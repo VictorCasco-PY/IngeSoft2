@@ -493,10 +493,10 @@ const MainClients = () => {
         <div className="card-1">
         <h2>Clientes</h2>
         <div className="card-body d-flex align-items-center ">
-        <form className="d-flex flex-grow-1">
+        <form className="d-flex flex-grow-1 align-items-center">
             <input
               id="input-search"
-              className="form-control mt-3 custom-input"
+              className="form-control custom-input"
               type="text"
               placeholder="Buscar..."
               value={searchTerm}

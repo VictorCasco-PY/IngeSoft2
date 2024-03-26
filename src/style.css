@@ -1,3 +1,9 @@
+/*cambios de andy*/
+@import './global.css';
+/**/
+
+
+
 .login-container {
   padding: 20px;
   display: flex;
@@ -7,8 +13,6 @@
   width: 100vw;
   background-color: #F4F4F4;
 }
-
-
 
 
 .login-card {
@@ -80,7 +84,7 @@
 }
 
 .focused .placehold,
-.form-control:not(:placeholder-shown) + .placehold {
+.form-control:not(:placeholder-shown)+.placehold {
   top: -15px;
   font-size: 15px;
   color: black;
@@ -99,12 +103,14 @@
 }
 
 .error-title {
-  font-size: 14px; 
+  font-size: 14px;
   color: red;
 }
 
 
-.logo-navbar{
+.logo-navbar {
   width: 20%;
   height: 20%;
 }
+
+

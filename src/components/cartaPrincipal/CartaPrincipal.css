@@ -1,0 +1,37 @@
+@import '../../global.css';
+
+.carta {
+    width: 100%;
+    min-height: var(--card-height);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+    background-color: var(--background-components);
+    color: var(--text-color);
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display:flex;
+    flex-direction: column;
+}
+
+@media (min-width: 992px) {
+    .carta {
+        max-width: 960px;
+    }
+    
+}
+
+@media (min-width: 1200px) {
+    .carta {
+        max-width: 1140px;
+    }
+    
+}
+
+@media (min-width: 1400px) {
+    .carta {
+        max-width: var(--card-max-width);
+    }
+    
+}

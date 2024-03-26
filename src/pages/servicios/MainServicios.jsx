@@ -42,7 +42,9 @@ const MainServicios = () => {
 
   const fetchServicios = async (page) => {
     try {
-      const response = await api.get(`/actividades/count/clientes/page/${page}`);
+      const response = await api.get(
+        `/actividades/count/clientes/page/${page}`
+      );
       setServicios(response.data.items);
       setFilteredServicios(response.data.items);
       setTotalPages(response.data.totalPages);
@@ -98,31 +100,34 @@ const MainServicios = () => {
         toast.error("Existen campos vacios");
         return;
       }
-  
+
       if (servicioData.costoMensual < 0 || servicioData.costoSemanal < 0) {
         toast.error("Los valores no pueden ser negativos");
         return;
       }
-  
+
       // Convertir a entero para comparar
       const costoMensual = parseInt(servicioData.costoMensual);
       const costoSemanal = parseInt(servicioData.costoSemanal);
-  
+
       // el costo mensual debe ser mayor que el semanal
       if (costoMensual <= costoSemanal) {
         toast.error("El costo mensual debe ser mayor que el costo semanal");
         return;
       }
-  
+
       let response;
       if (modalMode === "create") {
         response = await api.post("/actividades", servicioData);
         toast.success("Servicio creado satisfactoriamente");
       } else if (modalMode === "edit") {
-        response = await api.put(`/actividades/${servicioData.id}`, servicioData);
+        response = await api.put(
+          `/actividades/${servicioData.id}`,
+          servicioData
+        );
         toast.success("Servicio actualizado satisfactoriamente");
       }
-  
+
       handleCloseModal();
       fetchServicios(currentPage);
     } catch (error) {
@@ -130,7 +135,7 @@ const MainServicios = () => {
       toast.error("Error al procesar la solicitud");
     }
   };
-  
+
   const handleEliminarServicio = async () => {
     if (servicioToDelete) {
       try {
@@ -174,15 +179,14 @@ const MainServicios = () => {
       setFilteredServicios(servicios);
     }
   };
- 
+
   const handleSearchChange = () => {
     if (searchTerm.length >= 4) {
-      searchServicios(searchTerm); 
+      searchServicios(searchTerm);
     } else {
       setFilteredServicios(servicios);
     }
   };
-  
 
   const searchServicios = (term) => {
     const filtered = servicios.filter((servicio) => {
@@ -218,25 +222,28 @@ const MainServicios = () => {
           <div className="card-1">
             <h2>Servicios</h2>
             <div className="card-body d-flex align-items-center justify-content-between">
-              <form className="d-flex flex-grow-1">
-                  <input
-                   id="input-search"
-                  className="form-control mt-3 custom-input"
+              <form className="d-flex flex-grow-1 align-items-center">
+                <input
+                  id="input-search"
+                  className="form-control custom-input"
                   type="text"
                   placeholder="Buscar actividad..."
                   value={searchTerm}
                   onChange={handleInputChange}
                 />
-             
 
-<ButtonBasic
-  id="btn-buscar"
-  text="Buscar"
-  onClick={handleSearchChange} // Mantén el onClick para llamar a la función handleSearchChange
-/>
-  </form>
+                <ButtonBasic
+                  id="btn-buscar"
+                  text="Buscar"
+                  onClick={handleSearchChange} // Mantén el onClick para llamar a la función handleSearchChange
+                />
+              </form>
 
-              <button id="btn-crear" className="button-t" onClick={handleNuevoServicio}>
+              <button
+                id="btn-crear"
+                className="button-t"
+                onClick={handleNuevoServicio}
+              >
                 <IoAdd />
                 Nuevo Servicio
               </button>
@@ -244,11 +251,10 @@ const MainServicios = () => {
           </div>
 
           <ModalBase
-          id="ModalRegitro&edit"
+            id="ModalRegitro&edit"
             open={showModal || showEditModal}
             closeModal={handleCloseModal}
             title={showModal ? "Registrar Actividad" : "Editar Actividad"}
-            
           >
             <p style={{ fontWeight: "bold", fontSize: "14px" }}>
               Datos de Actividad
@@ -282,10 +288,16 @@ const MainServicios = () => {
                 ></textarea>
               </div>
               <div className="d-flex justify-content-between">
-                <div className="d-flex flex-column mr-2" style={{ width: '100%' }}>
+                <div
+                  className="d-flex flex-column mr-2"
+                  style={{ width: "100%" }}
+                >
                   <div className="mb-2 block">
                     <div className="label-container">
-                      <LabelBase label="Costo Mensual:" htmlFor="costoMensual" />
+                      <LabelBase
+                        label="Costo Mensual:"
+                        htmlFor="costoMensual"
+                      />
                       <span className="required">*</span>
                     </div>
                     <input
@@ -293,7 +305,7 @@ const MainServicios = () => {
                       id="costoMensual"
                       name="costoMensual"
                       className="form-control"
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       value={servicioData.costoMensual}
                       onChange={handleCampoChange}
                       required
@@ -301,7 +313,10 @@ const MainServicios = () => {
                   </div>
                   <div className="mb-2 block">
                     <div className="label-container">
-                      <LabelBase label="Costo Semanal:" htmlFor="costoSemanal" />
+                      <LabelBase
+                        label="Costo Semanal:"
+                        htmlFor="costoSemanal"
+                      />
                       <span className="required">*</span>
                     </div>
                     <input
@@ -321,7 +336,11 @@ const MainServicios = () => {
                 <span className="message">Campo obligatorio</span>
               </div>
               <div className="d-flex justify-content-center align-items-center float-end">
-                <ButtonBasic id="btn-guardar" text="Guardar" onClick={handleAceptar}  />
+                <ButtonBasic
+                  id="btn-guardar"
+                  text="Guardar"
+                  onClick={handleAceptar}
+                />
               </div>
             </form>
           </ModalBase>
@@ -350,21 +369,27 @@ const MainServicios = () => {
               <tbody>
                 {filteredServicios.map((servicio) => (
                   <tr key={servicio.id}>
-                     <td><Link to={`/infoServicio/${servicio.actividad.id}`}>
-                      {" "}
-                     {servicio.actividad.nombre}
-                    </Link></td>
-                    <td><Indicador clientes={servicio.clientes} /></td>
+                    <td>
+                      <Link to={`/infoServicio/${servicio.actividad.id}`}>
+                        {" "}
+                        {servicio.actividad.nombre}
+                      </Link>
+                    </td>
+                    <td>
+                      <Indicador clientes={servicio.clientes} />
+                    </td>
                     <td>{servicio.actividad.costoMensual.toLocaleString()}</td>
                     <td>{servicio.actividad.costoSemanal.toLocaleString()}</td>
                     <td class="text-center">
-                      <a 
-                       id={`btn-eliminar-actividad-${servicio.id}`}
-                      href="#" onClick={() => handleShowAlert(servicio)}>
+                      <a
+                        id={`btn-eliminar-actividad-${servicio.id}`}
+                        href="#"
+                        onClick={() => handleShowAlert(servicio)}
+                      >
                         <RiDeleteBinLine />
                       </a>
                       <a
-                         id={`btn-editar-actividad-${servicio.id}`}
+                        id={`btn-editar-actividad-${servicio.id}`}
                         href="#"
                         onClick={() => handleEditarServicio(servicio)}
                         style={{ marginLeft: "1.5em" }}
@@ -379,7 +404,7 @@ const MainServicios = () => {
           </div>
           <div className="pagination-container">
             <Pagination
-            id="ModalRegitro&edit"
+              id="ModalRegitro&edit"
               count={totalPages}
               shape="rounded"
               color="secondary"
