@@ -32,11 +32,15 @@ const useCaja = () => {
         return handleRequest(() => api.get(`${CAJA_URL}/${id}`, params ))
     }
 
+    const searchCajaByName = async (nombre, page = 1, params) => {
+        return handleRequest(() => api.get(`${CAJA_URL}/search/nombre/page/${page}`, params ))
+    }
+
     const getAllCajas = async (page = 1, params) => {
         return handleRequest(() => api.get(`${CAJA_URL}/page/${page}`, params ))
     }
 
-    return { createCaja, getCajaById, getAllCajas, data, error, isLoading }
+    return { createCaja, getCajaById, searchCajaByName, getAllCajas, data, error, isLoading }
 }
 
 export default useCaja

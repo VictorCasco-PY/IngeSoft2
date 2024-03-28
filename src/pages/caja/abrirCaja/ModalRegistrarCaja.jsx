@@ -29,8 +29,9 @@ const ModalRegistrarCaja = ({toast, ...props }) => {
             props.closeModal()
             toast.success("Caja registrada correctamente")
         } else {
-            if (success.response && success.response.status === 400) {
-                toast.error(errorCaja.response.data.message)
+            if (success.response && success.response.status === 500) {
+                //toast.error(errorCaja.response.data.message)
+                toast.error("Ya existe una caja con ese nombre.")
                 document.getElementById("input-nombre-caja").focus()
             } else {
                 toast.error("Error al registrar caja. Revise la conexión.")

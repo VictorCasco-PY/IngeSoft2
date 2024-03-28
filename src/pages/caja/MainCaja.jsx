@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './MainCaja.css'
 
@@ -6,10 +6,17 @@ import { Toaster } from "react-hot-toast";
 
 import AdministrarCaja from "./administrarCaja/AdministrarCaja";
 import CajaMainForm from "./abrirCaja/CajaMainForm";
+import CajaStorage from "../../utils/CajaStorage";
 
 const MainCaja = () => {
 
     const [sesionAbierta, setSesionAbierta] = useState(false);
+
+    useEffect(() => {
+        if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
+            setSesionAbierta(true)
+        }
+    }, [sesionAbierta])
 
     return (
         <>

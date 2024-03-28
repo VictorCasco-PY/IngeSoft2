@@ -20,7 +20,7 @@ import ModalRegistrarCaja from "./ModalRegistrarCaja";
 import UserStorage from "../../../utils/UserStorage";
 import CajaStorage from "../../../utils/CajaStorage";
 
-import AsyncSelect from 'react-select/async';
+import Select from 'react-select/async';
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
@@ -80,7 +80,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         }
     }
 
-
     return (
         <>
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} />
@@ -88,19 +87,9 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             <CartaPrincipal>
                 {/**/}
                 {/**/}
-                {req_cajas.items && (
-                    <AsyncSelect
-                        cacheOptions
-                        loadOptions={getAllCajas}
-                        onInputChange={(data) => {
-                            console.log(data);
-                        }}
-                        onChange={(data) => {
-                            console.log(data);
-                        }}
-                        defaultOptions
-                    />
-                )}
+                {/*{req_cajas.items && (
+                    <Select />
+                )}*/}
 
                 <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
                     onClick={() => { setOpenRegistrarModal(true) }}>
