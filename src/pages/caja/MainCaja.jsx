@@ -39,11 +39,15 @@ const MainCaja = () => {
                 }}
             />
 
-            {(sesionAbierta) ?
-                (<AdministrarCaja setSesionAbierta={setSesionAbierta} />)
-                :
-                (<CajaMainForm setSesionAbierta={setSesionAbierta} />)
-            }
+            {sesionAbierta ? (
+                <AdministrarCaja setSesionAbierta={setSesionAbierta} />
+            ) : (
+                /*como useEffect se ejecuta antes del renderizado, utilizo este workaround para evitar
+                    volver a renderizar, si se conoce una mejor solucion, decir a andy*/
+                (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) && (
+                    <CajaMainForm setSesionAbierta={setSesionAbierta} />
+                )
+            )}
         </>
     )
 }

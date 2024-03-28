@@ -33,6 +33,11 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             setCaja(req_caja);
             getSesionCajaById(CajaStorage.getSesionCajaId());
             setSesionCaja(req_sesion);
+        } else {
+            toast.error("No se ha abierto una caja. No deberías de estar viendo esto...");
+            setTimeout(() => {
+                setSesionAbierta(false)
+            }, 2500);
         }
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());

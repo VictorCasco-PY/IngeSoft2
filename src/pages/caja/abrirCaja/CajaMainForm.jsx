@@ -45,6 +45,8 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             } else {
                 toast.error("No has iniciado sesión...")
             }
+        } else {
+            toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")
         }
     }, [])
 
@@ -86,10 +88,10 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
             <CartaPrincipal>
                 {/**/}
-                {/**/}
                 {/*{req_cajas.items && (
                     <Select />
                 )}*/}
+                {/**/}
 
                 <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
                     onClick={() => { setOpenRegistrarModal(true) }}>
