@@ -1,8 +1,15 @@
 
-export const Table = () => {
+export const Table = ({children, headers}) => {
 
-    return <table className="">
+    return <table className="table table-striped">
 
+        <thead>
+            <tr>
+                {headers.map((h,n) => {return <th key={n}>{h}</th>})}
+            </tr>
+        </thead>
+
+        {children}
     </table>
 
 }

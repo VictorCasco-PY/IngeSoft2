@@ -1,5 +1,9 @@
-export const cobrosPendientesLista = ({ lista, ...props }) => {
+import { Table } from "../../../components/table/Table";
+
+export const cobrosPendientesLista = ({ children }) => {
   
-    return <></>;
-    
+    return <Table headers={["Nº Factura", "Fecha", "Cliente", "RUC", "Estado", "Condición", "Vendido por", "Total", "Utilidad"]}>
+        {children}
+    </Table>;
+
 };
