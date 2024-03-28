@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './MainCaja.css'
 
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
-import ModalRegistrarCaja from "./abrirCaja/ModalRegistrarCaja";
 import AdministrarCaja from "./administrarCaja/AdministrarCaja";
 import CajaMainForm from "./abrirCaja/CajaMainForm";
 
