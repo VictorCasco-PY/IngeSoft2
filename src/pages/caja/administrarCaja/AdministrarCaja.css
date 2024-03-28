@@ -1,3 +1,5 @@
+@import '../../../global.css';
+
 .cajaCard {
     width:22.5rem; 
     margin-left: 0;
@@ -8,6 +10,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.cajaFont {
+    color: var(--text-color);
+    font-size:1.8rem;
+}
+
+.cajaMiscFont {
+    color: var(--text-color);
+    font-size:1.1rem;
 }
 
 @media (max-width: 992px) {

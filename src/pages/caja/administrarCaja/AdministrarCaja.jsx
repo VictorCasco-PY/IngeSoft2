@@ -37,7 +37,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());
         }
-    }, [caja])
+    }, [])
 
 
     const goToNuevaCompra = () => {
@@ -90,6 +90,11 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
         }, 2500);
     }
 
+    const formatFecha = (fecha) => {
+        const fechaArr = fecha.split("-");
+        return `${fechaArr[2]}-${fechaArr[1]}-${fechaArr[0]}`;
+    }
+
     return (
         <>
             <Toaster
@@ -118,27 +123,32 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                             (<CircularProgress />)
                             :
                             (<h1>{caja.nombre}</h1>)}
-                        <div>
-                            {(user && user.nombre) &&
-                                <>
-                                    <p className="p-0 m-0">Cajero: {user.nombre}</p>
-                                    {(sesionCaja && sesionCaja.horaApertura) && <p className="p-0 m-0">Hora de Apertura: {sesionCaja.horaApertura}</p>}
-                                </>
-                            }
-                        </div>
                     </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
-                        {sesionCaja.horaCierre ? <p className="p-0 m-0">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0">Caja en curso</p>}
+                        {sesionCaja.horaCierre ? <p className="p-0 m-0 cajaMiscFont">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>}
                         <Btn outline onClick={cerrarCajaActual} disabled={disabledCerrarCaja}>
                             Cerrar Caja
                         </Btn>
                     </div>
                 </div>
 
-                <div className="d-flex gap-5 justify-content-center my-auto flex-md-row flex-sm-column align-items-center">
+                <div>
+                    {(user && user.nombre) &&
+                        <>
+                            <p className="p-0 m-0 cajaMiscFont">Cajero: {user.nombre}</p>
+                            {(sesionCaja && sesionCaja.horaApertura && sesionCaja.fecha) &&
+                                <>
+                                    <p className="p-0 m-0 cajaMiscFont">Hora de Apertura: {sesionCaja.horaApertura}</p>
+                                    <p className="p-0 m-0 cajaMiscFont">Fecha: {formatFecha(sesionCaja.fecha)}</p>
+                                </>}
+                        </>
+                    }
+                </div>
+
+                <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center">
                     <div className="card cajaCard">
-                        <p>Ventas</p>
+                        <p className="cajaFont">Ventas</p>
 
                         <Btn type="primary" onClick={goToNuevaVenta} disabled={disabledCerrarCaja}>
                             Nueva Venta
@@ -149,7 +159,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                         </Btn>
                     </div>
                     <div className="card cajaCard">
-                        <p>Compras</p>
+                        <p className="cajaFont">Compras</p>
 
                         <Btn type="primary" onClick={goToNuevaCompra} disabled={disabledCerrarCaja}>
                             Nueva Compra
@@ -160,7 +170,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                         </Btn>
                     </div>
                     <div className="card cajaCard">
-                        <p>Cobros Pendientes</p>
+                        <p className="cajaFont">Cobros Pendientes</p>
 
                         <Btn outline onClick={goToListarCobros} disabled={disabledCerrarCaja}>
                             Listar Cobros Pendientes
