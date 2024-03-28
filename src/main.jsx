@@ -13,6 +13,7 @@ import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from './pages/proveedores/MainProveedores';
 import MainCaja from './pages/caja/MainCaja';
 import AdministrarCaja from "./pages/caja/administrarCaja/AdministrarCaja";
+import {CobrosPendientesVista} from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
 
 createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -30,7 +31,7 @@ createRoot(document.getElementById("root")).render(
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
           <Route path="/caja-administracion" element={<Layout><AdministrarCaja /></Layout>} />
-          <Route path="/caja/cobros-pendientes" element={<Layout></Layout>} />
+          <Route path="/caja/pendientes" element={<Layout><CobrosPendientesVista/></Layout>} />
 
 
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
