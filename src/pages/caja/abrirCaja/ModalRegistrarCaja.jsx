@@ -25,10 +25,6 @@ const ModalRegistrarCaja = ({toast, ...props }) => {
 
         const success = await createCaja(postData);
 
-        console.log(success)
-        
-        console.log(errorCaja)
-
         if (success.id) {
             props.closeModal()
             toast.success("Caja registrada correctamente")

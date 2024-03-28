@@ -10,7 +10,7 @@ import { FormSelect, FormTextInput } from "../../../components/forms/FormInputs"
 import useCaja from "../../../hooks/useCaja";
 import useSesionCaja from "../../../hooks/useSesionCaja";
 
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoAdd } from "react-icons/io5";
@@ -20,6 +20,8 @@ import ModalRegistrarCaja from "./ModalRegistrarCaja";
 import UserStorage from "../../../utils/UserStorage";
 import CajaStorage from "../../../utils/CajaStorage";
 
+import AsyncSelect from 'react-select/async';
+
 const CajaMainForm = ({ setSesionAbierta }) => {
 
     const [openRegistrarModal, setOpenRegistrarModal] = useState(false);
@@ -28,6 +30,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const { createSesionCaja, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
 
     const [abrirDisabled, setAbrirDisabled] = useState(true);
+    //const [selectedValue, setSelectedValue] = useState(null);
 
     useEffect(() => {
         //si ya se abrio una caja, ir a administración
@@ -77,12 +80,29 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         }
     }
 
+
     return (
         <>
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} />
 
             <CartaPrincipal>
-                <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={((cargandoSesion || abrirDisabled))} icon={<IoAdd />}
+                {/**/}
+                {/**/}
+                {req_cajas.items && (
+                    <AsyncSelect
+                        cacheOptions
+                        loadOptions={getAllCajas}
+                        onInputChange={(data) => {
+                            console.log(data);
+                        }}
+                        onChange={(data) => {
+                            console.log(data);
+                        }}
+                        defaultOptions
+                    />
+                )}
+
+                <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
                     onClick={() => { setOpenRegistrarModal(true) }}>
                     Registrar Nueva Caja
                 </Btn>
