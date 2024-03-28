@@ -18,6 +18,7 @@ import CajaStorage from "../../utils/CajaStorage";
 import { IoAdd } from "react-icons/io5";
 import ModalBase from "../../components/modals/ModalBase";
 import ModalRegistrarCaja from "./ModalRegistrarCaja";
+import UserStorage from "../../utils/UserStorage";
 
 const MainCaja = () => {
 
@@ -34,14 +35,15 @@ const MainCaja = () => {
         if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
             navigate(`/caja-administracion`);
         } else {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
+            if (UserStorage.getUser()) {
                 getAllCajas(1);
                 setAbrirDisabled(false)
                 if (errorCajas) {
                     setAbrirDisabled(true);
                     toast.error("Error al cargar cajas. Revise la conexión.");
                 }
+            } else {
+                toast.error("No has iniciado sesión...")
             }
         }
     }, [localStorage.getItem("user")])
@@ -57,7 +59,7 @@ const MainCaja = () => {
 
         const postData = {
             idCaja: values['id_caja'],
-            idUsuario: 1,
+            idUsuario: UserStorage.getEmpleadoId(),
             montoInicial: values['montoInicial'],
             montoFinal: null,
             fecha: fecha,

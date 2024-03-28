@@ -14,6 +14,7 @@ import useCaja from "../../../hooks/useCaja";
 
 import CajaStorage from "../../../utils/CajaStorage";
 import { CircularProgress } from "@mui/material";
+import UserStorage from "../../../utils/UserStorage";
 
 const AdministrarCaja = () => {
 
@@ -22,6 +23,7 @@ const AdministrarCaja = () => {
     const { getSesionCajaById, cerrarCajaById, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
     const [sesionCaja, setSesionCaja] = useState({});
     const [caja, setCaja] = useState({});
+    const [user, setUser] = useState({});
 
     const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
@@ -31,7 +33,11 @@ const AdministrarCaja = () => {
             setCaja(req_caja);
             getSesionCajaById(CajaStorage.getSesionCajaId());
             setSesionCaja(req_sesion);
-        } 
+        }
+        if (UserStorage.getUser()) {
+            setUser(UserStorage.getUser());
+        }
+        console.log(user)
     }, [caja])
 
 
@@ -108,10 +114,13 @@ const AdministrarCaja = () => {
 
             <CartaPrincipal>
                 <div className="d-flex align-items-center justify-content-between">
-                    {(cargandoCaja && cargandoSesion && caja) ?
-                        (<CircularProgress />)
-                        :
-                        (<h1>{caja.nombre}</h1>)}
+                    <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
+                        {(cargandoCaja && cargandoSesion && caja) ?
+                            (<CircularProgress />)
+                            :
+                            (<h1>{caja.nombre}</h1>)}
+                        {(user && user.nombre) && <p className="p-0 m-0">Cajero: {user.nombre}</p>}
+                    </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
                         {sesionCaja.horaCierre ? <p className="p-0 m-0">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0">Caja en curso</p>}
@@ -121,7 +130,7 @@ const AdministrarCaja = () => {
                     </div>
                 </div>
 
-                <div className="d-flex gap-5 justify-content-center my-auto flex-md-row flex-sm-column">
+                <div className="d-flex gap-5 justify-content-center my-auto flex-md-row flex-sm-column align-items-center">
                     <div className="card cajaCard">
                         <p>Ventas</p>
 
