@@ -119,7 +119,14 @@ const AdministrarCaja = () => {
                             (<CircularProgress />)
                             :
                             (<h1>{caja.nombre}</h1>)}
-                        {(user && user.nombre) && <p className="p-0 m-0">Cajero: {user.nombre}</p>}
+                        <div>
+                            {(user && user.nombre) &&
+                                <>
+                                    <p className="p-0 m-0">Cajero: {user.nombre}</p>
+                                    {(sesionCaja && sesionCaja.horaApertura) && <p className="p-0 m-0">Hora de Apertura: {sesionCaja.horaApertura}</p>}
+                                </>
+                            }
+                        </div>
                     </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
