@@ -1,13 +1,14 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Btn } from "../../components/bottons/Button";
-import './MainCaja.css'
+
+import '../MainCaja.css'
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { FormTextInput } from "../../components/forms/FormInputs";
 
-import useCaja from "../../hooks/useCaja";
-import ModalFormik from "../../components/modals/ModalFormik";
+import useCaja from "../../../hooks/useCaja";
+import ModalFormik from "../../../components/modals/ModalFormik";
+import { Btn } from "../../../components/bottons/Button";
+import { FormTextInput } from "../../../components/forms/FormInputs";
 
 const ModalRegistrarCaja = ({toast, ...props }) => {
 
@@ -25,6 +26,7 @@ const ModalRegistrarCaja = ({toast, ...props }) => {
         const success = await createCaja(postData);
 
         console.log(success)
+        
         console.log(errorCaja)
 
         if (success.id) {

@@ -14,14 +14,16 @@ import useCaja from "../../../hooks/useCaja";
 
 import CajaStorage from "../../../utils/CajaStorage";
 import { CircularProgress } from "@mui/material";
+import UserStorage from "../../../utils/UserStorage";
 
-const AdministrarCaja = () => {
+const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const navigate = useNavigate();
     const { getCajaById, data: req_caja, isLoading: cargandoCaja, error: errorCajas } = useCaja();
     const { getSesionCajaById, cerrarCajaById, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
     const [sesionCaja, setSesionCaja] = useState({});
     const [caja, setCaja] = useState({});
+    const [user, setUser] = useState({});
 
     const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
@@ -31,13 +33,16 @@ const AdministrarCaja = () => {
             setCaja(req_caja);
             getSesionCajaById(CajaStorage.getSesionCajaId());
             setSesionCaja(req_sesion);
-        } 
+        }
+        if (UserStorage.getUser()) {
+            setUser(UserStorage.getUser());
+        }
     }, [caja])
 
 
     const goToNuevaCompra = () => {
         if (disabledCerrarCaja) return;
-        navigate("/caja-ventas");
+        navigate("/caja-compra");
     }
 
     const goToListarCompras = () => {
@@ -57,7 +62,7 @@ const AdministrarCaja = () => {
 
     const goToListarCobros = () => {
         if (disabledCerrarCaja) return;
-        navigate("/lista-cobros");
+        navigate("/caja/pendientes");
     }
 
     //AUN NO SE ACTUALIZA EL MONTO FINAL!!!! URGENTE
@@ -81,7 +86,7 @@ const AdministrarCaja = () => {
         CajaStorage.cerrarCaja();
         toast.success(`Caja cerrada con éxito a las ${hora}. Redirigiendo a la página principal..`);
         setTimeout(() => {
-            navigate("/caja");
+            setSesionAbierta(false)
         }, 2500);
     }
 
@@ -108,10 +113,20 @@ const AdministrarCaja = () => {
 
             <CartaPrincipal>
                 <div className="d-flex align-items-center justify-content-between">
-                    {(cargandoCaja && cargandoSesion && caja) ?
-                        (<CircularProgress />)
-                        :
-                        (<h1>{caja.nombre}</h1>)}
+                    <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
+                        {(cargandoCaja && cargandoSesion && caja) ?
+                            (<CircularProgress />)
+                            :
+                            (<h1>{caja.nombre}</h1>)}
+                        <div>
+                            {(user && user.nombre) &&
+                                <>
+                                    <p className="p-0 m-0">Cajero: {user.nombre}</p>
+                                    {(sesionCaja && sesionCaja.horaApertura) && <p className="p-0 m-0">Hora de Apertura: {sesionCaja.horaApertura}</p>}
+                                </>
+                            }
+                        </div>
+                    </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
                         {sesionCaja.horaCierre ? <p className="p-0 m-0">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0">Caja en curso</p>}
@@ -121,7 +136,7 @@ const AdministrarCaja = () => {
                     </div>
                 </div>
 
-                <div className="d-flex gap-5 justify-content-center my-auto flex-md-row flex-sm-column">
+                <div className="d-flex gap-5 justify-content-center my-auto flex-md-row flex-sm-column align-items-center">
                     <div className="card cajaCard">
                         <p>Ventas</p>
 
