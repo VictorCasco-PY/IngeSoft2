@@ -26,7 +26,7 @@ export const NavBtn = ({ children, icon, type, href, className, ...props }) => {
   const location = useLocation();
 
   useEffect(() => {
-    setSelected(location.pathname === href);
+    setSelected(location.pathname.includes(href));
   }, [location]);
 
   switch (type) {
