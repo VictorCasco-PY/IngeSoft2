@@ -16,7 +16,7 @@ import CajaStorage from "../../../utils/CajaStorage";
 import { CircularProgress } from "@mui/material";
 import UserStorage from "../../../utils/UserStorage";
 
-const AdministrarCaja = () => {
+const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const navigate = useNavigate();
     const { getCajaById, data: req_caja, isLoading: cargandoCaja, error: errorCajas } = useCaja();
@@ -37,13 +37,12 @@ const AdministrarCaja = () => {
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());
         }
-        console.log(user)
     }, [caja])
 
 
     const goToNuevaCompra = () => {
         if (disabledCerrarCaja) return;
-        navigate("/caja-ventas");
+        navigate("/caja-compra");
     }
 
     const goToListarCompras = () => {
@@ -63,7 +62,7 @@ const AdministrarCaja = () => {
 
     const goToListarCobros = () => {
         if (disabledCerrarCaja) return;
-        navigate("/lista-cobros");
+        navigate("/caja/pendientes");
     }
 
     //AUN NO SE ACTUALIZA EL MONTO FINAL!!!! URGENTE
@@ -87,7 +86,7 @@ const AdministrarCaja = () => {
         CajaStorage.cerrarCaja();
         toast.success(`Caja cerrada con éxito a las ${hora}. Redirigiendo a la página principal..`);
         setTimeout(() => {
-            navigate("/caja");
+            setSesionAbierta(false)
         }, 2500);
     }
 
