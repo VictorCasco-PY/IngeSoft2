@@ -17,22 +17,26 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
     const getSuscripciones = async () => {
         setLoadTable(true);
         try {
-            const res = await api.get(`suscripciones/cliente/${clienteId}/page/${page}` ) 
-            setActividades(res.data) 
-            console.log(res.data)
+            const res = await api.get(`suscripciones/cliente/${clienteId}/page/${page}`)
+            setActividades(res.data)
         } catch (error) {
-            //console.log(error)
             if (toast) {
-                toast.error("Error al cargar suscripciones. Revise la conexión.");
+                if (error.response.status === 404) {
+                    setActividades([]);
+                } else {
+                    toast.error("Error al cargar suscripciones. Revise la conexión.");
+                }
             }
-            console.log(error);
         } finally {
             setLoadTable(false);
         }
-        
+
     }
 
     useEffect(() => {
+
+        // no borrar esto, no tomar en cuenta en  code review, lo usare en el sig sprint.
+
         /*const fetchData = async () => {
             setLoadTable(true);
             try {
@@ -40,18 +44,22 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                 setActividades(suscripcionesData);
             } catch (error) {
                 if (toast) {
-                    toast.error("Error al cargar suscripciones. Revise la conexión.");
+                    setActividades([]);
+                    if (error.response.status === 404) {
+                        setActividades([]);
+                    } else {
+                        toast.error("Error al cargar suscripciones. Revise la conexión.");
+                    }
                 }
-                console.log(error);
             } finally {
                 setLoadTable(false);
             }
-            console.log(req_suscripciones)
+            console.log(actividades)
         };
 
         fetchData();*/
+        
         getSuscripciones();
-
     }, [page]);
 
     return (
@@ -74,16 +82,15 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                     </tr>
                 ) : (
 
-
                     <>
-                        {(actividades.length == 0 || !actividades) ? (
+                        {actividades && actividades.length === 0 ? (
                             <tr>
                                 <td colSpan="5">
-                                    No hay actividades inscritas.
+                                    Este cliente no tiene actividades inscritas.
                                 </td>
                             </tr>
                         ) : (
-                            actividades.items.map((actividad) => (
+                            (actividades) && actividades.items.map((actividad) => (
                                 <tr key={actividad.id}>
                                     <td onClick={() => { navigate(`/infoServicio/${actividad.actividadId}`) }} className='rowClickable'>
                                         {actividad.actividadNombre}
@@ -95,9 +102,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                                 </tr>
                             ))
                         )}
-
                     </>
-
 
                 )}
                 {/*

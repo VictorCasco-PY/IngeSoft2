@@ -32,8 +32,6 @@ createRoot(document.getElementById("root")).render(
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
           <Route path="/caja-administracion" element={<Layout><AdministrarCaja /></Layout>} />
 
-          <Route path="/component-test" element={<Layout><TablaActividadesCliente /></Layout>} />
-
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
         </Routes>
       </Router>
