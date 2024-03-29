@@ -7,9 +7,9 @@ import { Input } from "../../../components/input/input";
 import { Btn } from "../../../components/bottons/Button";
 import { HiArrowSmLeft } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
 import ErrorPagina from "../../../components/errores/ErrorPagina";
 import { ListaVacía } from "../../../components/errores/ListaVacía";
+import { Loader } from "../../../components/layout/Loader";
 
 export const CobrosPendientesVista = () => {
   const [data, setData] = useState([]);
@@ -27,26 +27,16 @@ export const CobrosPendientesVista = () => {
   }, []);
 
   const switchRender = () => {
-    if (isLoading)
-      return (
-        <div className="loading">
-          <CircularProgress /> <br />
-          <div>Cargando...</div>
-        </div>
-      );
 
-      if(notFound){
-        return <ListaVacía mensaje="No hay facturas pendientes" />
-      }
+    if (isLoading) return <Loader />
 
-      if(error)
-      return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos" />
+    if (notFound) return <ListaVacía mensaje="No hay facturas pendientes." />
+
+    if (error) return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos." />
 
     return (
       <>
-       
         <CobrosPendientesLista facturas={data?.items} />
-
         <Pagination
           totalPages={data?.totalPages}
           currentPage={data?.currentPage}
@@ -57,33 +47,42 @@ export const CobrosPendientesVista = () => {
   };
 
   return <CartaPrincipal>
-     <h1>
-          <Link to="/caja">
-            <HiArrowSmLeft />
-          </Link>
-          Cobros Pendientes
-        </h1>
+    <h1>
+      <Link to="/caja">
+        <HiArrowSmLeft />
+      </Link>
+      Cobros Pendientes
+    </h1>
 
-        <div className="p-2 d-flex justify-content-between">
-          <form className="d-flex gap-4  flex-wrap w-100">
-            <span className="d-flex gap-3">
-              <Input
-                id="input-mindate"
-                placeholder="01/01/2024"
-                type="date"
-              />
-              <Input
-                id="input-maxdate"
-                placeholder="31/12/2024"
-                type="date"
-              />
-            </span>
-            <span className="d-flex">
-              <Input id="input-search" placeholder="Buscar..." />
-              <Btn outline>Buscar</Btn>
-            </span>
-          </form>
-        </div>
+    {/* Menú de búsqueda */}
+    <div className="p-2">
+      <form className="d-flex gap-4 flex-wrap w-100">
+
+
+        {/* No implementado aún */}
+        {/* 
+        <span className="d-flex gap-3">
+          <Input
+            id="input-mindate"
+            placeholder="01/01/2024"
+            type="date"
+          />
+          <Input
+            id="input-maxdate"
+            placeholder="31/12/2024"
+            type="date"
+          />
+        </span> */}
+
+
+        <span className="d-flex w-50 gap-3">
+          <Input id="input-search" placeholder="Buscar..." />
+          <Btn outline>Buscar</Btn>
+        </span>
+      </form>
+    </div>
+
+
     {switchRender()}
-    </CartaPrincipal>;
+  </CartaPrincipal>;
 };
