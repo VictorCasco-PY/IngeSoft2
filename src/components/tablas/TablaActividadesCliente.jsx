@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from 'react-router-dom';
 import './TablaActividades.css';
 import { capFirstMinRest, formatFecha } from '../../utils/Formatting';
+import api from '../../utils/api';
 
 const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
@@ -13,21 +14,45 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
     const navigate = useNavigate();
 
+    const getSuscripciones = async () => {
+        setLoadTable(true);
+        try {
+            const res = await api.get(`suscripciones/cliente/${clienteId}/page/${page}` ) 
+            setActividades(res.data) 
+            console.log(res.data)
+        } catch (error) {
+            //console.log(error)
+            if (toast) {
+                toast.error("Error al cargar suscripciones. Revise la conexión.");
+            }
+            console.log(error);
+        } finally {
+            setLoadTable(false);
+        }
+        
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
+        /*const fetchData = async () => {
+            setLoadTable(true);
             try {
                 const suscripcionesData = await getSuscripcionesByCliente(clienteId, page);
                 setActividades(suscripcionesData);
-                setLoadTable(true);
             } catch (error) {
                 if (toast) {
                     toast.error("Error al cargar suscripciones. Revise la conexión.");
                 }
+                console.log(error);
+            } finally {
+                setLoadTable(false);
             }
+            console.log(req_suscripciones)
         };
 
-        fetchData();
-    }, []);
+        fetchData();*/
+        getSuscripciones();
+
+    }, [page]);
 
     return (
         <table class="table table-striped">
@@ -41,25 +66,49 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                 </tr>
             </thead>
             <tbody>
-                {(!loadTable) ? (
+                {loadTable ? (
                     <tr>
-                        <td colSpan="4">
+                        <td colSpan="5">
                             <CircularProgress />
                         </td>
                     </tr>
                 ) : (
-                    actividades['items'].map((actividad) => (
-                        <tr key={actividad.id}>
-                            <td onClick={() => { navigate(`/infoServicio/${actividad.actividadId}`) }} className='rowClickable'>
-                                {actividad.actividadNombre}
-                            </td>
-                            <td>{capFirstMinRest(actividad.modalidad)}</td>
-                            <td>{capFirstMinRest(actividad.estado)}</td>
-                            <td>{formatFecha(actividad.fechaInicio)}</td>
-                            <td>{formatFecha(actividad.fechaFin)}</td>
-                        </tr>
-                    ))
+
+
+                    <>
+                        {(actividades.length == 0 || !actividades) ? (
+                            <tr>
+                                <td colSpan="5">
+                                    No hay actividades inscritas.
+                                </td>
+                            </tr>
+                        ) : (
+                            actividades.items.map((actividad) => (
+                                <tr key={actividad.id}>
+                                    <td onClick={() => { navigate(`/infoServicio/${actividad.actividadId}`) }} className='rowClickable'>
+                                        {actividad.actividadNombre}
+                                    </td>
+                                    <td>{capFirstMinRest(actividad.modalidad)}</td>
+                                    <td>{capFirstMinRest(actividad.estado)}</td>
+                                    <td>{formatFecha(actividad.fechaInicio)}</td>
+                                    <td>{formatFecha(actividad.fechaFin)}</td>
+                                </tr>
+                            ))
+                        )}
+
+                    </>
+
+
                 )}
+                {/*
+                {errorSuscripciones && (
+                    <tr>
+                        <td colSpan="4">
+                            Error al cargar suscripciones. Revise la conexión.
+                        </td>
+                    </tr>
+                )}
+                */}
             </tbody>
         </table>
     );
