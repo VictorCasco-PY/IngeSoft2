@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './TablaActividades.css';
 import { capFirstMinRest, formatFecha } from '../../utils/Formatting';
 
-const TablaActividadesCliente = ({ toast, clienteId }) => {
+const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
     const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
     const [actividades, setActividades] = useState([]);
@@ -16,7 +16,7 @@ const TablaActividadesCliente = ({ toast, clienteId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const suscripcionesData = await getSuscripcionesByCliente(1, 1);
+                const suscripcionesData = await getSuscripcionesByCliente(clienteId, page);
                 setActividades(suscripcionesData);
                 setLoadTable(true);
             } catch (error) {
@@ -24,8 +24,6 @@ const TablaActividadesCliente = ({ toast, clienteId }) => {
                     toast.error("Error al cargar suscripciones. Revise la conexión.");
                 }
             }
-
-            console.log(actividades['items'])
         };
 
         fetchData();

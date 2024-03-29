@@ -24,8 +24,8 @@ const useSuscripcion = () => {
     }
 
     //Funciones del endpoint
-    const getSuscripcionesByCliente = async (id, page = 1, params) => {
-        return handleRequest(() => api.get(`${SUSCRIPCION_URL}/cliente/${id}/page/${page}`, params ))
+    const getSuscripcionesByCliente = async (idCliente, page = 1, params) => {
+        return handleRequest(() => api.get(`${SUSCRIPCION_URL}/cliente/${idCliente}/page/${page}`, params ))
     }
 
     return { getSuscripcionesByCliente, data, error, isLoading }

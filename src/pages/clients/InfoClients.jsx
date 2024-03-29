@@ -16,12 +16,16 @@ import LabelBase from "../../components/labels/LabelBase.jsx";
 import EstadoPago from "../../components/estado_pago/EstadoPago.jsx";
 import { Link } from "react-router-dom";
 import api from "../../utils/api";
+import TablaActividadesCliente from "../../components/tablas/TablaActividadesCliente.jsx";
 
 const InfoClients = () => {
   const { id } = useParams();
   const [cliente, setCliente] = useState(null);
+
   const [showPayments, setShowPayments] = useState(true);
   const [showMeasurements, setShowMeasurements] = useState(false);
+  const [showActivities, setShowActivities] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [value, setValue] = useState("one");
   const [editingClient, setEditingClient] = useState(null);
@@ -70,9 +74,15 @@ const InfoClients = () => {
     if (newValue === "one") {
       setShowPayments(true);
       setShowMeasurements(false);
-    } else {
+      setShowActivities(false);
+    } else if (newValue === "two") {
       setShowPayments(false);
       setShowMeasurements(true);
+      setShowActivities(false);
+    } else if (newValue === "three") {
+      setShowPayments(false);
+      setShowMeasurements(false);
+      setShowActivities(true);
     }
   };
   const handleNameChange = (event) => {
@@ -176,7 +186,7 @@ const InfoClients = () => {
             open={modalOpen}
             title="Editar Cliente"
             closeModal={handleCloseModal}
-            
+
           >
             <form className="mb-3">
               <div className="mb-2 block">
@@ -235,16 +245,16 @@ const InfoClients = () => {
           {cliente && (
             <div className="datos-extras">
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>Plan Actual</h4>
-                <p style={{fontSize: "20px", textAlign:"center"}}>Mensual</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>Plan Actual</h4>
+                <p style={{ fontSize: "20px", textAlign: "center" }}>Mensual</p>
               </div>
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>RUC</h4>
-                <p style={{fontSize: "20px"}}>{cliente.ruc}</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>RUC</h4>
+                <p style={{ fontSize: "20px" }}>{cliente.ruc}</p>
               </div>
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>N° de Telefono</h4>
-                <p style={{fontSize: "20px", textAlign:"center"}}>{cliente.telefono}</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>N° de Telefono</h4>
+                <p style={{ fontSize: "20px", textAlign: "center" }}>{cliente.telefono}</p>
               </div>
             </div>
           )}
@@ -259,6 +269,7 @@ const InfoClients = () => {
               >
                 <Tab value="one" label="Pagos" />
                 <Tab value="two" label="Mediciones" />
+                <Tab value="three" label="Actividades" />
               </Tabs>
             </div>
             {/* 
@@ -284,7 +295,7 @@ const InfoClients = () => {
               </thead>
               <tbody>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">11111</th>
+                  <th style={{ color: "#6941C6" }} scope="row">11111</th>
                   <td>Enero</td>
                   <td>
                     <EstadoPago estado="No pagado" />
@@ -292,7 +303,7 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">2222</th>
+                  <th style={{ color: "#6941C6" }} scope="row">2222</th>
                   <td>Febrero</td>
                   <td>
                     <EstadoPago estado="Pagado" />
@@ -300,7 +311,7 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">33333</th>
+                  <th style={{ color: "#6941C6" }} scope="row">33333</th>
                   <td>Marzo</td>
                   <td>
                     <EstadoPago estado="Pagado" />
@@ -341,6 +352,11 @@ const InfoClients = () => {
               </tbody>
             </table>
           )}
+
+          {showActivities && (
+            <TablaActividadesCliente clienteId={id} toast={toast} />
+          )}
+
           <div className="d-flex justify-content-center mt-4">
             <Pagination count={5} shape="rounded" color="secondary" />
           </div>
