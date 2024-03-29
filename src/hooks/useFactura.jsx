@@ -28,10 +28,14 @@ export const useFactura = () => {
         }
     }
 
+    const getFacturaById = async (id) => {
+        return handleRequest(async () => await api.get(`${DIR}/${id}`))
+    }
+
     const getFacturasPendientes = async (page = 1) => {
         return handleRequest(async () => await api.get(`${DIR}/estado/pendiente/page/${page}`))
     }
 
-    return { getFacturasPendientes, error, notFound, isLoading }
+    return { getFacturasPendientes, getFacturaById, error, notFound, isLoading }
 
 }

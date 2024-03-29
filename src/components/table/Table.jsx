@@ -1,6 +1,6 @@
-export const Table = ({ children, headers }) => {
+export const Table = ({ children, headers, striped, textcenter }) => {
   return (
-    <table className="table table-striped  table-hover border-top border-bottom">
+    <table className={`table table-hover border-top border-bottom ${striped && "table-striped"} ${textcenter && "text-center"}`}>
       <thead>
         <tr>
           {headers?.map((h, n) => {
@@ -8,7 +8,7 @@ export const Table = ({ children, headers }) => {
           })}
         </tr>
       </thead>
-      {children}
+      <tbody>{children}</tbody>
     </table>
   );
 };

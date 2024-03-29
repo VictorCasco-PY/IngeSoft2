@@ -1,13 +1,12 @@
 import { Table } from "../../../components/table/Table";
 
-export const CobrosPendientesLista = ({ facturas }) => {
+export const CobrosPendientesLista = ({ facturas, select }) => {
 
     return (
-        <Table headers={["Nº Factura", "Fecha", "Cliente", "RUC", "Total", "Saldo"]}>
-            <tbody>
+        <Table headers={["Nº Factura", "Fecha", "Cliente", "RUC", "Total", "Saldo"]} striped>
             {facturas.map(factura=>{
                 return (
-                        <tr key={factura.id}>
+                        <tr key={factura.id} onClick={()=>select(factura.id)}>
                             <th className="py-3" scope="row" style={{color:"#7749F8"}}>{factura.nroFactura}</th>
                             <td className="py-3">{factura.fecha}</td>
                             <td className="py-3">{factura.nombreCliente}</td>
@@ -16,7 +15,6 @@ export const CobrosPendientesLista = ({ facturas }) => {
                             <td className="py-3">{factura.saldo}</td>
                         </tr>
             )})}
-            </tbody>
         </Table>
 )
 

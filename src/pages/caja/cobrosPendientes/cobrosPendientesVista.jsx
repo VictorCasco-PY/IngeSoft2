@@ -11,17 +11,31 @@ import ErrorPagina from "../../../components/errores/ErrorPagina";
 import { ListaVacía } from "../../../components/errores/ListaVacía";
 import { Loader } from "../../../components/layout/Loader";
 import { VolverAtras } from "../../../components/bottons/VolverAtras";
+import { FacturaModal } from "../FacturaModal";
 
 export const CobrosPendientesVista = () => {
   const [data, setData] = useState([]);
+  const [openFacturaModal, setOpenFacturaModal] = useState(false);
+  const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
 
-  const { isLoading, error, notFound, getFacturasPendientes } = useFactura();
+  const { isLoading, error, notFound, getFacturasPendientes,getFacturaById } = useFactura();
 
   const getData = async () => {
     const pendientes = await getFacturasPendientes();
-    console.log(pendientes);
     setData(pendientes);
   };
+
+  const handleOpenFacturaModal = () => {
+    setOpenFacturaModal(!openFacturaModal);
+  }
+
+  const handleSelectFactura = async(facturaId) => {
+    const res = await getFacturaById(facturaId);
+    setFacturaSeleccionada(res);
+    handleOpenFacturaModal();
+  }
+
+
 
   useEffect(() => {
     getData();
@@ -37,7 +51,7 @@ export const CobrosPendientesVista = () => {
 
     return (
       <>
-        <CobrosPendientesLista facturas={data?.items} />
+        <CobrosPendientesLista facturas={data?.items} select={handleSelectFactura} />
         <Pagination
           totalPages={data?.totalPages}
           currentPage={data?.currentPage}
@@ -83,5 +97,6 @@ export const CobrosPendientesVista = () => {
 
 
     {switchRender()}
+    <FacturaModal open={openFacturaModal} facturaId={facturaSeleccionada} closeModal={handleOpenFacturaModal} data={facturaSeleccionada}/>
   </CartaPrincipal>;
 };
