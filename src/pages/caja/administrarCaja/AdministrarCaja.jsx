@@ -28,10 +28,14 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
     const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
     useEffect(() => {
+        const fetchData = async () => {
+            await getCajaById(CajaStorage.getCajaId());
+            await getSesionCajaById(CajaStorage.getSesionCajaId());
+        }
+
         if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
-            getCajaById(CajaStorage.getCajaId());
+            fetchData();
             setCaja(req_caja);
-            getSesionCajaById(CajaStorage.getSesionCajaId());
             setSesionCaja(req_sesion);
         } else {
             toast.error("No se ha abierto una caja. No deberías de estar viendo esto...");

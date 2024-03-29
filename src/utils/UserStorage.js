@@ -10,7 +10,7 @@ class UserStorage {
 
     static getEmpleadoId() {
         const user = this.getUser();
-        return user ? user.empleadoId : null;
+        return user ? user.usuarioId : null;
     }
 
     static getUserRol() {
