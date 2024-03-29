@@ -20,11 +20,6 @@ const BoxStyled = styled(Box)(BoxStyle);
 export const NewNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
 
-  useEffect(() => {
-    console.log("showMenu", showMenu);
-  }
-  , [showMenu]);
-
   return (
     <NavbarStyled position="static">
       <div className="nav-container">
