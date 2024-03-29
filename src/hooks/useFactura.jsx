@@ -8,13 +8,15 @@ export const useFactura = () =>{
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
 
+    
+
     const handleRequest = async (FuncionBackend) => {
         setIsLoading(true)
         try {
             const res = await FuncionBackend()
-            setData(res.data)
             return res.data
         } catch (error) {
+            console.log(error);
             setError(error)
             return error
         } finally {
@@ -23,7 +25,7 @@ export const useFactura = () =>{
     }
 
     const getFacturasPendientes = async (page = 1) => {
-        return handleRequest(() => api.get(`${DIR}/estado/pendiente/page/${page}`))
+        return handleRequest(async () => await api.get(`${DIR}/estado/pendiente/page/${page}`))
     }
 
     return { getFacturasPendientes, error, isLoading }
