@@ -8,7 +8,8 @@ import api from '../../utils/api';
 
 const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
-    const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
+    // no borrar
+    //const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
     const [actividades, setActividades] = useState([]);
     const [loadTable, setLoadTable] = useState(false);
 
@@ -18,6 +19,10 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
         setLoadTable(true);
         try {
             const res = await api.get(`suscripciones/cliente/${clienteId}/page/${page}`)
+            //por el momento se utiliza esto cuando en la pagina no hay datos
+            if (res.data.items.length === 0) {
+                setActividades([])
+            }
             setActividades(res.data)
         } catch (error) {
             if (toast) {
@@ -58,7 +63,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
         };
 
         fetchData();*/
-        
+
         getSuscripciones();
     }, [page]);
 
