@@ -8,11 +8,13 @@ import { Btn } from "../../../components/bottons/Button";
 import { HiArrowSmLeft } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import ErrorPagina from "../../../components/errores/ErrorPagina";
+import { ListaVacía } from "../../../components/errores/ListaVacía";
 
 export const CobrosPendientesVista = () => {
   const [data, setData] = useState([]);
 
-  const { isLoading, error, getFacturasPendientes } = useFactura();
+  const { isLoading, error, notFound, getFacturasPendientes } = useFactura();
 
   const getData = async () => {
     const pendientes = await getFacturasPendientes();
@@ -25,51 +27,63 @@ export const CobrosPendientesVista = () => {
   }, []);
 
   const switchRender = () => {
+    if (isLoading)
+      return (
+        <div className="loading">
+          <CircularProgress /> <br />
+          <div>Cargando...</div>
+        </div>
+      );
 
-    if(error){}
+      if(notFound){
+        return <ListaVacía mensaje="No hay facturas pendientes" />
+      }
 
-    
-        return (
-          <>
-            <h1>
-              {" "}
-              <Link to="/caja">
-                <HiArrowSmLeft />
-              </Link>{" "}
-              Cobros Pendientes
-            </h1>
+      if(error)
+      return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos" />
 
-            <div className="p-2 d-flex justify-content-between">
-              <form className="d-flex gap-4  flex-wrap w-100">
-                <span className="d-flex gap-3">
-                  <Input
-                    id="input-mindate"
-                    placeholder="01/01/2024"
-                    type="date"
-                  />
-                  <Input
-                    id="input-maxdate"
-                    placeholder="31/12/2024"
-                    type="date"
-                  />
-                </span>
-                <span className="d-flex">
-                  <Input id="input-search" placeholder="Buscar..." />
-                  <Btn outline>Buscar</Btn>
-                </span>
-              </form>
-            </div>
+    return (
+      <>
+       
+        <CobrosPendientesLista facturas={data?.items} />
 
-            <CobrosPendientesLista facturas={data.items} />
+        <Pagination
+          totalPages={data?.totalPages}
+          currentPage={data?.currentPage}
+          onPageChange={getData}
+        />
+      </>
+    );
+  };
 
-            <Pagination
-              totalPages={data.totalPages}
-              currentPage={data.currentPage}
-              onPageChange={getData}
-            />
-          </>
-        );
-    }
+  return <CartaPrincipal>
+     <h1>
+          <Link to="/caja">
+            <HiArrowSmLeft />
+          </Link>
+          Cobros Pendientes
+        </h1>
 
-  return <CartaPrincipal isLoading={isLoading}>{switchRender()}</CartaPrincipal>;
+        <div className="p-2 d-flex justify-content-between">
+          <form className="d-flex gap-4  flex-wrap w-100">
+            <span className="d-flex gap-3">
+              <Input
+                id="input-mindate"
+                placeholder="01/01/2024"
+                type="date"
+              />
+              <Input
+                id="input-maxdate"
+                placeholder="31/12/2024"
+                type="date"
+              />
+            </span>
+            <span className="d-flex">
+              <Input id="input-search" placeholder="Buscar..." />
+              <Btn outline>Buscar</Btn>
+            </span>
+          </form>
+        </div>
+    {switchRender()}
+    </CartaPrincipal>;
 };
