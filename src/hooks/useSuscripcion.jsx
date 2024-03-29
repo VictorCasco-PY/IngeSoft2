@@ -28,21 +28,7 @@ const useSuscripcion = () => {
         return handleRequest(() => api.get(`${SUSCRIPCION_URL}/cliente/${id}/page/${page}`, params ))
     }
 
-    const getSuscripcionesByClienteByHand = async (id, page = 1) => {
-        setIsLoading(true)
-        try {
-            const res = await api.get(`${SUSCRIPCION_URL}/cliente/${id}/page/${page}` );
-            setData(res.data) //guarda los datos traidos del back
-            return res.data;
-        } catch (error) {
-            setError(error)
-            return error
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
-    return { getSuscripcionesByCliente, getSuscripcionesByClienteByHand, data, error, isLoading }
+    return { getSuscripcionesByCliente, data, error, isLoading }
 }
 
 export default useSuscripcion
