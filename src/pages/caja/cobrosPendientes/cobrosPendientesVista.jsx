@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import ErrorPagina from "../../../components/errores/ErrorPagina";
 import { ListaVacía } from "../../../components/errores/ListaVacía";
 import { Loader } from "../../../components/layout/Loader";
+import { VolverAtras } from "../../../components/bottons/VolverAtras";
 
 export const CobrosPendientesVista = () => {
   const [data, setData] = useState([]);
@@ -48,9 +49,7 @@ export const CobrosPendientesVista = () => {
 
   return <CartaPrincipal>
     <h1>
-      <Link to="/caja">
-        <HiArrowSmLeft />
-      </Link>
+      <VolverAtras href="/caja" />
       Cobros Pendientes
     </h1>
 
