@@ -85,13 +85,15 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             horaCierre: hora
         }
 
-        setSesionCaja(await cerrarCajaById(CajaStorage.getSesionCajaId(), putData));
-
-        if (errorSesion) {
+        const response = await cerrarCajaById(CajaStorage.getSesionCajaId(), putData);
+        console.log(response)
+        console.log(errorSesion)
+        if (!response) {
             toast.error("Error al cerrar caja. Revise la conexión.");
             setDisabledCerrarCaja(false);
             return;
         }
+        setSesionCaja(response);
 
         CajaStorage.cerrarCaja();
         toast.success(`Caja cerrada con éxito a las ${hora}. Redirigiendo a la página principal..`);
