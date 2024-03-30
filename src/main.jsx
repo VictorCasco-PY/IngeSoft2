@@ -11,7 +11,9 @@ import MainProductos from './pages/productos/MainProductos';
 import Servicios from './pages/servicios/MainServicios';
 import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from './pages/proveedores/MainProveedores';
+import MainMiUsuario from './pages/mi_usuario/mainMiUsuario';
 import MainCaja from './pages/caja/MainCaja';
+
 
 createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -25,7 +27,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/servicios" element={<Layout><Servicios /></Layout>} />
           <Route path="/infoServicio/:id" element={<Layout><InfoServicios /></Layout>} />
           <Route path="/proveedores" element={<Layout><MainProveedores /></Layout>} />
-
+          <Route path="/miUsuario" element={<Layout><MainMiUsuario/></Layout>}/>
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
 
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
