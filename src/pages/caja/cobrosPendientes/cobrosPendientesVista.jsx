@@ -5,8 +5,6 @@ import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import Pagination from "../../../components/pagination/PaginationContainer";
 import { Input } from "../../../components/input/input";
 import { Btn } from "../../../components/bottons/Button";
-import { HiArrowSmLeft } from "react-icons/hi";
-import { Link } from "react-router-dom";
 import ErrorPagina from "../../../components/errores/ErrorPagina";
 import { ListaVacía } from "../../../components/errores/ListaVacía";
 import { Loader } from "../../../components/layout/Loader";
@@ -31,6 +29,7 @@ export const CobrosPendientesVista = () => {
 
   const handleSelectFactura = async(facturaId) => {
     const res = await getFacturaById(facturaId);
+    console.log(res);
     setFacturaSeleccionada(res);
     handleOpenFacturaModal();
   }
