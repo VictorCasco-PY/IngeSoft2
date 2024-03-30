@@ -32,7 +32,7 @@ export const ButtonBase = {
     borderColor: "#ddd",
   },
 
-  "@media (max-width: 1100px)": {
+  "@media (max-width: 1000px)": {
     "&>span[role='progressbar']": {
       marginRight: "0rem",
     },

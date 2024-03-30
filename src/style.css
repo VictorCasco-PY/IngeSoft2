@@ -23,12 +23,6 @@
   width: 35%;
 }
 
-.logo {
-  width: 50%;
-  height: 50%;
-  display: block;
-  margin-bottom: 35px;
-}
 
 
 .form-password {
@@ -114,3 +108,7 @@
 }
 
 
+.logo {
+  width: 20vw;
+  margin: 2.5rem
+}
