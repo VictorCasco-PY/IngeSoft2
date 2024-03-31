@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from 'react-loader-spinner'
@@ -21,9 +21,15 @@ const Login = () => {
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { login: contextLogin } = useCurrentUser();
+    const { login: contextLogin, userId } = useCurrentUser();
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (userId) {
+            navigate("/clientes");
+        }
+    }, [userId]);
 
     const handleChange = (event) => {
         setUsuario({
@@ -32,6 +38,7 @@ const Login = () => {
         });
     };
 
+    //voy a cambiar esta funcion para utilizar un hook de useAuth en el sig sprint, asi si el token expiró, se redirige a login automaticamente
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
@@ -80,6 +87,10 @@ const Login = () => {
             setPasswordFocused(false);
         }
     };
+
+    if (userId) {
+        return (<></>)
+    }
 
     return (
         <div className="login-container">

@@ -37,10 +37,13 @@ createRoot(document.getElementById("root")).render(
           <Route path="/caja-administracion" element={<Layout><AdministrarCaja /></Layout>} />
           <Route path="/caja/pendientes" element={<Layout><CobrosPendientesVista /></Layout>} />
 
-
+          {/*seccion de roles, user context*/}
           <Route path="/role-tutorial" element={<Layout><RoleTestPage /></Layout>} />
-          <ProtectedRoute path="/role-test" element={<Layout><RoleTestPage /></Layout>} roles={["ADMIN"]} />
-          
+          {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
+          <Route exact element={<ProtectedRoute roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]} />}>
+            <Route exact path="/role-test" element={<Layout><RoleTestPage /></Layout>} />
+          </Route>
+
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
         </Routes>
       </Router>

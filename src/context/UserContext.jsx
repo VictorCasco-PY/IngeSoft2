@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import UserStorage from "../utils/UserStorage";
 
 const CurrentUserContext = createContext();
 
@@ -18,18 +19,21 @@ export const CurrentUserProvider = ({ children }) => {
             nombre: user.nombre,
             usuarioId: user.usuarioId,
         };
-
-        localStorage.setItem("user", JSON.stringify(data));
+        UserStorage.setUser(data);
     };
 
     const logout = () => {
-        localStorage.removeItem("user");
+        UserStorage.removeUser();
+        setToken(null);
+        setRol(null);
+        setEmail(null);
+        setNombre(null);
+        setUserId(null);
     };
 
     const setLocalStorage = () => {
-        const storedToken = localStorage.getItem("user");
-        if (storedToken) {
-            const data = JSON.parse(storedToken);
+        const data = UserStorage.getUser();
+        if (data) {
             setToken(data.accessToken);
             setRol(data.rol);
             setEmail(data.email);
