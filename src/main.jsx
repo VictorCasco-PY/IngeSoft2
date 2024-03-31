@@ -18,7 +18,6 @@ import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
-import {CobrosPendientesVista} from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 
 createRoot(document.getElementById("root")).render(
