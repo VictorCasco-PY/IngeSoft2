@@ -69,6 +69,8 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             horaCierre: null
         }
 
+        console.log(UserStorage.getEmpleadoId())
+
         const success = await createSesionCaja(postData);
 
         if (!errorSesion && success) {

@@ -27,17 +27,22 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
+    const fetchData = async () => {
+        const data1 = await getCajaById(CajaStorage.getCajaId());
+        const data2 = await getSesionCajaById(CajaStorage.getSesionCajaId());
+        setCaja(data1);
+        setSesionCaja(data2);
+    }
+
     useEffect(() => {
         if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
-            getCajaById(CajaStorage.getCajaId());
-            setCaja(req_caja);
-            getSesionCajaById(CajaStorage.getSesionCajaId());
-            setSesionCaja(req_sesion);
+            fetchData();
         } else {
             toast.error("No se ha abierto una caja. No deberías de estar viendo esto...");
             setTimeout(() => {
                 setSesionAbierta(false)
             }, 2500);
+            console.log(caja)
         }
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());
@@ -80,13 +85,15 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             horaCierre: hora
         }
 
-        setSesionCaja(await cerrarCajaById(CajaStorage.getSesionCajaId(), putData));
-
-        if (errorSesion) {
+        const response = await cerrarCajaById(CajaStorage.getSesionCajaId(), putData);
+        console.log(response)
+        console.log(errorSesion)
+        if (!response) {
             toast.error("Error al cerrar caja. Revise la conexión.");
             setDisabledCerrarCaja(false);
             return;
         }
+        setSesionCaja(response);
 
         CajaStorage.cerrarCaja();
         toast.success(`Caja cerrada con éxito a las ${hora}. Redirigiendo a la página principal..`);

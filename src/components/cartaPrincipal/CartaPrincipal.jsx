@@ -4,7 +4,7 @@ import "./CartaPrincipal.css";
 const CartaPrincipal = ({ children, isCentered = true }) => {
   return (
     <>
-      <div className='carta px-5 py-3'>
+      <div className='carta rounded-3  shadow-lg'>
           {children}
       </div>
     </>
