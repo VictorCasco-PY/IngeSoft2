@@ -18,6 +18,8 @@ import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
+import {CobrosPendientesVista} from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
+import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -57,7 +59,6 @@ createRoot(document.getElementById("root")).render(
             <Route exact path="/role-cajero" element={<Layout><RoleExclusivePage mensaje="Solo el cajero puede ingresar a esta página" /></Layout>} />
           </Route>
           {/*FIN, BORRAR LUEGO DE DEMO*/}
-
 
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
         </Routes>
