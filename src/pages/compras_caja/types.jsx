@@ -1,2 +1,2 @@
-export const GET_RUC = "GET_RUC";
-export const GET_Productos = "GET_Productos";
+
+export const ADD_ITEM = "ADD_ITEM"

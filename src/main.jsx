@@ -12,7 +12,10 @@ import Servicios from './pages/servicios/MainServicios';
 import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from './pages/proveedores/MainProveedores';
 import MainCaja from './pages/caja/MainCaja';
+
 import ComprasCaja from "./pages/compras_caja/ComprasCaja";
+import ListaCompras from "./pages/compras_caja/ListaCompras";
+import { ComprasCajaProvider } from "./pages/compras_caja/context/ComprasCajaState";
 
 createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -28,7 +31,11 @@ createRoot(document.getElementById("root")).render(
           <Route path="/proveedores" element={<Layout><MainProveedores /></Layout>} />
 
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
-          <Route path="/comprasCaja" element={<Layout><ComprasCaja/></Layout>}/>
+
+          <Route path="/comprasCaja" element={<Layout><ComprasCajaProvider/></Layout>}/>
+          <Route path="/ListaComprasCaja" element={<Layout><ComprasCajaProvider/></Layout>}/>
+
+          <Route path="/compras" element={<Layout><ComprasCajaProvider /></Layout>} />
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
         </Routes>
       </Router>

@@ -83,7 +83,12 @@ const NavBar = () => {
                 <Link to="/servicios" ><button className={`nav-btn ${isActiveLink("/servicios") ? 'active' : ''}`}>Servicios</button></Link>    
                 <Link to="/caja" ><button className={`nav-btn ${isActiveLink("/caja") ? 'active' : ''}`}>Caja</button></Link>
                 <Link to="/reportes" ><button className={`nav-btn ${isActiveLink("/reportes") ? 'active' : ''}`}>Reportes</button></Link>
+
+
                 <Link to="/comprasCaja" ><button className={`nav-btn ${isActiveLink("/comprasCaja") ? 'active' : ''}`}>Compras Caja</button></Link> 
+
+                <Link to="/ListaComprasCaja" ><button className={`nav-btn ${isActiveLink("/ListaComprasCaja") ? 'active' : ''}`}>Lista Compras Caja</button></Link> 
+
             </div>
             <div className="navbar-right">
                 {userData && (
