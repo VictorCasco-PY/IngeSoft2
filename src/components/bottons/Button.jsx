@@ -31,11 +31,19 @@ const BtnContent = ({ loading, icon, children }) => {
   );
 };
 
-export const Btn = ({ type, icon, outline, loading, children, ...props }) => {
+export const Btn = ({
+  type,
+  icon,
+  outline,
+  loading,
+  children,
+  submit,
+  ...props
+}) => {
   switch (type) {
     case "primary":
       return (
-        <BtnPrimary {...props}>
+        <BtnPrimary {...props} type={submit ? "submit" : "button"}>
           <BtnContent loading={loading} icon={icon}>
             {children}
           </BtnContent>
@@ -44,7 +52,7 @@ export const Btn = ({ type, icon, outline, loading, children, ...props }) => {
     case "secondary":
       if (outline) {
         return (
-          <BtnSecondaryOutline {...props}>
+          <BtnSecondaryOutline {...props} type={submit ? "submit" : "button"}>
             <BtnContent loading={loading} icon={icon}>
               {children}
             </BtnContent>
@@ -52,7 +60,7 @@ export const Btn = ({ type, icon, outline, loading, children, ...props }) => {
         );
       }
       return (
-        <BtnSecondary {...props}>
+        <BtnSecondary {...props} type={submit ? "submit" : "button"}>
           <BtnContent loading={loading} icon={icon}>
             {children}
           </BtnContent>
@@ -61,7 +69,7 @@ export const Btn = ({ type, icon, outline, loading, children, ...props }) => {
     default:
       if (outline) {
         return (
-          <BtnDefaultOutline {...props}>
+          <BtnDefaultOutline {...props} type={submit ? "submit" : "button"}>
             <BtnContent loading={loading} icon={icon}>
               {children}
             </BtnContent>
@@ -69,7 +77,7 @@ export const Btn = ({ type, icon, outline, loading, children, ...props }) => {
         );
       }
       return (
-        <BtnDefault {...props}>
+        <BtnDefault {...props} type={submit ? "submit" : "button"}>
           <BtnContent loading={loading} icon={icon}>
             {children}
           </BtnContent>
