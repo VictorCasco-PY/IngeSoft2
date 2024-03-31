@@ -8,6 +8,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import toast, { Toaster } from "react-hot-toast";
 import api from "../utils/api";
 import "../style.css";
+import { useCurrentUser } from "../context/UserContext";
 
 
 const Login = () => {
@@ -19,6 +20,8 @@ const Login = () => {
     const [emailFocused, setEmailFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const { login: contextLogin } = useCurrentUser();
 
     const navigate = useNavigate();
 
@@ -34,7 +37,8 @@ const Login = () => {
         setLoading(true);
         api.post("/auth/login", usuario)
             .then((response) => {
-                localStorage.setItem("user", JSON.stringify(response.data));
+                //cambio de andy: guardar el usuario en el contexto
+                contextLogin(response.data);
                 navigate("/clientes");
             })
             .catch((error) => {
