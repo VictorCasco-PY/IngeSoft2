@@ -17,6 +17,7 @@ import { CobrosPendientesVista } from "./pages/caja/cobrosPendientes/cobrosPendi
 import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -41,8 +42,22 @@ createRoot(document.getElementById("root")).render(
           <Route path="/role-tutorial" element={<Layout><RoleTestPage /></Layout>} />
           {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
           <Route exact element={<ProtectedRoute roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]} />}>
-            <Route exact path="/role-test" element={<Layout><RoleTestPage /></Layout>} />
+            <Route exact path="/role-todos" element={<Layout><RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" /></Layout>} />
           </Route>
+          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route exact path="/role-admin" element={<Layout><RoleExclusivePage mensaje="Solo el admin puede ingresar a esta página" /></Layout>} />
+          </Route>
+          <Route exact element={<ProtectedRoute roles={["CLIENTE"]} />}>
+            <Route exact path="/role-cliente" element={<Layout><RoleExclusivePage mensaje="Solo el cliente puede ingresar a esta página" /></Layout>} />
+          </Route>
+          <Route exact element={<ProtectedRoute roles={["ENTRENADOR"]} />}>
+            <Route exact path="/role-entrenador" element={<Layout><RoleExclusivePage mensaje="Solo el entrenador puede ingresar a esta página" /></Layout>} />
+          </Route>
+          <Route exact element={<ProtectedRoute roles={["CAJERO"]} />}>
+            <Route exact path="/role-cajero" element={<Layout><RoleExclusivePage mensaje="Solo el cajero puede ingresar a esta página" /></Layout>} />
+          </Route>
+          {/*FIN, BORRAR LUEGO DE DEMO*/}
+
 
           <Route path="*" element={<Layout><PageNotFound /></Layout>} />
         </Routes>
