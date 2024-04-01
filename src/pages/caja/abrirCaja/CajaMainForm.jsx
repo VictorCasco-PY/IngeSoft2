@@ -53,12 +53,14 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const handleAbrirCaja = async (values) => {
 
         if (cargandoSesion || cargandoCajas) return;
-
+        const date = new Date();
         //anho-mes-fecha
-        const fecha = new Date().toISOString().slice(0, 10);
+        const fecha = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "-" + (date.getDate() < 10 ? '0' : '') + date.getDate();
         //hora-min-seg
-        const hora = new Date().toISOString().slice(11, 19);
+        //agregar un cero si es menor a 10
+        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds();
 
+        console.log(fecha)
         const postData = {
             idCaja: values['id_caja'],
             idUsuario: UserStorage.getEmpleadoId(),
