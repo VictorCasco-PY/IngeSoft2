@@ -1,0 +1,39 @@
+.title {
+    display: inline-block;
+    margin-left: 30px;
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.title_container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.form_container {
+    position: relative;
+    height: 750px;
+}
+
+@media (min-width: 992px) {
+    .form_container {
+        max-width: 960px;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .form_container {
+        max-width: 1140px;
+    }
+
+}
+
+@media (min-width: 1400px) {
+    .form_container {
+        max-width: var(--card-max-width);
+    }
+
+}
