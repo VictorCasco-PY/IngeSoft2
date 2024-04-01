@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { NavBtn } from "../NavBtn";
-import { FaUser } from "react-icons/fa";
+import { HiUser } from "react-icons/hi";
 import { NavDropdown } from "./NavDropdown";
 import { useNavigate } from "react-router-dom";
+
+
 const UserDropDownTitle = ({ nombre }) => {
   return (
     <>
@@ -14,7 +16,7 @@ const UserDropDownTitle = ({ nombre }) => {
           margin: "0.5rem",
         }}
       >
-        <FaUser
+        <HiUser
           style={{
             height: "30px",
             width: "30px",
