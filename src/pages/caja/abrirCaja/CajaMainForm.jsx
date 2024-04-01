@@ -37,14 +37,12 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     //const [selectedValue, setSelectedValue] = useState(null);
 
     const fetchCajas = async () => {
-        console.log("fetching cajas")
         if (currentPage > totalPages) {
             setTotalPages(1);
         }
         const res = await getAllCajas(currentPage);
         setTotalPages(res.totalPages);
         setCajas(res.items);
-        console.log(res)
     }
 
     useEffect(() => {
@@ -75,7 +73,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         //agregar un cero si es menor a 10
         const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds();
 
-        console.log(fecha)
         const postData = {
             idCaja: values['id_caja'],
             idUsuario: UserStorage.getEmpleadoId(),
@@ -85,8 +82,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             horaApertura: hora,
             horaCierre: null
         }
-
-        console.log(UserStorage.getEmpleadoId())
 
         const success = await createSesionCaja(postData);
 

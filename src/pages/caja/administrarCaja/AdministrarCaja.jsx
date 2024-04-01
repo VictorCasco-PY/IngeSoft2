@@ -42,7 +42,6 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             setTimeout(() => {
                 setSesionAbierta(false)
             }, 2500);
-            console.log(caja)
         }
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());
