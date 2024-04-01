@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
+import api from "../../../../utils/api";
 import CobroModal from "./CobroModal";
-import { Btn } from "../../components/bottons/Button";
+import { Btn } from "../../../../components/bottons/Button";
 
 const DetalleFacturaModal = ({ factura, closeModal, open }) => {
   const { nroFactura, fecha, nombreCliente, rucCliente, direccion, pagado } =
@@ -31,7 +31,7 @@ const DetalleFacturaModal = ({ factura, closeModal, open }) => {
     };
 
     obtenerNombreActividad();
-  }, [detalles]); // Se ejecuta cada vez que cambian los detalles de la factura
+  }, [detalles]);
 
   const handleOpenCobroModal = () => {
     closeModal();
@@ -76,7 +76,7 @@ const DetalleFacturaModal = ({ factura, closeModal, open }) => {
                 {direccion}
               </p>
 
-              {/* Renderiza los detalles de la factura */}
+              {/* Detalles de la factura */}
               <table className="table">
                 <thead>
                   <tr>

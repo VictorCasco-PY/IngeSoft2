@@ -4,7 +4,7 @@ import classes from "./ListaVentas.module.css";
 import api from "../../../../utils/api";
 import Pagination from "../../../../components/pagination/PaginationContainer";
 import { Btn } from "../../../../components/bottons/Button";
-import DetallesFacturaModal from "./DetallesFacturaModal";
+import DetalleFacturaModal from "./DetalleFacturaModal";
 import { toast, Toaster } from "react-hot-toast";
 
 const ListaVentas = () => {
@@ -16,8 +16,6 @@ const ListaVentas = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [estado, setEstado] = useState("");
-
-  console.log(estado);
 
   const closeModal = () => {
     setModalOpen(false);
@@ -43,7 +41,6 @@ const ListaVentas = () => {
       setTotalPages(response.data.totalPages);
     } catch (error) {
       setFacturas([]);
-      console.log("Error al traer facturas");
     } finally {
       setIsLoading(false);
     }
@@ -165,7 +162,7 @@ const ListaVentas = () => {
         {/* Muestra los detalles de la factura seleccionada */}
         {detalleFactura && (
           <>
-            <DetallesFacturaModal
+            <DetalleFacturaModal
               factura={detalleFactura}
               closeModal={closeModal}
               open={modalOpen}
