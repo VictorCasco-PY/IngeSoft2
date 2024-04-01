@@ -85,22 +85,7 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
-          <Route
-            path="/caja"
-            element={
-              <Layout>
-                <MainCaja />
-              </Layout>
-            }
-          />
-          <Route
-            path="/caja-administracion"
-            element={
-              <Layout>
-                <AdministrarCaja />
-              </Layout>
-            }
-          />
+          <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
           <Route
             path="/caja/pendientes"
             element={
@@ -128,23 +113,8 @@ createRoot(document.getElementById("root")).render(
             }
           />
           {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
-          <Route
-            exact
-            element={
-              <ProtectedRoute
-                roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]}
-              />
-            }
-          >
-            <Route
-              exact
-              path="/role-todos"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" />
-                </Layout>
-              }
-            />
+          <Route exact element={<ProtectedRoute roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]} />}>
+            <Route exact path="/role-todos" element={<Layout><RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" /></Layout>} />
           </Route>
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route
