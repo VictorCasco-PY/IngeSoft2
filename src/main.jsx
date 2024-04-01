@@ -20,6 +20,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
+import MainVenta from "./pages/caja/ventas/factura/MainVenta";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -114,6 +115,14 @@ createRoot(document.getElementById("root")).render(
             element={
               <Layout>
                 <MainLista />
+              </Layout>
+            }
+          />
+          <Route
+            path="/caja-ventas"
+            element={
+              <Layout>
+                <MainVenta />
               </Layout>
             }
           />
