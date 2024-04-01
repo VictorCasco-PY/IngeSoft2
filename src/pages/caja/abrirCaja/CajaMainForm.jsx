@@ -21,6 +21,7 @@ import UserStorage from "../../../utils/UserStorage";
 import CajaStorage from "../../../utils/CajaStorage";
 
 import Select from 'react-select/async';
+import Pagination from "../../../components/pagination/PaginationContainer";
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
@@ -30,13 +31,27 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const { createSesionCaja, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
 
     const [abrirDisabled, setAbrirDisabled] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [cajas, setCajas] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
     //const [selectedValue, setSelectedValue] = useState(null);
+
+    const fetchCajas = async () => {
+        console.log("fetching cajas")
+        if (currentPage > totalPages) {
+            setTotalPages(1);
+        }
+        const res = await getAllCajas(currentPage);
+        setTotalPages(res.totalPages);
+        setCajas(res.items);
+        console.log(res)
+    }
 
     useEffect(() => {
         //si ya se abrio una caja, ir a administración
         if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) {
             if (UserStorage.getUser()) {
-                getAllCajas(1);
+                fetchCajas()
                 setAbrirDisabled(false)
                 if (errorCajas) {
                     setAbrirDisabled(true);
@@ -48,7 +63,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         } else {
             toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")
         }
-    }, [])
+    }, [currentPage])
 
     const handleAbrirCaja = async (values) => {
 
@@ -88,7 +103,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
     return (
         <>
-            <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} />
+            <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} />
 
             <CartaPrincipal>
                 {/**/}
@@ -102,8 +117,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                     Registrar Nueva Caja
                 </Btn>
                 <div className="d-flex align-items-center justify-content-center my-auto">
-                    <div className="d-flex flex-column p-4 py-5 card" style={{ "width": "30rem", marginLeft: 0 }}>
-                        <h1>Abrir caja</h1>
+                    <div className="d-flex flex-column p-4 py-5 card " style={{ "width": "30rem", marginLeft: 0 }}>
                         <Formik
                             initialValues={{
                                 id_caja: '',
@@ -122,49 +136,54 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                 handleAbrirCaja(values)
                             }}
                         >
-                            <Form>
-                                <div className="d-flex flex-column gap-2">
-                                    {cargandoCajas ? (
-                                        <div className="d-flex flex-column align-items-center justify-content-center mt-2">
-                                            <CircularProgress />
-                                            <p className="pt-2">Cargando cajas...</p>
-                                        </div>
+                            <Form className="d-flex flex-column gap-2" style={{minHeight: 364 }}>
+                                <h1>Abrir caja</h1>
+                                {cargandoCajas ? (
+                                    <div className="d-flex flex-column align-items-center justify-content-center mt-2">
+                                        <CircularProgress />
+                                        <p className="pt-2">Cargando cajas...</p>
+                                    </div>
+                                ) : (
+                                    req_cajas.items ? (
+                                        <>
+                                            <FormSelect
+                                                label="Caja"
+                                                name="id_caja"
+                                                required={true}
+                                            >
+                                                <option value="">Selecciona una Caja</option>
+                                                {req_cajas.items.map(caja => (
+                                                    <option key={caja.id} value={caja.id}>{caja.nombre}</option>
+                                                ))}
+                                            </FormSelect>
+                                            {/*<div className="align-self-start">
+                                                    <button onClick={() => {
+                                                        setCurrentPage(currentPage + 1);
+                                                    }} disabled={currentPage >= totalPages} className="mt-2">Siguiente Página</button>
+                                                </div> */}
+                                            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
+
+                                            <FormTextInput
+                                                label="Monto Inicial en Efectivo"
+                                                name="montoInicial"
+                                                type="number"
+                                                placeholder="2000000"
+                                                required={true}
+                                            />
+                                        </>
                                     ) : (
-                                        req_cajas.items ? (
-                                            <>
-                                                <FormSelect
-                                                    label="Caja"
-                                                    name="id_caja"
-                                                    required={true}
-                                                >
-                                                    <option value="">Selecciona una Caja</option>
-                                                    {req_cajas.items.map(caja => (
-                                                        <option key={caja.id} value={caja.id}>{caja.nombre}</option>
-                                                    ))}
-                                                </FormSelect>
-                                                <FormTextInput
-                                                    label="Monto Inicial en Efectivo"
-                                                    name="montoInicial"
-                                                    type="number"
-                                                    placeholder="2000000"
-                                                    required={true}
-                                                />
-                                            </>
-                                        ) : (
-                                            <p className="pt-2">No se encontraron cajas, registra una nueva caja.</p>
-                                        )
-                                    )}
+                                        <p className="pt-2">No se encontraron cajas, registra una nueva caja.</p>
+                                    )
+                                )}
 
-                                    <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
-                                        submit >
-                                        Abrir Caja
-                                    </Btn>
+                                <Btn type="primary" className='mt-3 align-self-end mt-auto' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
+                                    submit >
+                                    Abrir Caja
+                                </Btn>
 
-                                    {/*<nav>
+                                {/*<nav>
                                         {errorSesion && <p className="text-danger">Error al abrir caja. Revise la conexión.</p>}
                                     </nav>*/}
-
-                                </div>
                             </Form>
                         </Formik>
                     </div>
