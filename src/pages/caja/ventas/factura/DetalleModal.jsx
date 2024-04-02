@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CobroModal from "../lista/CobroModal";
 import { Btn } from "../../../../components/bottons/Button";
+import api from "../../../../utils/api";
+import { Toaster, toast } from "react-hot-toast";
 
 const DetalleModal = ({
   factura,
@@ -10,8 +12,13 @@ const DetalleModal = ({
   open,
 }) => {
   const { nroFactura, fecha, nombreCliente, rucCliente, direccion } = factura;
-  const detalles = factura;
+  const detalles = detallesParaEnviar;
   const [cobroModalOpen, setCobroModalOpen] = useState(false);
+  const [data, setData] = useState({
+    factura,
+    detalles,
+  });
+  console.log(data);
 
   const handleOpenCobroModal = () => {
     closeModal();
@@ -22,8 +29,20 @@ const DetalleModal = ({
     setCobroModalOpen(false);
   };
 
+  const handleSubmitFactura = async () => {
+    try {
+      const response = await api.post("/facturas", data);
+      toast.success("Factura guardada correctamente");
+    } catch (error) {
+      toast.error("Error al guardar la factura");
+    }
+  };
+
   return (
     <>
+      <div>
+        <Toaster position="top-right" />
+      </div>
       <div
         className={`modal ${open ? "show" : ""}`}
         tabIndex="-1"
@@ -89,7 +108,7 @@ const DetalleModal = ({
                 Cerrar
               </Btn>
 
-              <Btn type="secondary" outline>
+              <Btn type="secondary" outline onClick={handleSubmitFactura}>
                 Guardar factura
               </Btn>
 
