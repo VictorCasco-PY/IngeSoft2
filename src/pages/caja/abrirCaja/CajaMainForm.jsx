@@ -90,9 +90,9 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
         const success = await fetchAbrirSesion(postData);
 
+        //todo: transformar a buena practica, que el error se chequee primero
         if (success && success['id'] && success['idCaja']) { //si se devuelve un id de sesion
-            CajaStorage.setCajaId(success['idCaja']);
-            CajaStorage.setSesionCajaId(success['id']);
+            CajaStorage.abrirCaja(success)
             setSesionAbierta(true);
         } else if (errorMonto) { //si el monto no coincide
             toast.error(errorMonto)

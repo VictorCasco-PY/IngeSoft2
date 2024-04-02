@@ -1,10 +1,12 @@
+USER_LABEL = 'user';
+
 class UserStorage {
     static setUser(user) {
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem(USER_LABEL, JSON.stringify(user));
     }
 
     static getUser() {
-        const user = localStorage.getItem('user');
+        const user = localStorage.getItem(USER_LABEL);
         return user ? JSON.parse(user) : null;
     }
 
@@ -24,7 +26,7 @@ class UserStorage {
     }
 
     static removeUser() {
-        localStorage.removeItem('user');
+        localStorage.removeItem(USER_LABEL);
     }
 }
 
