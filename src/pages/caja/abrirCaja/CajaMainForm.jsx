@@ -52,16 +52,12 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
     useEffect(() => {
         //si ya se abrio una caja, ir a administración
-        if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) { //si no hay caja abierta
-            if (UserStorage.getUser()) {
-                fetchCajas()
-                setAbrirDisabled(false)
-                if (errorCajas) {
-                    setAbrirDisabled(true);
-                    toast.error("Error al cargar cajas. Revise la conexión.");
-                }
-            } else {
-                toast.error("No has iniciado sesión...")
+        if (!CajaStorage.getSesionCajaId()) { //si no hay caja abierta
+            fetchCajas()
+            setAbrirDisabled(false)
+            if (errorCajas) {
+                setAbrirDisabled(true);
+                toast.error("Error al cargar cajas. Revise la conexión.");
             }
         } else {
             toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")

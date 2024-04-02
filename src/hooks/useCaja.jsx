@@ -9,14 +9,20 @@ const useCaja = () => {
     const [error, setError] = useState(null) //guarda error
     const [isLoading, setIsLoading] = useState(false) //guarda el estado de cargando
 
+    const [noCajasError, setNoCajasError] = useState(null) //guarda error 404
+
     const handleRequest = async (FuncionBackend) => {
         setError(null)
         setIsLoading(true)
+        setNoCajasError(null)
         try {
             const res = await FuncionBackend() // que funcion se ejecutara en el back
             setData(res.data) //guarda los datos traidos del back
             return res.data;
         } catch (error) {
+            if (error.response && error.response.status === 404) {
+                setNoCajasError(error.response.data.message)
+            }
             setError(error)
             return error
         } finally {
@@ -41,7 +47,7 @@ const useCaja = () => {
         return handleRequest(() => api.get(`${CAJA_URL}/page/${page}`, params ))
     }
 
-    return { createCaja, getCajaById, searchCajaByName, getAllCajas, data, error, isLoading }
+    return { createCaja, getCajaById, searchCajaByName, getAllCajas, data, error, noCajasError, isLoading }
 }
 
 export default useCaja

@@ -17,7 +17,7 @@ import { Input } from '../../../components/input/input';
 
 const InfoCajas = () => {
 
-    const { getAllCajas, searchCajaByName, data: req_cajas, isLoading: cargandoCajas, error: errorCajas } = useCaja();
+    const { getAllCajas, searchCajaByName, data: req_cajas, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
     const [currentPage, setCurrentPage] = useState(1);
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -25,14 +25,14 @@ const InfoCajas = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const fetchCajas = async () => {
-        if (currentPage > totalPages) {
+        if (currentPage > totalPages) { //si la pagina actual es mayor a la ultima pagina, resetear a 1
             setTotalPages(1);
         }
-        if (searchQuery) {
+        if (searchQuery) { //si hay query de busqueda
             const res = await searchCajaByName(searchQuery, currentPage);
             setTotalPages(res.totalPages);
             setCajas(res.items);
-        } else {
+        } else { //si no hay query de busqueda
             const res = await getAllCajas(currentPage);
             setTotalPages(res.totalPages);
             setCajas(res.items);
@@ -76,9 +76,9 @@ const InfoCajas = () => {
         </Table><Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}>
             </Pagination></div>
 
-        if (errorCajas) return <ListaVacía mensaje="Ha ocurrido un error al solicitar las cajas." />
+        if (noCajasError) return <ErrorPagina mensaje={noCajasError} />
 
-        if (cajas.length <= 0) return <ErrorPagina mensaje="No hay cajas registradas." />
+        if (errorCajas) return <ListaVacía mensaje="Ha ocurrido un error al solicitar las cajas." />
 
         return (
             <>
