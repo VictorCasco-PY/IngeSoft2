@@ -383,7 +383,7 @@ const MainProveedores = () => {
                                     data-bs-toggle="dropdown"
                                 >
                                     <IoCheckmark />
-                                    {appliedFilter ? `Filtrado por ${appliedFilter}` : "Filtrar por..."}
+                                    {appliedFilter ? `Filtrar por ${appliedFilter}` : "Filtrar por..."}
                                 </button>
                                 <ul className="dropdown-menu">
                                     <li>
@@ -518,7 +518,10 @@ const MainProveedores = () => {
                     )}
 
                     <div class="table-container">
-                        {error && <ErrorPagina />}{" "}
+                        {error && <ErrorPagina
+                            mensaje=" ¡Ups! Parece que hubo un problema al cargar los proveedores. Por favor,
+                          inténtalo de nuevo más tarde."
+                        />}{" "}
                         {/* Muestra el componente de error si hay un error */}
                         {!error &&
                             filteredProveedores.length === 0 &&
