@@ -10,6 +10,7 @@ const useCaja = () => {
     const [isLoading, setIsLoading] = useState(false) //guarda el estado de cargando
 
     const handleRequest = async (FuncionBackend) => {
+        setError(null)
         setIsLoading(true)
         try {
             const res = await FuncionBackend() // que funcion se ejecutara en el back
