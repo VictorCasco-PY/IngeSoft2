@@ -91,7 +91,10 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             CajaStorage.setSesionCajaId(success['id']);
             setSesionAbierta(true);
 
-        } else {
+        } else if (errorSesion && errorSesion.response && errorSesion.response.status === 400) {
+            toast.error("El monto especificado no coincide con el monto inicial de la caja seleccionada.")
+        }
+        else {
             toast.error("Error al abrir caja. Revise la conexión.");
         }
     }
