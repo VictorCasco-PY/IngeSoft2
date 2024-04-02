@@ -51,22 +51,22 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const goToNuevaCompra = () => {
         if (disabledCerrarCaja) return;
-        navigate("/caja-compra");
+        navigate("/caja/compras");
     }
 
     const goToListarCompras = () => {
         if (disabledCerrarCaja) return;
-        navigate("/lista-compras");
+        navigate("/caja/lista-compras");
     }
 
     const goToNuevaVenta = () => {
         if (disabledCerrarCaja) return;
-        navigate("/caja-ventas");
+        navigate("/caja/ventas");
     }
 
     const goToListarVentas = () => {
         if (disabledCerrarCaja) return;
-        navigate("/lista-ventas");
+        navigate("/caja/lista-ventas");
     }
 
     const goToListarCobros = () => {
@@ -77,8 +77,11 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
     //AUN NO SE ACTUALIZA EL MONTO FINAL!!!! URGENTE
     const cerrarCajaActual = async () => {
         setDisabledCerrarCaja(true);
+
+        const date = new Date();
         //hora-min-seg
-        const hora = new Date().toISOString().slice(11, 19);
+        //agregar un cero si es menor a 10
+        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds();
 
         const putData = {
             horaCierre: hora
