@@ -22,6 +22,8 @@ import CajaStorage from "../../../utils/CajaStorage";
 
 import Select from 'react-select/async';
 import Pagination from "../../../components/pagination/PaginationContainer";
+import { useCurrentUser } from "../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
@@ -35,6 +37,9 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     //const [selectedValue, setSelectedValue] = useState(null);
+    const { rol } = useCurrentUser();
+
+    const navigate = useNavigate();
 
     const fetchCajas = async () => {
         if (currentPage > totalPages) {
@@ -47,7 +52,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
     useEffect(() => {
         //si ya se abrio una caja, ir a administración
-        if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) {
+        if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) { //si no hay caja abierta
             if (UserStorage.getUser()) {
                 fetchCajas()
                 setAbrirDisabled(false)
@@ -62,6 +67,10 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")
         }
     }, [currentPage])
+
+    const fetchAbrirSesion = async (data) => {
+        return await createSesionCaja(data);
+    }
 
     const handleAbrirCaja = async (values) => {
 
@@ -83,18 +92,15 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             horaCierre: null
         }
 
-        const success = await createSesionCaja(postData);
+        const success = await fetchAbrirSesion(postData);
 
-        if (!errorSesion && success) {
-
+        if (success && success['id'] && success['idCaja']) { //si se devuelve un id de sesion
             CajaStorage.setCajaId(success['idCaja']);
             CajaStorage.setSesionCajaId(success['id']);
             setSesionAbierta(true);
-
-        } else if (errorSesion && errorSesion.response && errorSesion.response.status === 400) {
+        } else if (errorSesion && errorSesion.response && errorSesion.response.status === 400) { //si el monto no coincide
             toast.error("El monto especificado no coincide con el monto inicial de la caja seleccionada.")
-        }
-        else {
+        } else { //si no se pudo abrir la caja
             toast.error("Error al abrir caja. Revise la conexión.");
         }
     }
@@ -110,10 +116,17 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                 )}*/}
                 {/**/}
 
-                <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
-                    onClick={() => { setOpenRegistrarModal(true) }}>
-                    Registrar Nueva Caja
-                </Btn>
+                {rol === "ADMIN" && <div className="d-flex justify-content-between">
+                    <Btn type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)}
+                        onClick={() => { navigate("/caja/lista") }}>
+                        Ver Cajas (ADMIN)
+                    </Btn>
+                    <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
+                        onClick={() => { setOpenRegistrarModal(true) }}>
+                        Registrar Nueva Caja
+                    </Btn>
+                </div>}
+
                 <div className="d-flex align-items-center justify-content-center my-auto">
                     <div className="d-flex flex-column p-4 py-5 card " style={{ "width": "30rem", marginLeft: 0 }}>
                         <Formik
@@ -134,7 +147,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                 handleAbrirCaja(values)
                             }}
                         >
-                            <Form className="d-flex flex-column gap-2" style={{minHeight: 364 }}>
+                            <Form className="d-flex flex-column gap-2" style={{ minHeight: 364 }}>
                                 <h1>Abrir caja</h1>
                                 {cargandoCajas ? (
                                     <div className="d-flex flex-column align-items-center justify-content-center mt-2">
