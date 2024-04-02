@@ -360,10 +360,10 @@ const MainProductos = () => {
           <div className="card-1">
             <h2>Tienda</h2>
             <div className="card-body d-flex align-items-center ">
-              <form className="d-flex flex-grow-1">
+              <form className="d-flex flex-grow-1 align-items-center">
                 <input
                   id="input-search"
-                  className="form-control mt-3 custom-input"
+                  className="form-control custom-input"
                   type="text"
                   placeholder="Buscar producto en tienda..."
                   value={searchQuery}
@@ -570,7 +570,14 @@ const MainProductos = () => {
                 <span className="message">Campo obligatorio</span>
               </div>
               <div className="d-flex justify-content-center align-items-center float-end">
-              <button type="button"  id = "btn-cancelar" className="btn-cancelar" onClick={handleCloseModal}>Cancelar</button>
+                <button
+                  type="button"
+                  id="btn-cancelar"
+                  className="btn-cancelar"
+                  onClick={handleCloseModal}
+                >
+                  Cancelar
+                </button>
                 <ButtonCrear
                   id="btn-guardar"
                   text="Aceptar"
@@ -590,11 +597,7 @@ const MainProductos = () => {
             />
           )}
           <div class="table-container">
-            {error && (
-              <ErrorPagina
-                mensaje=  "No hay pruductos cargados aún "
-              />
-            )}
+            {error && <ErrorPagina mensaje="No hay pruductos cargados aún " />}
             {/* Muestra el componente de error si hay un error */}
             {!error &&
               filteredProductos.length === 0 &&

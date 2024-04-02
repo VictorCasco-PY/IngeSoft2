@@ -1,13 +1,16 @@
 import React from 'react'
-import NavBar from './NavBar'
+import './Layout.css'
+import { NewNavbar } from './Navbar/NewNavbar'
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
     <>
-        <NavBar />
+      <NewNavbar />
+    {/* todas las pantallas estaran rodeadas de este fondo, gris al fondo
+        - Para utilizar la carta blanca del medio, ver componente CartaPrincipal */}
+      <div className='FondoApp pt-5'>
         {children}
-      
-        {/**Footer en caso de ser necesario */}
+      </div>
     </>
   )
 }
