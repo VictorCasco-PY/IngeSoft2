@@ -10,12 +10,25 @@ const CobroModal = ({ factura, closeModal, open }) => {
   const [tarjeta, setTarjeta] = useState(0);
   const [transferencia, setTransferencia] = useState(0);
 
+  const [storedValue, setStoredValue] = useState("");
+
+  useEffect(() => {
+    // Obteniendo el valor almacenado en localStorage cuando el componente se monta
+    const storedItem = localStorage.getItem("sesionCajaId");
+    console.log(storedItem);
+
+    // Actualizando el estado con el valor almacenado, si existe
+    if (storedItem) {
+      setStoredValue(storedItem);
+    }
+  }, []);
+
   const cobrar = async () => {
     try {
       const movimiento = {
         facturaId: factura.factura.id,
         facturaProveedorId: null,
-        sesionId: 1, // Este valor debo obtenerlo del localStorage cuando una mi parte con caja
+        sesionId: Number(storedValue), // Este valor debo obtenerlo del localStorage cuando una mi parte con caja
         total: total,
         entrada: true,
       };
@@ -47,6 +60,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
         movimiento: movimiento,
         detalles: detalles,
       };
+      console.log(data);
 
       const response = await api.post("/movimientos", data);
       toast.success("Factura cobrada correctamente");
@@ -59,17 +73,17 @@ const CobroModal = ({ factura, closeModal, open }) => {
 
   const handleChangeEfectivo = (event) => {
     const value = event.target.value;
-    setEfectivo(value);
+    setEfectivo(Number(value));
   };
 
   const handleChangeTarjeta = (event) => {
     const value = event.target.value;
-    setTarjeta(value);
+    setTarjeta(Number(value));
   };
 
   const handleChangeTransferencia = (event) => {
     const value = event.target.value;
-    setTransferencia(value);
+    setTransferencia(Number(value));
   };
 
   return (
@@ -106,7 +120,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   type="number"
                   name="efectivo"
                   className="form-control"
-                  value={efectivo.toLocaleString("es-ES")}
+                  value={efectivo}
                   onChange={handleChangeEfectivo}
                 />
               </div>
@@ -116,7 +130,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   type="number"
                   name="tarjeta"
                   className="form-control"
-                  value={tarjeta.toLocaleString("es-ES")}
+                  value={tarjeta}
                   onChange={handleChangeTarjeta}
                 />
               </div>
@@ -126,7 +140,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   type="number"
                   name="transferencia"
                   className="form-control"
-                  value={transferencia.toLocaleString("es-ES")}
+                  value={transferencia}
                   onChange={handleChangeTransferencia}
                 />
               </div>

@@ -20,11 +20,8 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
-<<<<<<< HEAD
 import MainVenta from "./pages/caja/ventas/factura/MainVenta";
-=======
 import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
->>>>>>> dev
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -90,7 +87,6 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
-<<<<<<< HEAD
           <Route
             path="/caja"
             element={
@@ -99,12 +95,17 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-=======
-          <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
-            <Route exact path="/caja/lista" element={<Layout><InfoCajas /></Layout>} />
+            <Route
+              exact
+              path="/caja/lista"
+              element={
+                <Layout>
+                  <InfoCajas />
+                </Layout>
+              }
+            />
           </Route>
->>>>>>> dev
           <Route
             path="/caja/pendientes"
             element={

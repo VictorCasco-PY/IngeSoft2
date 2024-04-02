@@ -9,13 +9,25 @@ import DetalleModal from "./DetalleModal";
 
 const FacturaForm = () => {
   // State
+  const [storedValue, setStoredValue] = useState("");
+
+  useEffect(() => {
+    // Obteniendo el valor almacenado en localStorage cuando el componente se monta
+    const storedItem = localStorage.getItem("sesionCajaId");
+    console.log(storedItem);
+
+    // Actualizando el estado con el valor almacenado, si existe
+    if (storedItem) {
+      setStoredValue(storedItem);
+    }
+  }, []);
+
   // Constants
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().substr(0, 10);
   const [detallesParaMostrar, setDetallesParaMostrar] = useState([]);
   const [detallesParaEnviar, setDetallesParaEnviar] = useState([]);
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
-  const [codigo, setCodigo] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [datosFactura, setDatosFactura] = useState({
     clienteId: "",
@@ -24,7 +36,7 @@ const FacturaForm = () => {
     nombreCliente: "",
     rucCliente: "",
     direccion: "",
-    sesionId: 1,
+    sesionId: Number(storedValue),
     subTotal: 0,
     iva5: 0,
     iva10: 0,
@@ -201,8 +213,9 @@ const FacturaForm = () => {
   };
 
   const handleKeyDown = async (e) => {
+    let codigo;
     if (e.key === "Tab") {
-      setCodigo(e.target.value);
+      codigo = e.target.value;
       try {
         const response = await api.get(`/productos/codigo/${codigo}`);
         const productoData = response.data;
