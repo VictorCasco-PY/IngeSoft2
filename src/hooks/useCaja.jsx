@@ -34,7 +34,7 @@ const useCaja = () => {
     }
 
     const searchCajaByName = async (nombre, page = 1, params) => {
-        return handleRequest(() => api.get(`${CAJA_URL}/search/nombre/page/${page}`, params ))
+        return handleRequest(() => api.get(`${CAJA_URL}/search/${nombre}/page/${page}`, params ))
     }
 
     const getAllCajas = async (page = 1, params) => {

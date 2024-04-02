@@ -86,6 +86,9 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
+          <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
+            <Route exact path="/caja" element={<Layout><MainCaja /></Layout>} />
+          </Route>
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route exact path="/caja/lista" element={<Layout><InfoCajas /></Layout>} />

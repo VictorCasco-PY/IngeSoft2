@@ -12,21 +12,31 @@ import { CircularProgress } from '@mui/material';
 import { ListaVacía } from '../../../components/errores/ListaVacía';
 import ErrorPagina from '../../../components/errores/ErrorPagina';
 import { Loader } from '../../../components/layout/Loader';
+import { Btn } from '../../../components/bottons/Button';
+import { Input } from '../../../components/input/input';
 
 const InfoCajas = () => {
 
-    const { getAllCajas, data: req_cajas, isLoading: cargandoCajas, error: errorCajas } = useCaja();
+    const { getAllCajas, searchCajaByName, data: req_cajas, isLoading: cargandoCajas, error: errorCajas } = useCaja();
     const [currentPage, setCurrentPage] = useState(1);
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchCajas = async () => {
         if (currentPage > totalPages) {
             setTotalPages(1);
         }
-        const res = await getAllCajas(currentPage);
-        setTotalPages(res.totalPages);
-        setCajas(res.items);
+        if (searchQuery) {
+            const res = await searchCajaByName(searchQuery, currentPage);
+            setTotalPages(res.totalPages);
+            setCajas(res.items);
+        } else {
+            const res = await getAllCajas(currentPage);
+            setTotalPages(res.totalPages);
+            setCajas(res.items);
+        }
     }
 
     useEffect(() => {
@@ -94,6 +104,14 @@ const InfoCajas = () => {
             <div className='d-flex align-items-center gap-3'>
                 <FlechaAtras ruta='/caja' />
                 <h1>Lista de Cajas Creadas</h1>
+            </div>
+            <div className="p-2">
+                <form className="d-flex gap-4 flex-wrap w-100">
+                    <span className="d-flex w-50 gap-3">
+                        <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        <Btn outline onClick={fetchCajas}>Buscar</Btn>
+                    </span>
+                </form>
             </div>
             {switchRender()}
         </CartaPrincipal>
