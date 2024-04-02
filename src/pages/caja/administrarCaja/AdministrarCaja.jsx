@@ -42,7 +42,6 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             setTimeout(() => {
                 setSesionAbierta(false)
             }, 2500);
-            console.log(caja)
         }
         if (UserStorage.getUser()) {
             setUser(UserStorage.getUser());
@@ -86,8 +85,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
         }
 
         const response = await cerrarCajaById(CajaStorage.getSesionCajaId(), putData);
-        console.log(response)
-        console.log(errorSesion)
+
         if (!response) {
             toast.error("Error al cerrar caja. Revise la conexión.");
             setDisabledCerrarCaja(false);

@@ -10,7 +10,7 @@ import ModalFormik from "../../../components/modals/ModalFormik";
 import { Btn } from "../../../components/bottons/Button";
 import { FormTextInput } from "../../../components/forms/FormInputs";
 
-const ModalRegistrarCaja = ({toast, ...props }) => {
+const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
 
     const { createCaja, data: req_caja, isLoading: cargandoCaja, error: errorCaja } = useCaja();
 
@@ -28,8 +28,14 @@ const ModalRegistrarCaja = ({toast, ...props }) => {
         if (success.id) {
             props.closeModal()
             toast.success("Caja registrada correctamente")
+
+            //funcion ejecutada en el componente padre si existe
+            if (fetchFunction) {
+                fetchFunction()
+            }
         } else {
             if (success.response && success.response.status === 500) {
+                //ya no se utiliza el codigo 400 para una caja existente
                 //toast.error(errorCaja.response.data.message)
                 toast.error("Ya existe una caja con ese nombre.")
                 document.getElementById("input-nombre-caja").focus()
