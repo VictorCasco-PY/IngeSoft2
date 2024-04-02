@@ -29,11 +29,24 @@ export const useFactura = () => {
     }
 
     const getFacturaById = async (id) => {
-        return handleRequest(async () => await api.get(`${DIR}/${id}`))
+        setIsLoading(true)
+        try {
+            return handleRequest(async () => await api.get(`${DIR}/${id}`))
+        }
+        catch {
+            if (error.response?.status === 404) {
+                setNotFound(true)
+            }
+            else {
+                setError(error)
+            }
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const getFacturasPendientes = async (page = 1) => {
-        return handleRequest(async () => await api.get(`${DIR}/estado/pendiente/page/${page}`))
+        return handleRequest(async () => await api.get(`${DIR}/cabecera/estado/pendiente/page/${page}`))
     }
 
     return { getFacturasPendientes, getFacturaById, error, notFound, isLoading }

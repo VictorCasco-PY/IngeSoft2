@@ -1,4 +1,6 @@
 export const precioHandler = (precio) => {
+  if(!precio) return;
+  let result = precio.toString();
   // Verificar si el precio es definido
   if (typeof precio !== 'undefined') {
     let result = precio.toString();
