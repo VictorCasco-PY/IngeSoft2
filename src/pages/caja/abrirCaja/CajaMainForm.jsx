@@ -30,7 +30,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const [openRegistrarModal, setOpenRegistrarModal] = useState(false);
 
     const { getAllCajas, data: req_cajas, isLoading: cargandoCajas, error: errorCajas } = useCaja();
-    const { createSesionCaja, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
+    const { createSesionCaja, data: req_sesion, isLoading: cargandoSesion, error: errorSesion, error400: errorMonto } = useSesionCaja();
 
     const [abrirDisabled, setAbrirDisabled] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -52,16 +52,12 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
     useEffect(() => {
         //si ya se abrio una caja, ir a administración
-        if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) { //si no hay caja abierta
-            if (UserStorage.getUser()) {
-                fetchCajas()
-                setAbrirDisabled(false)
-                if (errorCajas) {
-                    setAbrirDisabled(true);
-                    toast.error("Error al cargar cajas. Revise la conexión.");
-                }
-            } else {
-                toast.error("No has iniciado sesión...")
+        if (!CajaStorage.getSesionCajaId()) { //si no hay caja abierta
+            fetchCajas()
+            setAbrirDisabled(false)
+            if (errorCajas) {
+                setAbrirDisabled(true);
+                toast.error("Error al cargar cajas. Revise la conexión.");
             }
         } else {
             toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")
@@ -98,8 +94,8 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             CajaStorage.setCajaId(success['idCaja']);
             CajaStorage.setSesionCajaId(success['id']);
             setSesionAbierta(true);
-        } else if (errorSesion && errorSesion.response && errorSesion.response.status === 400) { //si el monto no coincide
-            toast.error("El monto especificado no coincide con el monto inicial de la caja seleccionada.")
+        } else if (errorMonto) { //si el monto no coincide
+            toast.error(errorMonto)
         } else { //si no se pudo abrir la caja
             toast.error("Error al abrir caja. Revise la conexión.");
         }
