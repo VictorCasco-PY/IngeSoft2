@@ -8,7 +8,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
 
   const [efectivo, setEfectivo] = useState(0);
   const [tarjeta, setTarjeta] = useState(0);
-  const [cambio, setCambio] = useState(0);
+  const [transferencia, setTransferencia] = useState(0);
 
   const cobrar = async () => {
     try {
@@ -36,6 +36,13 @@ const CobroModal = ({ factura, closeModal, open }) => {
         });
       }
 
+      if (transferencia > 0) {
+        detalles.push({
+          tipoDePagoId: 3, // Transferencia
+          monto: transferencia,
+        });
+      }
+
       const data = {
         movimiento: movimiento,
         detalles: detalles,
@@ -60,15 +67,10 @@ const CobroModal = ({ factura, closeModal, open }) => {
     setTarjeta(value);
   };
 
-  useEffect(() => {
-    const calcularCambio = () => {
-      const totalPagado = efectivo + tarjeta;
-      const cambio = total - totalPagado;
-      setCambio(cambio >= 0 ? cambio.toLocaleString("es-ES") : 0);
-    };
-
-    calcularCambio();
-  }, [efectivo, tarjeta]);
+  const handleChangeTransferencia = (event) => {
+    const value = event.target.value;
+    setTransferencia(value);
+  };
 
   return (
     <>
@@ -89,7 +91,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
               ></button>
             </div>
             <div className="modal-body">
-              <div>
+              <div className="mb-2">
                 <label htmlFor="total">Total</label>
                 <input
                   type="text"
@@ -98,7 +100,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   value={total.toLocaleString("es-ES")}
                 />
               </div>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="efectivo">Efectivo</label>
                 <input
                   type="number"
@@ -108,7 +110,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   onChange={handleChangeEfectivo}
                 />
               </div>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="tarjeta">Tarjeta</label>
                 <input
                   type="number"
@@ -118,13 +120,14 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   onChange={handleChangeTarjeta}
                 />
               </div>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="cambio">Transferencia</label>
                 <input
-                  type="text"
-                  disabled
+                  type="number"
+                  name="transferencia"
                   className="form-control"
-                  value={cambio}
+                  value={transferencia.toLocaleString("es-ES")}
+                  onChange={handleChangeTransferencia}
                 />
               </div>
             </div>

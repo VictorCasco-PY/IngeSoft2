@@ -5,13 +5,33 @@ import api from "../../../../utils/api";
 import { Toaster, toast } from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import FlechaAtras from "../../../../components/flechaAtras/FlechaAtras";
+import DetalleModal from "./DetalleModal";
 
 const FacturaForm = () => {
   // State
-  const [detalles, setDetalles] = useState([]);
+  // Constants
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().substr(0, 10);
   const [detallesParaMostrar, setDetallesParaMostrar] = useState([]);
   const [detallesParaEnviar, setDetallesParaEnviar] = useState([]);
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
+  const [codigo, setCodigo] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [datosFactura, setDatosFactura] = useState({
+    clienteId: "",
+    timbrado: 0,
+    fecha: formattedDate,
+    nombreCliente: "",
+    rucCliente: "",
+    direccion: "",
+    sesionId: 1,
+    subTotal: 0,
+    iva5: 0,
+    iva10: 0,
+    total: 0,
+    saldo: 0,
+  });
+
   const [clienteInfo, setClienteInfo] = useState({
     nombre: "",
     clienteId: "",
@@ -27,18 +47,18 @@ const FacturaForm = () => {
     iva: "",
   });
 
-  // Constants
-  const currentDate = new Date();
-  const formattedDate = currentDate.toISOString().substr(0, 10);
-
   // Functions
+  const handleGuardarFactura = () => {
+    setModalVisible(true);
+  };
+
   const getSuscripcionesVencidas = async (idCliente) => {
     try {
       const response = await api.get(
         `suscripciones/cliente/${idCliente}/pendientes/page/1`
       );
       const suscripciones = response.data.items;
-      const detallesSuscripciones = suscripciones.map((suscripcion) => ({
+      const nuevosDetalles = suscripciones.map((suscripcion) => ({
         suscripcionId: suscripcion.id,
         descripcion: suscripcion.descripcion,
         precioUnitario:
@@ -56,9 +76,21 @@ const FacturaForm = () => {
             ? suscripcion.costoSemanal * 0.1
             : suscripcion.costoMensual * 0.1,
       }));
-      setDetalles([...detalles, ...detallesSuscripciones]);
+
+      // Actualizar los estados
+      setDetallesParaMostrar((prevDetalles) => [
+        ...prevDetalles,
+        ...nuevosDetalles,
+      ]);
+      setDetallesParaEnviar((prevDetalles) => [
+        ...prevDetalles,
+        ...nuevosDetalles,
+      ]);
     } catch (error) {
-      console.error("Error al obtener las suscripciones:", error);
+      if (error.response && error.response.status === 404) {
+        console.log("No hay suscripciones pendientes para este cliente");
+        return;
+      }
       toast.error("Error al obtener las suscripciones");
     }
   };
@@ -88,7 +120,7 @@ const FacturaForm = () => {
       let subTotal = 0;
       let iva5 = 0;
       let iva10 = 0;
-      detalles.forEach((detalle) => {
+      detallesParaEnviar.forEach((detalle) => {
         subTotal += detalle.subtotal;
         if (detalle.iva === 5) {
           iva5 += detalle.ivaTotal;
@@ -97,42 +129,24 @@ const FacturaForm = () => {
         }
       });
       const total = subTotal;
-      console.log(total, iva5, iva10);
       // Enviar la factura al backend
-      console.log({
-        factura: {
-          clienteId: clienteInfo.clienteId,
-          timbrado: 1547884,
-          fecha: formattedDate,
-          nombreCliente: clienteInfo.nombre,
-          rucCliente: clienteInfo.ruc,
-          direccion: clienteInfo.direccion,
-          sesionId: 1,
-          subTotal: subTotal,
-          iva5: iva5,
-          iva10: iva10,
-          total: total,
-          saldo: total,
-        },
-        detalles: detalles,
+
+      setDatosFactura({
+        clienteId: clienteInfo.clienteId,
+        timbrado: 1547884,
+        fecha: formattedDate,
+        nombreCliente: clienteInfo.nombre,
+        rucCliente: clienteInfo.ruc,
+        direccion: clienteInfo.direccion,
+        sesionId: 1,
+        subTotal: subTotal,
+        iva5: iva5,
+        iva10: iva10,
+        total: total,
+        saldo: total,
       });
-      /* const response = await api.post("/facturas", {
-        factura: {
-          clienteId: clienteInfo.clienteId,
-          timbrado: 1547884,
-          fecha: formattedDate,
-          nombreCliente: clienteInfo.nombre,
-          rucCliente: clienteInfo.ruc,
-          direccion: clienteInfo.direccion,
-          sesionId: 1,
-          subTotal: subTotal,
-          iva5: iva5,
-          iva10: iva10,
-          total: total,
-          saldo: total,
-        },
-        detalles: detalles,
-      });*/
+
+      handleGuardarFactura();
       toast.success("Factura generada correctamente");
     } catch (error) {
       toast.error("No se pudo cargar la factura");
@@ -150,6 +164,7 @@ const FacturaForm = () => {
     setDetallesParaMostrar(updatedDetallesMostrar);
     setDetallesParaEnviar(updatedDetallesEnviar);
   };
+
   const handleAgregarItem = () => {
     const nuevoDetalleMostrar = {
       cantidad: producto.cantidad,
@@ -158,6 +173,7 @@ const FacturaForm = () => {
       iva: producto.iva,
       subtotal: producto.precio * producto.cantidad,
     };
+    console.log(nuevoDetalleMostrar);
 
     const nuevoDetalleEnviar = {
       productoId: producto.id,
@@ -167,14 +183,26 @@ const FacturaForm = () => {
       iva: producto.iva,
       ivaTotal: producto.precio * producto.cantidad * producto.iva,
     };
+    console.log(nuevoDetalleEnviar);
 
     setDetallesParaMostrar([...detallesParaMostrar, nuevoDetalleMostrar]);
     setDetallesParaEnviar([...detallesParaEnviar, nuevoDetalleEnviar]);
+
+    // Limpiar los inputs de los items
+    setProducto({
+      id: "",
+      nombre: "",
+      descripcion: "",
+      cantidad: "",
+      precio: "",
+      iva: "",
+    });
+    setCodigo("");
   };
 
   const handleKeyDown = async (e) => {
     if (e.key === "Tab") {
-      const codigo = e.target.value;
+      setCodigo(e.target.value);
       try {
         const response = await api.get(`/productos/codigo/${codigo}`);
         const productoData = response.data;
@@ -369,7 +397,7 @@ const FacturaForm = () => {
               </tr>
             </thead>
             <tbody>
-              {detalles.map((detalle, index) => (
+              {detallesParaMostrar.map((detalle, index) => (
                 <tr key={index}>
                   <td>{detalle.cantidad}</td>
                   <td>{detalle.descripcion}</td>
@@ -397,6 +425,15 @@ const FacturaForm = () => {
           </Btn>
         </div>
       </form>
+      {modalVisible && (
+        <DetalleModal
+          factura={datosFactura}
+          detallesParaEnviar={detallesParaEnviar}
+          detallesParaMostrar={detallesParaMostrar}
+          closeModal={() => setModalVisible(false)}
+          open={modalVisible}
+        />
+      )}
     </div>
   );
 };

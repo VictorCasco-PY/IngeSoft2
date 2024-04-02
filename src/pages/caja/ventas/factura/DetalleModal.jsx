@@ -1,37 +1,17 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../../utils/api";
-import CobroModal from "./CobroModal";
+import CobroModal from "../lista/CobroModal";
 import { Btn } from "../../../../components/bottons/Button";
 
-const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
-  const { nroFactura, fecha, nombreCliente, rucCliente, direccion, pagado } =
-    factura.factura;
-  const detalles = factura.detalles;
-  const [actividadNombres, setActividadNombres] = useState({});
+const DetalleModal = ({
+  factura,
+  detallesParaEnviar,
+  detallesParaMostrar,
+  closeModal,
+  open,
+}) => {
+  const { nroFactura, fecha, nombreCliente, rucCliente, direccion } = factura;
+  const detalles = factura;
   const [cobroModalOpen, setCobroModalOpen] = useState(false);
-
-  useEffect(() => {
-    const obtenerNombreActividad = async () => {
-      try {
-        const nombres = {};
-        await Promise.all(
-          detalles.map(async (detalle) => {
-            if (detalle.suscripcionId) {
-              const response = await api.get(
-                `/suscripciones/${detalle.suscripcionId}`
-              );
-              nombres[detalle.suscripcionId] = response.data.actividadNombre;
-            }
-          })
-        );
-        setActividadNombres(nombres);
-      } catch (error) {
-        console.log("Error al obtener nombres de actividad:", error);
-      }
-    };
-
-    obtenerNombreActividad();
-  }, [detalles]);
 
   const handleOpenCobroModal = () => {
     closeModal();
@@ -52,7 +32,7 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">N° Factura {nroFactura}</h5>
+              <h5 className="modal-title">Factura</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -88,18 +68,14 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {detalles.map((detalle, index) => (
+                  {detallesParaMostrar.map((detalle, index) => (
                     <tr key={index}>
                       <td className="py-2">{detalle.cantidad}</td>
-                      <td className="py-2">
-                        {detalle.suscripcionId
-                          ? actividadNombres[detalle.suscripcionId]
-                          : detalle.productoNombre}
-                      </td>
+                      <td className="py-2">{detalle.descripcion}</td>
                       <td className="py-2">
                         {detalle.precioUnitario.toLocaleString("es-ES")}
                       </td>
-                      <td className="py-2">{Number(detalle.iva) * 100}%</td>
+                      <td className="py-2">{Number(detalle.iva)}%</td>
                       <td className="py-2">
                         {detalle.subtotal.toLocaleString("es-ES")}
                       </td>
@@ -109,16 +85,17 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
               </table>
             </div>
             <div className="modal-footer">
-              <Btn type="secondary" outline onClick={closeModal}>
+              <Btn type="secondary" onClick={closeModal}>
                 Cerrar
               </Btn>
-              {pagado ? (
-                ""
-              ) : (
-                <Btn type="primary" onClick={handleOpenCobroModal}>
-                  Cobrar factura
-                </Btn>
-              )}
+
+              <Btn type="secondary" outline>
+                Guardar factura
+              </Btn>
+
+              <Btn type="primary" onClick={handleOpenCobroModal}>
+                Cobrar factura
+              </Btn>
             </div>
           </div>
         </div>
@@ -134,4 +111,4 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
   );
 };
 
-export default DetalleFacturaModal;
+export default DetalleModal;
