@@ -70,12 +70,6 @@ export const NewNavbar = () => {
               <NavBtn id="nav-reportes" href="/reportes">
                 Reportes
               </NavBtn>
-              <NavBtn id="nav-reportes" href="/comprasCaja">
-                compras en caja
-              </NavBtn>
-              <NavBtn id="nav-reportes" href="/ListaComprasCaja">
-                lista compras
-              </NavBtn>
             </BoxStyled>
           </div>
 

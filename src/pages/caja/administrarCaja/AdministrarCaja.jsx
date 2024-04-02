@@ -51,7 +51,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const goToNuevaCompra = () => {
         if (disabledCerrarCaja) return;
-        navigate("/caja-compra");
+        navigate("/caja-compras");
     }
 
     const goToListarCompras = () => {

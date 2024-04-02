@@ -18,8 +18,10 @@ import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
-
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
+import MainLista from "./pages/caja/ventas/lista/MainLista";
+import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
+import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -85,7 +87,14 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
-          <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
+          <Route
+            path="/caja"
+            element={
+              <Layout>
+                <MainCaja />
+              </Layout>
+            }
+          />
           <Route
             path="/caja/pendientes"
             element={
@@ -102,6 +111,22 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
+          <Route
+            path="/caja-compras"
+            element={
+              <Layout>
+                <ComprasCaja />
+              </Layout>
+            }
+          />
+          <Route
+            path="/lista-compras"
+            element={
+              <Layout>
+                <ListaCompras />
+              </Layout>
+            }
+          />
 
           {/*seccion de roles, user context*/}
           <Route
@@ -113,8 +138,23 @@ createRoot(document.getElementById("root")).render(
             }
           />
           {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
-          <Route exact element={<ProtectedRoute roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]} />}>
-            <Route exact path="/role-todos" element={<Layout><RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" /></Layout>} />
+          <Route
+            exact
+            element={
+              <ProtectedRoute
+                roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]}
+              />
+            }
+          >
+            <Route
+              exact
+              path="/role-todos"
+              element={
+                <Layout>
+                  <RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" />
+                </Layout>
+              }
+            />
           </Route>
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route
@@ -162,7 +202,14 @@ createRoot(document.getElementById("root")).render(
           </Route>
           {/*FIN, BORRAR LUEGO DE DEMO*/}
 
-          <Route path="*" element={<Layout><PageNotFound /></Layout>} />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <PageNotFound />
+              </Layout>
+            }
+          />
         </Routes>
       </Router>
     </CurrentUserProvider>
