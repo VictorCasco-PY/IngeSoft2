@@ -7,6 +7,11 @@ import UserStorage from '../../../utils/UserStorage';
 import CartaPrincipal from '../../../components/cartaPrincipal/CartaPrincipal';
 import Pagination from '../../../components/pagination/PaginationContainer';
 import { precioHandler } from '../../../utils/precioHandler';
+import FlechaAtras from '../../../components/flechaAtras/FlechaAtras';
+import { CircularProgress } from '@mui/material';
+import { ListaVacía } from '../../../components/errores/ListaVacía';
+import ErrorPagina from '../../../components/errores/ErrorPagina';
+import { Loader } from '../../../components/layout/Loader';
 
 const InfoCajas = () => {
 
@@ -40,22 +45,57 @@ const InfoCajas = () => {
         }
     }, [currentPage])
 
+    const switchRender = () => {
+
+        if (cargandoCajas) return <div className='' style={{ minHeight: 435 }}><Table headers={["Nombre", "Monto de la Caja"]} striped>
+            <tr>
+                <td className="py-3"><CircularProgress /></td><td className="py-3"><CircularProgress /></td>
+            </tr>
+            <tr>
+                <td className="py-3"><CircularProgress /></td><td className="py-3"><CircularProgress /></td>
+            </tr>
+            <tr>
+                <td className="py-3"><CircularProgress /></td><td className="py-3"><CircularProgress /></td>
+            </tr>
+            <tr>
+                <td className="py-3"><CircularProgress /></td><td className="py-3"><CircularProgress /></td>
+            </tr>
+            <tr>
+                <td className="py-3"><CircularProgress /></td><td className="py-3"><CircularProgress /></td>
+            </tr>
+        </Table><Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}>
+            </Pagination></div>
+
+        if (errorCajas) return <ListaVacía mensaje="Ha ocurrido un error al solicitar las cajas." />
+
+        if (cajas.length <= 0) return <ErrorPagina mensaje="No hay cajas registradas." />
+
+        return (
+            <>
+                <div className='' style={{ minHeight: 435 }}>
+                    <Table headers={["Nombre", "Monto de la Caja"]} striped>
+                        {cajas.map(caja => {
+                            return (
+                                <tr key={caja.id} onClick={() => select(caja.id)}>
+                                    <th className="py-3" scope="row" style={{ color: "#7749F8" }}>{caja.nombre}</th>
+                                    <td className="py-3">{precioHandler(caja.monto)}</td>
+                                </tr>
+                            )
+                        })}
+                    </Table>
+                </div>
+                <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
+            </>
+        );
+    };
+
     return (
         <CartaPrincipal>
-            <h1>Lista de Cajas Creadas</h1>
-            <div style={{minHeight:343}}>
-                <Table headers={["Nombre", "Monto de la Caja"]} striped>
-                    {cajas.map(caja => {
-                        return (
-                            <tr key={caja.id} onClick={() => select(caja.id)}>
-                                <th className="py-3" scope="row" style={{ color: "#7749F8" }}>{caja.nombre}</th>
-                                <td className="py-3">{precioHandler(caja.monto)}</td>
-                            </tr>
-                        )
-                    })}
-                </Table>
+            <div className='d-flex align-items-center gap-3'>
+                <FlechaAtras ruta='/caja' />
+                <h1>Lista de Cajas Creadas</h1>
             </div>
-            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
+            {switchRender()}
         </CartaPrincipal>
     );
 };
