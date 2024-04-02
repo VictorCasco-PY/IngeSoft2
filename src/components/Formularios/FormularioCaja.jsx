@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import LabelBase from "../labels/LabelBase";
 import ButtonCrear from "../bottons/ButtonCrear";
 import ButtonBasic from "../bottons/ButtonBasic";
 import DateTime from "react-datetime";
-
-import { useComprasCaja } from "../../pages/compras_caja/context/ComprasCajaState";
+import { FacturaModal } from "../../pages/caja/FacturaModal";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datetime/css/react-datetime.css";
 
-const FormularioCaja = () => {
-  const {
-    addItem,
-    items,
-    generarFacturaYActualizarProductos,
-    guardarFacturaProveedor,
-  } = useComprasCaja();
+import api from "../../utils/api";
 
+const FormularioCaja = () => {
+  const [proveedores, setProveedores] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [items, setItems] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [proveedorInfo, setProveedorInfo] = useState({
+    ruc: "",
+    nombre: "",
+    proveedorIdId: "",
+    direccion: "",
+  });
   const [formData, setFormData] = useState({
-    fecha: new Date(),
+    proveedorId: "",
+    productoId: "",
+    fecha: "",
     modalidadPago: "",
     ruc: "",
     razonSocial: "",
@@ -30,22 +36,73 @@ const FormularioCaja = () => {
     iva: "",
     subtotal: "",
   });
-  const [facturaGenerada, setFacturaGenerada] = useState(false);
+  useEffect(() => {
+    const obtenerProveedores = async () => {
+      try {
+        const response = await api.get("/proveedores/page/1");
+        setProveedores(response.data.items);
+      } catch (error) {
+        console.error("Error al obtener los proveedores:", error);
+      }
+    };
 
-  const handleChange = (e) => {
+    const obtenerProductos = async () => {
+      try {
+        const response = await api.get("/productos/page/1");
+        setProductos(response.data.items);
+      } catch (error) {
+        console.error("Error al obtener los productos:", error);
+      }
+    };
+
+    obtenerProveedores();
+    obtenerProductos();
+  }, []);
+
+  const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Si el campo cambiado es el RUC, buscar el proveedor correspondiente
+    if (name === "ruc") {
+      try {
+        const response = await api.get(
+          `/facturas-proveedores/ruc/${value}/page/1`
+        );
+        const proveedor = response.data.items[0];
+        if (proveedor) {
+          // Completar los datos del proveedor en el formulario
+          setFormData({
+            ...formData,
+            razonSocial: proveedor.razonSocial,
+            direccion: proveedor.direccion,
+            // Otros campos del proveedor que desees completar
+          });
+        } else {
+          // Limpiar los datos del proveedor si no se encontró ninguno
+          setFormData({
+            ...formData,
+            razonSocial: "",
+            direccion: "",
+            // Otros campos del proveedor que desees limpiar
+          });
+        }
+      } catch (error) {
+        console.error("Error al buscar el proveedor por RUC:", error);
+      }
+    }
   };
 
   const handleDateChange = (date) => {
     setFormData({ ...formData, fecha: date });
   };
-  const handleAddItem = () => {
-    addItem(formData);
 
+  const handleAddItem = () => {
+    // Agregar los datos del formulario al array de items
+    setItems([...items, formData]);
+    // Limpiar el formulario después de agregar el item
     setFormData({
-      // Limpiar el formulario
-      fecha: new Date(),
+      fecha: "",
       modalidadPago: "",
       ruc: "",
       razonSocial: "",
@@ -57,33 +114,113 @@ const FormularioCaja = () => {
       subtotal: "",
     });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Valores", formData);
-    // Agregar el nuevo elemento a la lista items
-    addItem(formData);
-    // Restablecer los valores del formulario
-    setFormData({
-      fecha: new Date(),
-      modalidadPago: "",
-      ruc: "",
-      razonSocial: "",
-      direccion: "",
-      cantidad: "",
-      producto: "",
-      precioUnitario: "",
-      iva: "",
-      subtotal: "",
-    });
+  const handleGenerateFactura = () => {
+    // Aquí debes abrir el modal y pasar los datos necesarios
+    setModalOpen(true);
   };
-  const handleGenerateInvoice = async () => {
-    await generarFacturaYActualizarProductos(items);
-    await guardarFacturaProveedor(formData);
-    setFacturaGenerada(true);
-    console.log("Generar factura y enviar detalles a la API...");
+
+  const handleKeyDown = async (e) => {
+    if (e.key === "Tab") {
+      const codigo = e.target.value;
+      try {
+        const response = await api.get(`/productos/${codigo}`);
+        const productoData = response.data;
+        if (productoData) {
+          // Actualizar el estado del producto y la cantidad máxima disponible
+          setFormData({
+            ...formData,
+            producto: productoData.nombre,
+            precioUnitario: productoData.precio,
+            iva: productoData.iva,
+            // Otros campos del producto que desees actualizar
+          });
+        } else {
+          // Limpiar los campos del producto si no se encontró ninguno
+          setFormData({
+            ...formData,
+            producto: "",
+            precioUnitario: "",
+            iva: "",
+            // Otros campos del producto que desees limpiar
+          });
+        }
+      } catch (error) {
+        console.error("Error al obtener el producto:", error);
+      }
+    }
+  };
+ 
+  const handleSubmit = async (values) => {
+    try {
+      const response = await api.post('/facturas-proveedores', values);
+      console.log('Factura generada:', response.data);
+      
+    } catch (error) {
+      console.error('Error al generar la factura:', error);
+     
+    }
+  };
+
+  const getProductoByCodigo = async (codigo) => {
+    try {
+      const response = await api.get(`/productos/codigo/${codigo}`);
+      const productoData = response.data;
+      if (productoData) {
+        setFormData({
+          ...formData,
+          producto: productoData.nombre,
+          precioUnitario: productoData.precio,
+          iva: productoData.iva,
+        });
+      } else {
+        setFormData({
+          ...formData,
+          producto: "",
+          precioUnitario: "",
+          iva: "",
+        });
+      }
+    } catch (error) {
+      console.error("Error al obtener el producto:", error);
+    }
+  };
+  const getProveedorByRuc = async (ruc) => {
+    try {
+      const response = await api.get(`/proveedores/searchByRuc/${ruc}/page/1`);
+      const proveedorData = response.data;
+      if (proveedorData) {
+        setProveedorInfo({
+          ruc: ruc,
+          nombre: proveedorData.items[0].nombre,
+          proveedorId: proveedorData.items[0].id,
+          direccion: proveedorData.items[0].direccion,
+        });
+        setFormData({
+          ...formData,
+          ruc: ruc,
+          razonSocial: proveedorData.items[0].nombre,
+          direccion: proveedorData.items[0].direccion,
+        });
+      } else {
+        setProveedorInfo({
+          ruc: "",
+          nombre: "",
+          proveedorId: "",
+          direccion: "",
+        });
+        setFormData({
+          ...formData,
+          ruc: "",
+          razonSocial: "",
+          direccion: "",
+        });
+      }
+    } catch (error) {
+      console.error("Error al obtener el cliente:", error);
+    }
   };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="row mb-3">
         <div className="col-md-4">
           <LabelBase htmlFor="fecha">Fecha</LabelBase>
@@ -93,19 +230,6 @@ const FormularioCaja = () => {
             onChange={handleDateChange}
           />
         </div>
-        <div className="col-md-3">
-          <LabelBase htmlFor="modalidadPago">Modalidad de Pago</LabelBase>
-          <select
-            name="modalidadPago"
-            value={formData.modalidadPago}
-            onChange={handleChange}
-            className="form-control"
-          >
-            <option value="contado">Efectivo</option>
-            <option value="cuota">Tarjeta</option>
-            <option value="contado">Transferencia</option>
-          </select>
-        </div>
       </div>
 
       <div className="row mb-3">
@@ -113,10 +237,14 @@ const FormularioCaja = () => {
           <LabelBase htmlFor="ruc">RUC</LabelBase>
           <input
             type="text"
-            name="ruc"
-            value={formData.ruc}
-            onChange={handleChange}
+            id="rucProveedor"
+            name="factura.rucProveedor"
             className="form-control"
+            onKeyDown={async (e) => {
+              if (e.key === "Tab") {
+                await getProveedorByRuc(e.target.value);
+              }
+            }}
           />
         </div>
         <div className="col-md-6">
@@ -159,10 +287,16 @@ const FormularioCaja = () => {
           <LabelBase htmlFor="producto">Producto</LabelBase>
           <input
             type="text"
-            name="producto"
-            value={formData.producto}
-            onChange={handleChange}
+            id="codigo"
+            name="detalles.codigo"
             className="form-control"
+            style={{ width: "120px" }}
+            min={0}
+            onKeyDown={async (e) => {
+              if (e.key === "Tab") {
+                await getProductoByCodigo(e.target.value);
+              }
+            }}
           />
         </div>
         <div className="col-md-2">
@@ -212,6 +346,7 @@ const FormularioCaja = () => {
               <th scope="col"></th>
             </tr>
           </thead>
+
           <tbody>
             {items.map((item, index) => (
               <tr key={index}>
@@ -220,23 +355,32 @@ const FormularioCaja = () => {
                 <td>{item.precioUnitario}</td>
                 <td>{item.iva}</td>
                 <td>{item.subtotal}</td>
-                <td>
-                  {/* Aquí puedes agregar botones para editar o eliminar el elemento */}
-                </td>
+                <td></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div className="text-end">
-        <ButtonCrear
-          id="btn-crear"
-          text="Generar Factura"
-          color="secondary"
-          onClick={handleGenerateInvoice}
-          disabled={facturaGenerada}
-        />
+        <ButtonCrear id="btn-crear" text="Generar Factura" color="secondary" />
       </div>
+
+      {/* Modal de la factura */}
+      {modalOpen && (
+        <FacturaModal
+          open={modalOpen}
+          closeModal={() => setModalOpen(false)}
+          data={{
+            factura: {
+              /* Aquí pasas los datos de la factura */
+            },
+            detalles: items,
+          }}
+          guardar={() => {
+            /* Función para guardar la factura */
+          }}
+        />
+      )}
     </form>
   );
 };

@@ -1,34 +1,27 @@
-
 const TablaCaja = ({ items }) => {
+  
   return (
     <table className="table">
       <thead>
         <tr>
+          <th scope="col">N° Factura</th>
           <th scope="col">Fecha</th>
-          <th scope="col">Modalidad de Pago</th>
+          <th scope="col">Proveedor</th>
           <th scope="col">RUC</th>
-          <th scope="col">Razón Social</th>
-          <th scope="col">Dirección</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Producto</th>
-          <th scope="col">P. Unitario</th>
-          <th scope="col">IVA</th>
-          <th scope="col">Subtotal</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Total(Gs)</th>
         </tr>
       </thead>
       <tbody>
+        {/* Mapea sobre las facturas y muestra cada una en una fila de la tabla */}
         {items.map((item, index) => (
           <tr key={index}>
-            <td>{item.fecha.toLocaleDateString()}</td>
-            <td>{item.modalidadPago}</td>
-            <td>{item.ruc}</td>
-            <td>{item.razonSocial}</td>
-            <td>{item.direccion}</td>
-            <td>{item.cantidad}</td>
-            <td>{item.producto}</td>
-            <td>{item.precioUnitario}</td>
-            <td>{item.iva}</td>
-            <td>{item.subtotal}</td>
+            <td>{item.factura.nroFactura}</td>
+            <td>{item.factura.fecha}</td>
+            <td>{item.factura.nombreProveedor}</td>
+            <td>{item.factura.rucProveedor}</td>
+            <td>Pagado</td>
+            <td>{item.factura.subTotal}</td>
           </tr>
         ))}
       </tbody>

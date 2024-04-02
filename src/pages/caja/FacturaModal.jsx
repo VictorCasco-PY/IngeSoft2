@@ -19,7 +19,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
 
             <Table headers={["Cantidad", "Producto", "Precio", "Iva", "Subtotal"]} textcenter>
                 {data?.detalles?.map(item => (
-                    <tr key={item?.id}>
+                    <tr key={item}>
                         <td className="py-3 text-center">{item?.cantidad}</td>
                         <td className="py-3 text-center">{item?.productoNombre}</td>
                         <td className="py-3 text-center">{precioHandler(item?.precioUnitario)}</td>

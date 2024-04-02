@@ -18,11 +18,13 @@ import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
+
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 
-import ComprasCaja from "./pages/compras_caja/ComprasCaja";
-import ListaCompras from "./pages/compras_caja/ListaCompras";
-import { ComprasCajaProvider } from "./pages/compras_caja/context/ComprasCajaState";
+import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
+import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
+
+import { ComprasCajaProvider } from "./context/ComprasCajaState";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

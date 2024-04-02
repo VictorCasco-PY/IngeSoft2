@@ -1,4 +1,4 @@
-import { ADD_ITEM } from '../types.jsx';
+import { ADD_ITEM } from '../pages/compras_caja/types.jsx';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state, action) => {
