@@ -51,13 +51,13 @@ const CobroModal = ({ factura, closeModal, open }) => {
   };
 
   const handleChangeEfectivo = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    setEfectivo(value === "" ? 0 : parseFloat(value));
+    const value = event.target.value;
+    setEfectivo(value);
   };
 
   const handleChangeTarjeta = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    setTarjeta(value === "" ? 0 : parseFloat(value));
+    const value = event.target.value;
+    setTarjeta(value);
   };
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
                 />
               </div>
               <div>
-                <label htmlFor="cambio">Cambio</label>
+                <label htmlFor="cambio">Transferencia</label>
                 <input
                   type="text"
                   disabled
