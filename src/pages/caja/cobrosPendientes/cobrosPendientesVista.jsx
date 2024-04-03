@@ -19,13 +19,14 @@ export const CobrosPendientesVista = () => {
 
   const { isLoading, error, notFound, getFacturasPendientes, getSearchFacturaPendienteByNombre, getFacturaById } = useFactura();
 
-  const getData = async () => {
-    const pendientes = await getFacturasPendientes();
+  const getData = async (page=1) => {
+    const pendientes = await getFacturasPendientes(page);
     setData(pendientes);
   };
 
   const handleFacturaModal = () => {
     setOpenFacturaModal(false);
+    getData();
   }
   
   const handleSelectFactura = async (facturaId) => {
