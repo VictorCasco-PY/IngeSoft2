@@ -49,6 +49,10 @@ export const useFactura = () => {
         return handleRequest(async () => await api.get(`${DIR}/cabecera/estado/pendiente/page/${page}`))
     }
 
-    return { getFacturasPendientes, getFacturaById, error, notFound, isLoading }
+    const getSearchFacturaPendienteByNombre = async (nombre, page = 1) => {
+        return handleRequest(async () => await api.get(`${DIR}/cabecera/estado/pendiente/cliente/${nombre}/page/${page}`))
+    }
+
+    return { getFacturasPendientes, getFacturaById, error, notFound, isLoading, getSearchFacturaPendienteByNombre }
 
 }
