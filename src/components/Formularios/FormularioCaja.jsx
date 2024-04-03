@@ -6,7 +6,6 @@ import ButtonBasic from "../bottons/ButtonBasic";
 
 import DatePicker from "react-datepicker";
 
-import { FacturaModal } from "../../pages/caja/FacturaModal";
 import { Toaster, toast } from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import "react-datepicker/dist/react-datepicker.css";
