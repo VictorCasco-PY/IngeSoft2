@@ -17,6 +17,7 @@ import EstadoPago from "../../components/estado_pago/EstadoPago.jsx";
 import { Link } from "react-router-dom";
 import api from "../../utils/api";
 import TablaActividadesCliente from "../../components/tablas/TablaActividadesCliente.jsx";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal.jsx";
 
 const InfoClients = () => {
   const { id } = useParams();
@@ -126,7 +127,7 @@ const InfoClients = () => {
   };
 
   return (
-    <div className="container-fluid MaquetaCliente">
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -145,7 +146,7 @@ const InfoClients = () => {
           },
         }}
       />
-      <div className="cuadro-central">
+      <CartaPrincipal>
         <div style={{ marginLeft: "3%" }}>
           <Link to="/clientes">
             <button className="custom-button">
@@ -170,7 +171,6 @@ const InfoClients = () => {
                 </Alert>
                 {/*https://mui.com/material-ui/react-alert/     Para buscar las otras alertas*/}
               </div>
-
               <div className="d-flex justify-content-center mb-4 float-end">
                 <ButtonBasic
                   icon={<IoPencilOutline />}
@@ -186,7 +186,6 @@ const InfoClients = () => {
             open={modalOpen}
             title="Editar Cliente"
             closeModal={handleCloseModal}
-
           >
             <form className="mb-3">
               <div className="mb-2 block">
@@ -200,7 +199,6 @@ const InfoClients = () => {
                   onChange={handleNameChange}
                 />
               </div>
-
               <div className="mb-2 block">
                 <LabelBase label="Plan Actual:" htmlFor="plan-actual" />
                 <select
@@ -240,7 +238,6 @@ const InfoClients = () => {
               </div>
             </form>
           </ModalBase>
-
           <hr />
           {cliente && (
             <div className="datos-extras">
@@ -272,16 +269,16 @@ const InfoClients = () => {
                 <Tab value="three" label="Actividades" />
               </Tabs>
             </div>
-            {/* 
-            <div style={{marginRight:"6%"}}>
-              <ButtonBasic
-                icon={<IoAdd />}
-                color="secondary"
-                text="Nueva Medicion"
-                onClick={handleEditClientClick}
-              />
-            </div>
-            */}
+            {/*
+              <div style={{marginRight:"6%"}}>
+                <ButtonBasic
+                  icon={<IoAdd />}
+                  color="secondary"
+                  text="Nueva Medicion"
+                  onClick={handleEditClientClick}
+                />
+              </div>
+              */}
           </Box>
           {/* Renderiza la tabla de pagos si showPayments es true */}
           {showPayments && (
@@ -352,17 +349,15 @@ const InfoClients = () => {
               </tbody>
             </table>
           )}
-
           {showActivities && (
             <TablaActividadesCliente clienteId={id} toast={toast} />
           )}
-
           <div className="d-flex justify-content-center mt-4">
             <Pagination count={5} shape="rounded" color="secondary" />
           </div>
         </div>
-      </div>
-    </div>
+      </CartaPrincipal>
+    </>
   );
 };
 

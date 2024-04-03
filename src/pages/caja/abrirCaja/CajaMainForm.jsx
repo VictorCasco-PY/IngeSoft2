@@ -143,7 +143,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                 handleAbrirCaja(values)
                             }}
                         >
-                            <Form className="d-flex flex-column gap-2" style={{ minHeight: 364 }}>
+                            <Form className="d-flex flex-column gap-2 formaFont" style={{ minHeight: 364 }}>
                                 <h1>Abrir caja</h1>
                                 {cargandoCajas ? (
                                     <div className="d-flex flex-column align-items-center justify-content-center mt-2">
