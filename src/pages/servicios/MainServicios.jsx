@@ -35,6 +35,7 @@ const MainServicios = () => {
     descripcion: "",
     costoMensual: "",
     costoSemanal: "",
+    entrenadores:[],
   });
 
   useEffect(() => {
@@ -62,6 +63,7 @@ const MainServicios = () => {
       descripcion: "",
       costoMensual: "",
       costoSemanal: "",
+      entrenadores:[],
     });
     setShowModal(true);
   };
@@ -74,6 +76,7 @@ const MainServicios = () => {
       descripcion: servicio.actividad.descripcion,
       costoMensual: servicio.actividad.costoMensual,
       costoSemanal: servicio.actividad.costoSemanal,
+      entrenadores: servicio.actividad.entrenadores,
     });
     setShowEditModal(true);
   };
