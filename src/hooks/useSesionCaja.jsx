@@ -22,7 +22,6 @@ const useSesionCaja = () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {    
                 setError400(error.response.data.message)
-                console.log(error400)
             }
             setError(error)
             return error
