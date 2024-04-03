@@ -15,6 +15,7 @@ import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
 import toast, { Toaster } from "react-hot-toast";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 
 const MainUsers = () => {
   const emptyUser = {
@@ -381,7 +382,7 @@ const MainUsers = () => {
   };
 
   return (
-    <div className="MaquetaCliente">
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -401,10 +402,9 @@ const MainUsers = () => {
         }}
       />
 
-      <div class="card">
-        <div class="container">
-          <div className="card-1">
-            <h2>Usuarios</h2>
+      <CartaPrincipal>
+          <div>
+            <h1>Usuarios</h1>
             <div className="card-body d-flex align-items-center justify-content-between">
               <form className="d-flex flex-grow-1 align-items-center">
                 <input
@@ -675,16 +675,13 @@ const MainUsers = () => {
             )}
           </div>
 
-          <div className="pagination-container">
             <Pagination
               totalPages={totalPages}
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
-          </div>
-        </div>
-      </div>
-    </div>
+      </CartaPrincipal>
+    </>
   );
 };
 export default MainUsers;
