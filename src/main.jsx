@@ -147,6 +147,14 @@ createRoot(document.getElementById("root")).render(
             }
           />
           <Route
+            path="/caja/ventas"
+            element={
+              <Layout>
+                <MainVenta />
+              </Layout>
+            }
+          />
+          <Route
             path="/caja/compras"
             element={
               <Layout>
