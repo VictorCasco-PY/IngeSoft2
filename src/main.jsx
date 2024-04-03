@@ -22,6 +22,9 @@ import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente
 import MainLista from "./pages/caja/ventas/lista/MainLista";
 import MainVenta from "./pages/caja/ventas/factura/MainVenta";
 import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
+import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
+import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
+import { ComprasCajaProvider } from "./context/ComprasCajaState";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -142,10 +145,20 @@ createRoot(document.getElementById("root")).render(
             }
           />
           <Route
-            path="/caja/ventas"
+            path="/caja/compras"
             element={
               <Layout>
-                <MainVenta />
+                <ComprasCaja />
+              </Layout>
+            }
+          />
+          <Route
+            path="/caja/lista-compras"
+            element={
+              <Layout>
+                <ComprasCajaProvider>
+                  <ListaCompras />
+                </ComprasCajaProvider>
               </Layout>
             }
           />
