@@ -12,7 +12,7 @@ import { FormTextInput } from "../../../components/forms/FormInputs";
 
 const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
 
-    const { createCaja, data: req_caja, isLoading: cargandoCaja, error: errorCaja } = useCaja();
+    const { createCaja, isLoading: cargandoCaja } = useCaja();
 
     const handleRegistrarCaja = async (values) => {
 

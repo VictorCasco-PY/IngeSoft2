@@ -10,6 +10,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-left: 0; 
+    margin-right:0;
 }
 
 .cajaFont {
@@ -23,5 +25,7 @@
 }
 
 @media (max-width: 992px) {
-    
+    .cajasContainer {
+        flex-direction:column;
+    }
 }
