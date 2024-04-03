@@ -3,8 +3,8 @@ import api from "../../../../utils/api";
 import CobroModal from "./CobroModal";
 import { Btn } from "../../../../components/bottons/Button";
 
-const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
-  const { nroFactura, fecha, nombreCliente, rucCliente, direccion, pagado } =
+const DetalleFacturaModal = ({ factura, closeModal, open }) => {
+  const { nroFactura, fecha, nombreCliente, rucCliente, direccion, total } =
     factura.factura;
   const detalles = factura.detalles;
   const [actividadNombres, setActividadNombres] = useState({});
@@ -49,7 +49,7 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
         tabIndex="-1"
         style={{ display: open ? "block" : "none" }}
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">N° Factura {nroFactura}</h5>
@@ -107,6 +107,12 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
                   ))}
                 </tbody>
               </table>
+              <p className="mt-4">
+                <b>
+                  Total: {total.toLocaleString("es-ES")} Gs.
+                  <br />
+                </b>
+              </p>
             </div>
             <div className="modal-footer">
               <Btn type="secondary" outline onClick={closeModal}>

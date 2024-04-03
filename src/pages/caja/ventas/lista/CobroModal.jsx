@@ -3,8 +3,8 @@ import api from "../../../../utils/api";
 import { toast, Toaster } from "react-hot-toast";
 import { Btn } from "../../../../components/bottons/Button";
 
-const CobroModal = ({ factura, closeModal, open }) => {
-  const { total } = factura.factura;
+const CobroModal = ({ factura, closeModal, open, resetForm }) => {
+  const { total, id } = factura;
 
   const [efectivo, setEfectivo] = useState(0);
   const [tarjeta, setTarjeta] = useState(0);
@@ -15,7 +15,6 @@ const CobroModal = ({ factura, closeModal, open }) => {
   useEffect(() => {
     // Obteniendo el valor almacenado en localStorage cuando el componente se monta
     const storedItem = localStorage.getItem("sesionCajaId");
-    console.log(storedItem);
 
     // Actualizando el estado con el valor almacenado, si existe
     if (storedItem) {
@@ -26,9 +25,9 @@ const CobroModal = ({ factura, closeModal, open }) => {
   const cobrar = async () => {
     try {
       const movimiento = {
-        facturaId: factura.factura.id,
+        facturaId: id,
         facturaProveedorId: null,
-        sesionId: Number(storedValue), // Este valor debo obtenerlo del localStorage cuando una mi parte con caja
+        sesionId: Number(storedValue), // Se obtiene el id de la sesion del LS
         total: total,
         entrada: true,
       };
@@ -60,9 +59,9 @@ const CobroModal = ({ factura, closeModal, open }) => {
         movimiento: movimiento,
         detalles: detalles,
       };
-      console.log(data);
 
       const response = await api.post("/movimientos", data);
+      resetForm();
       toast.success("Factura cobrada correctamente");
       closeModal();
     } catch (error) {
@@ -94,7 +93,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
         tabIndex="-1"
         style={{ display: open ? "block" : "none" }}
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Cobrar factura</h5>
@@ -146,13 +145,9 @@ const CobroModal = ({ factura, closeModal, open }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={closeModal}
-              >
+              <Btn type="secondary" onClick={closeModal}>
                 Cerrar
-              </button>
+              </Btn>
               <Btn type="primary" onClick={cobrar}>
                 Cobrar
               </Btn>

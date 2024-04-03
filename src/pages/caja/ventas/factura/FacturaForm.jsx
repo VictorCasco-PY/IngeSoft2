@@ -10,6 +10,7 @@ import DetalleModal from "./DetalleModal";
 const FacturaForm = () => {
   // State
   const [storedValue, setStoredValue] = useState("");
+  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   useEffect(() => {
     // Obteniendo el valor almacenado en localStorage cuando el componente se monta
@@ -126,6 +127,9 @@ const FacturaForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setFormularioEnviado(true);
+
     try {
       // Calcular subtotal, iva5, iva10 y total
       let subTotal = 0;
@@ -234,13 +238,39 @@ const FacturaForm = () => {
     }
   };
 
+  const resetFormulario = () => {
+    setClienteInfo({
+      nombre: "",
+      clienteId: "",
+      direccion: "",
+      ruc: "",
+    });
+    setDatosFactura({
+      clienteId: "",
+      timbrado: 0,
+      fecha: formattedDate,
+      nombreCliente: "",
+      rucCliente: "",
+      direccion: "",
+      sesionId: "",
+      subTotal: 0,
+      iva5: 0,
+      iva10: 0,
+      total: 0,
+      saldo: 0,
+    });
+    setDetallesParaMostrar([]);
+    setDetallesParaEnviar([]);
+    setFormularioEnviado(false);
+  };
+
   return (
     <div className={classes.form_container}>
       <div>
         <Toaster position="top-right" />
       </div>
       <div className={classes.title_container}>
-        <FlechaAtras />
+        <FlechaAtras ruta={"/caja"} />
         <h1 className={classes.title}>Registrar venta</h1>
       </div>
 
@@ -273,6 +303,9 @@ const FacturaForm = () => {
                 }
               }}
             />
+            {formularioEnviado && !clienteInfo.ruc && (
+              <p style={{ color: "red" }}>Campo obligatorio</p>
+            )}
           </div>
           <div className="col">
             <label htmlFor="nombreCliente">Razon social</label>
@@ -320,7 +353,7 @@ const FacturaForm = () => {
               name="cantidad"
               className="form-control"
               value={producto.cantidad}
-              min={1}
+              min={cantidadMaxima - cantidadMaxima + 1}
               max={cantidadMaxima}
               onChange={(e) => {
                 const nuevaCantidad = parseInt(e.target.value);
@@ -363,7 +396,7 @@ const FacturaForm = () => {
               id="iva"
               name="iva"
               className="form-control"
-              value={producto.iva}
+              value={producto.iva * 100}
               readOnly
               style={{ backgroundColor: "white" }}
             />
@@ -410,7 +443,13 @@ const FacturaForm = () => {
                   <td>{detalle.cantidad}</td>
                   <td>{detalle.descripcion}</td>
                   <td>{detalle.precioUnitario.toLocaleString("es-ES")}</td>
-                  <td>{detalle.iva}</td>
+                  <td>
+                    {detalle.iva === 0.05
+                      ? 5
+                      : detalle.iva === 0.1
+                      ? 10
+                      : detalle.iva}
+                  </td>
                   <td>{detalle.subtotal.toLocaleString("es-ES")}</td>
                   <td>
                     <button
@@ -433,13 +472,14 @@ const FacturaForm = () => {
           </Btn>
         </div>
       </form>
-      {modalVisible && (
+      {modalVisible && datosFactura.rucCliente && (
         <DetalleModal
           factura={datosFactura}
           detallesParaEnviar={detallesParaEnviar}
           detallesParaMostrar={detallesParaMostrar}
           closeModal={() => setModalVisible(false)}
           open={modalVisible}
+          resetForm={resetFormulario}
         />
       )}
     </div>

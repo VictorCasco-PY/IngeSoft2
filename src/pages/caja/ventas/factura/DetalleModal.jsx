@@ -10,14 +10,16 @@ const DetalleModal = ({
   detallesParaMostrar,
   closeModal,
   open,
+  resetForm,
 }) => {
-  const { fecha, nombreCliente, rucCliente, direccion } = factura;
+  const { fecha, nombreCliente, rucCliente, direccion, total } = factura;
   const detalles = detallesParaEnviar;
   const [cobroModalOpen, setCobroModalOpen] = useState(false);
   const [data, setData] = useState({
     factura,
     detalles,
   });
+  const [cabecera, setCabecera] = useState();
   console.log("Datos", data);
 
   const handleOpenCobroModal = () => {
@@ -32,8 +34,17 @@ const DetalleModal = ({
   const handleSubmitFactura = async () => {
     try {
       const response = await api.post("/facturas", data);
-      console.log("Response", response.data.factura);
+
+      // Guardar el ID de la nueva factura en el estado local
+      const newCabecera = response.data.factura;
+
       toast.success("Factura guardada correctamente");
+      setCobroModalOpen(true);
+
+      // Actualizar el estado de la cabecera después de asegurarse de que se ha guardado correctamente
+      setCabecera(newCabecera);
+
+      setCobroModalOpen(true);
     } catch (error) {
       toast.error("Error al guardar la factura");
     }
@@ -49,7 +60,7 @@ const DetalleModal = ({
         tabIndex="-1"
         style={{ display: open ? "block" : "none" }}
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Factura</h5>
@@ -95,7 +106,14 @@ const DetalleModal = ({
                       <td className="py-2">
                         {detalle.precioUnitario.toLocaleString("es-ES")}
                       </td>
-                      <td className="py-2">{Number(detalle.iva)}%</td>
+                      <td className="py-2">
+                        {detalle.iva === 0.05
+                          ? 5
+                          : detalle.iva === 0.1
+                          ? 10
+                          : detalle.iva}
+                        %
+                      </td>
                       <td className="py-2">
                         {detalle.subtotal.toLocaleString("es-ES")}
                       </td>
@@ -103,18 +121,20 @@ const DetalleModal = ({
                   ))}
                 </tbody>
               </table>
+              <p className="mt-4">
+                <b>
+                  Total: {total.toLocaleString("es-ES")} Gs.
+                  <br />
+                </b>
+              </p>
             </div>
             <div className="modal-footer">
               <Btn type="secondary" onClick={closeModal}>
                 Cerrar
               </Btn>
 
-              <Btn type="secondary" outline onClick={handleSubmitFactura}>
+              <Btn type="primary" onClick={handleSubmitFactura}>
                 Guardar factura
-              </Btn>
-
-              <Btn type="primary" onClick={handleOpenCobroModal}>
-                Cobrar factura
               </Btn>
             </div>
           </div>
@@ -122,9 +142,10 @@ const DetalleModal = ({
       </div>
       {cobroModalOpen && (
         <CobroModal
-          factura={factura}
+          factura={cabecera}
           closeModal={handleCloseCobroModal}
           open={cobroModalOpen}
+          resetForm={resetForm}
         />
       )}
     </>
