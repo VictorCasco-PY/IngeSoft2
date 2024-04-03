@@ -1,5 +1,5 @@
-CAJAID_LABEL = 'cajaId'
-SESIONCAJAID_LABEL = 'sesionCajaId'
+const CAJAID_LABEL = 'cajaId'
+const SESIONCAJAID_LABEL = 'sesionCajaId'
 
 class CajaStorage {
     static setCajaId(id) {

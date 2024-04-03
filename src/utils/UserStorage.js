@@ -1,4 +1,4 @@
-USER_LABEL = 'user';
+const USER_LABEL = 'user';
 
 class UserStorage {
     static setUser(user) {

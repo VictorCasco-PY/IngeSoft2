@@ -176,6 +176,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 type="number"
                                                 placeholder="2000000"
                                                 required={true}
+                                                
                                             />
                                         </>
                                     ) : (
