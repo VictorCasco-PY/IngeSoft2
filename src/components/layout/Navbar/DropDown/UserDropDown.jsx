@@ -50,17 +50,9 @@ export const UserDropDown = () => {
 
   return (
     <>
-      <NavDropdown
-        title={
-          <UserDropDownTitle
-            nombre={userData?.nombre}
-            style={{ minWidth: "max-content" }}
-          />
-        }
-        left
-      >
-        <NavBtn type="dropdownItem" href="#">
-          Configurar Cuenta
+      <NavDropdown title={<UserDropDownTitle nombre={userData?.nombre} style={{minWidth:"max-content"}}/>} left>
+        <NavBtn type="dropdownItem" href="/miUsuario">
+          Mi Usuario
         </NavBtn>
         <NavBtn type="dropdownItem" href="#" onClick={handleLogout}>
           Cerrar Sesión
