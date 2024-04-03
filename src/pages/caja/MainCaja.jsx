@@ -1,31 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useForm } from "react-hook-form"
-import BotonCrear from "../../components/bottons/ButtonCrear";
-import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 import './MainCaja.css'
-import FlechaAtras from "../../components/flechaAtras/FlechaAtras";
+
+import { Toaster } from "react-hot-toast";
+
+import AdministrarCaja from "./administrarCaja/AdministrarCaja";
+import CajaMainForm from "./abrirCaja/CajaMainForm";
+import CajaStorage from "../../utils/CajaStorage";
+import { useCurrentUser } from "../../context/UserContext";
 
 const MainCaja = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+
+    const [sesionAbierta, setSesionAbierta] = useState(false);
+
+    useEffect(() => {
+        if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
+            setSesionAbierta(true)
+        }
+    }, [sesionAbierta])
 
     return (
         <>
-            <CartaPrincipal>
-                <FlechaAtras />
-                <h1>Registrar Nueva Caja</h1>
-                <form>
-                    <label for="nombre">Nombre de la Caja</label>
-                    <input type="text" placeholder="nombre" {...register("nombre", { required: true, maxLength: 15, minLength: 5 })} />
-                    <label for="monto">Monto de la Caja</label>
-                    <input type="number" placeholder="monto" {...register("monto", { required: true, max: 10000000, min: 50000 })} />
-                    <BotonCrear
-                        onClick={handleSubmit(onSubmit)}
-                        text={"Registrar Caja"}
-                    />
-                </form>
-            </CartaPrincipal>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: "#75B798",
+                            color: "#0A3622",
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: "#FFDBD9",
+                            color: "#D92D20",
+                        },
+                    },
+                }}
+            />
+
+            {sesionAbierta ? (
+                <AdministrarCaja setSesionAbierta={setSesionAbierta} />
+            ) : (
+                /*como useEffect se ejecuta antes del renderizado, utilizo este workaround para evitar
+                    volver a renderizar, si se conoce una mejor solucion, decir a andy*/
+                (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) && (
+                    <CajaMainForm setSesionAbierta={setSesionAbierta} />
+                )
+            )}
         </>
     )
 }
