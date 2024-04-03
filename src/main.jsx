@@ -1,5 +1,5 @@
 import React from "react";
-import { createRoot } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import InfoClients from "./pages/clients/InfoClients";
 import PageNotFound from "./pages/PageNotFound";
@@ -20,6 +20,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
+import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -85,7 +86,13 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
+          <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
+            <Route exact path="/caja" element={<Layout><MainCaja /></Layout>} />
+          </Route>
           <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
+          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route exact path="/caja/lista" element={<Layout><InfoCajas /></Layout>} />
+          </Route>
           <Route
             path="/caja/pendientes"
             element={

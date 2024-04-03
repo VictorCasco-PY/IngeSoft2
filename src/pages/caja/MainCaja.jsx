@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import AdministrarCaja from "./administrarCaja/AdministrarCaja";
 import CajaMainForm from "./abrirCaja/CajaMainForm";
 import CajaStorage from "../../utils/CajaStorage";
+import { useCurrentUser } from "../../context/UserContext";
 
 const MainCaja = () => {
 

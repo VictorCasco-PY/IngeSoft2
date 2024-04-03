@@ -29,7 +29,6 @@ export const CobrosPendientesVista = () => {
 
   const handleSelectFactura = async(facturaId) => {
     const res = await getFacturaById(facturaId);
-    console.log(res);
     setFacturaSeleccionada(res);
     handleOpenFacturaModal();
   }

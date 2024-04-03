@@ -1,4 +1,5 @@
 export const precioHandler = (precio) => {
+  if(!precio) return;
   let result = precio.toString();
 
   // Dividir la cadena en grupos de 3 desde la derecha
