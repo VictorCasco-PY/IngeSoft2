@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import ModalBase from '../../components/modals/ModalBase';
-import { useFactura } from '../../hooks/useFactura';
 import { Table } from '../../components/table/Table';
 import { Btn } from '../../components/bottons/Button';
 import { iva } from '../../utils/ivaHandler';
 import { precioHandler } from '../../utils/precioHandler';
+import { CobrarFacturaModal } from './CobrarFacturaModal';
+import { useFactura } from '../../hooks/useFactura';
 
 export const FacturaModal = ({ open, closeModal, data, guardar }) => {
 
@@ -25,7 +26,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
     }, [data]);
 
 
-    return <ModalBase title={`Factura Nº ${factura?.factura?.nroFactura}`} open={open} closeModal={closeModal}>
+    return <ModalBase title={`Factura NÂº ${factura?.factura?.nroFactura}`} open={open} closeModal={closeModal}>
         {console.log(factura)}
         <div>
             <p className='py-2'>
@@ -62,7 +63,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
             </div>
 
         </div>
-      </ModalBase>
-    
-  }
-  
+        <CobrarFacturaModal data={data} open={cobroModal} closeModal={handleCobroModal} />
+    </ModalBase>
+
+}
