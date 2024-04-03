@@ -85,6 +85,11 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
     setTransferencia(Number(value));
   };
 
+  const handleCerrar = () => {
+    closeModal();
+    resetForm();
+  };
+
   return (
     <>
       <Toaster position="top-right" />
@@ -145,7 +150,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <Btn type="secondary" onClick={closeModal}>
+              <Btn type="secondary" onClick={handleCerrar}>
                 Cerrar
               </Btn>
               <Btn type="primary" onClick={cobrar}>

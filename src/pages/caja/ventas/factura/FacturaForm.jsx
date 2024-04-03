@@ -209,6 +209,7 @@ const FacturaForm = () => {
       precio: "",
       iva: "",
     });
+    document.getElementById("codigo").value = "";
   };
 
   const handleKeyDown = async (e) => {
@@ -262,6 +263,10 @@ const FacturaForm = () => {
     setDetallesParaMostrar([]);
     setDetallesParaEnviar([]);
     setFormularioEnviado(false);
+
+    // Limpiar los campos de RUC y código
+    document.getElementById("rucCliente").value = "";
+    document.getElementById("codigo").value = "";
   };
 
   return (
