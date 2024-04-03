@@ -14,11 +14,11 @@ const FacturaForm = () => {
   useEffect(() => {
     // Obteniendo el valor almacenado en localStorage cuando el componente se monta
     const storedItem = localStorage.getItem("sesionCajaId");
-    console.log(storedItem);
 
     // Actualizando el estado con el valor almacenado, si existe
     if (storedItem) {
       setStoredValue(storedItem);
+      console.log(storedValue);
     }
   }, []);
 
@@ -36,7 +36,7 @@ const FacturaForm = () => {
     nombreCliente: "",
     rucCliente: "",
     direccion: "",
-    sesionId: Number(storedValue),
+    sesionId: "",
     subTotal: 0,
     iva5: 0,
     iva10: 0,
@@ -100,7 +100,6 @@ const FacturaForm = () => {
       ]);
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        console.log("No hay suscripciones pendientes para este cliente");
         return;
       }
       toast.error("Error al obtener las suscripciones");
@@ -150,7 +149,7 @@ const FacturaForm = () => {
         nombreCliente: clienteInfo.nombre,
         rucCliente: clienteInfo.ruc,
         direccion: clienteInfo.direccion,
-        sesionId: 1,
+        sesionId: Number(storedValue),
         subTotal: subTotal,
         iva5: iva5,
         iva10: iva10,
@@ -159,7 +158,6 @@ const FacturaForm = () => {
       });
 
       handleGuardarFactura();
-      toast.success("Factura generada correctamente");
     } catch (error) {
       toast.error("No se pudo cargar la factura");
     }
@@ -185,7 +183,6 @@ const FacturaForm = () => {
       iva: producto.iva,
       subtotal: producto.precio * producto.cantidad,
     };
-    console.log(nuevoDetalleMostrar);
 
     const nuevoDetalleEnviar = {
       productoId: producto.id,
@@ -195,7 +192,6 @@ const FacturaForm = () => {
       iva: producto.iva,
       ivaTotal: producto.precio * producto.cantidad * producto.iva,
     };
-    console.log(nuevoDetalleEnviar);
 
     setDetallesParaMostrar([...detallesParaMostrar, nuevoDetalleMostrar]);
     setDetallesParaEnviar([...detallesParaEnviar, nuevoDetalleEnviar]);
@@ -209,7 +205,6 @@ const FacturaForm = () => {
       precio: "",
       iva: "",
     });
-    setCodigo("");
   };
 
   const handleKeyDown = async (e) => {

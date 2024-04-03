@@ -11,14 +11,14 @@ const DetalleModal = ({
   closeModal,
   open,
 }) => {
-  const { nroFactura, fecha, nombreCliente, rucCliente, direccion } = factura;
+  const { fecha, nombreCliente, rucCliente, direccion } = factura;
   const detalles = detallesParaEnviar;
   const [cobroModalOpen, setCobroModalOpen] = useState(false);
   const [data, setData] = useState({
     factura,
     detalles,
   });
-  console.log(data);
+  console.log("Datos", data);
 
   const handleOpenCobroModal = () => {
     closeModal();
@@ -32,6 +32,7 @@ const DetalleModal = ({
   const handleSubmitFactura = async () => {
     try {
       const response = await api.post("/facturas", data);
+      console.log("Response", response.data.factura);
       toast.success("Factura guardada correctamente");
     } catch (error) {
       toast.error("Error al guardar la factura");
