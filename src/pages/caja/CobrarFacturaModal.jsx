@@ -47,6 +47,11 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
             return;
         }
 
+        if (tarjeta > normalizarPrecio(data?.factura?.saldo)) {
+            toast.error("No puedes cobrar por tarjeta un monto mayor al saldo.")
+            return;
+        }
+
         const fechaHoraActual = new Date();
 
         // Obtener la hora, los minutos y los segundos
@@ -70,9 +75,13 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
         const detalles = []
 
         if (normalizarPrecio(efectivo) > 0) {
+            let efectivoFinal
+
+            efectivoFinal = normalizarPrecio(efectivo) - normalizarPrecio(cambio)
+
             detalles.push({
                 "tipoDePagoId": 1,
-                "monto": normalizarPrecio(efectivo)
+                "monto": normalizarPrecio(efectivoFinal)
             })
         }
 
@@ -85,6 +94,8 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
 
         cobro["detalles"] = detalles
 
+        console.log(cobro);
+
         await crearMovimiento(cobro)
 
         if (error) {
@@ -92,7 +103,7 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
             return;
         }
 
-        
+
         toast.success("El cobro se registró con éxito.")
         resetAndClose()
 
@@ -113,7 +124,7 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
 
         nuevoCambio = totalAPagar - data?.factura?.saldo;
 
-        
+
         if (nuevoCambio < 0 || isNaN(nuevoCambio)) {
             setTotalPago(totalAPagar)
             setCambio("0")

@@ -1,4 +1,5 @@
 import { Table } from "../../../components/table/Table";
+import { precioHandler } from '../../../utils/precioHandler';
 
 export const CobrosPendientesLista = ({ facturas, select }) => {
 
@@ -11,8 +12,8 @@ export const CobrosPendientesLista = ({ facturas, select }) => {
                             <td className="py-3">{factura.fecha}</td>
                             <td className="py-3">{factura.nombreCliente}</td>
                             <td className="py-3">{factura.rucCliente}</td>
-                            <td className="py-3">{factura.total}</td>
-                            <td className="py-3">{factura.saldo}</td>
+                            <td className="py-3">{precioHandler(factura.total)}</td>
+                            <td className="py-3">{precioHandler(factura.saldo)}</td>
                         </tr>
             )})}
         </Table>
