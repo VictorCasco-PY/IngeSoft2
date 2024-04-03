@@ -106,7 +106,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} />
 
             <CartaPrincipal>
-                {/**/}
+                {/*TODO: agregar react-select para la seleccion de caja*/}
                 {/*{req_cajas.items && (
                     <Select />
                 )}*/}
@@ -163,11 +163,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                     <option key={caja.id} value={caja.id}>{caja.nombre}</option>
                                                 ))}
                                             </FormSelect>
-                                            {/*<div className="align-self-start">
-                                                    <button onClick={() => {
-                                                        setCurrentPage(currentPage + 1);
-                                                    }} disabled={currentPage >= totalPages} className="mt-2">Siguiente Página</button>
-                                                </div> */}
                                             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
 
                                             <FormTextInput
