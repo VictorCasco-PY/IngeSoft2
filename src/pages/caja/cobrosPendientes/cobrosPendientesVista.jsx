@@ -15,24 +15,42 @@ export const CobrosPendientesVista = () => {
   const [data, setData] = useState([]);
   const [openFacturaModal, setOpenFacturaModal] = useState(false);
   const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
+  const [search, setSearch] = useState('');
 
-  const { isLoading, error, notFound, getFacturasPendientes,getFacturaById } = useFactura();
+  const { isLoading, error, notFound, getFacturasPendientes, getSearchFacturaPendienteByNombre, getFacturaById } = useFactura();
 
   const getData = async () => {
     const pendientes = await getFacturasPendientes();
     setData(pendientes);
   };
 
-  const handleOpenFacturaModal = () => {
-    setOpenFacturaModal(!openFacturaModal);
+  const handleFacturaModal = () => {
+    setOpenFacturaModal(false);
   }
-
-  const handleSelectFactura = async(facturaId) => {
+  
+  const handleSelectFactura = async (facturaId) => {
     const res = await getFacturaById(facturaId);
     setFacturaSeleccionada(res);
-    handleOpenFacturaModal();
+    setOpenFacturaModal(true);
   }
 
+  const handleSearchInput = (e) => {
+    setSearch(e.target.value);
+    if (e.target.value === "") {
+      getData();
+      return;
+    }
+  }
+
+  const handleSearch = async () => {
+    if (search === "") {
+      getData();
+      return;
+    }
+
+    const res = await getSearchFacturaPendienteByNombre(search);
+    setData(res);
+  }
 
 
   useEffect(() => {
@@ -69,7 +87,6 @@ export const CobrosPendientesVista = () => {
     <div className="p-2">
       <form className="d-flex gap-4 flex-wrap w-100">
 
-
         {/* No implementado aún */}
         {/* 
         <span className="d-flex gap-3">
@@ -87,14 +104,14 @@ export const CobrosPendientesVista = () => {
 
 
         <span className="d-flex w-50 gap-3">
-          <Input id="input-search" placeholder="Buscar..." />
-          <Btn outline>Buscar</Btn>
+          <Input id="input-search" placeholder="Buscar..." onChange={e => handleSearchInput(e)} />
+          <Btn outline onClick={handleSearch}>Buscar</Btn>
         </span>
       </form>
     </div>
 
 
     {switchRender()}
-    <FacturaModal open={openFacturaModal} facturaId={facturaSeleccionada} closeModal={handleOpenFacturaModal} data={facturaSeleccionada}/>
+    <FacturaModal open={openFacturaModal} facturaId={facturaSeleccionada} closeModal={handleFacturaModal} data={facturaSeleccionada} />
   </CartaPrincipal>;
 };

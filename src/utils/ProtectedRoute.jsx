@@ -10,7 +10,7 @@ const ProtectedRoute = ({ roles = ["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"] }
 
   useEffect(() => {
     // la razon por la cual utilizo UserStorage y no context es porque el context no se actualiza antes de que se ejecute este useEffect
-    const userRol = UserStorage.getUser().rol;
+    const userRol = UserStorage.getUserRol();
     if (!isAuthenticated || !roles.includes(userRol)) {
       //console.log("No estas permitido")
       navigate("/");

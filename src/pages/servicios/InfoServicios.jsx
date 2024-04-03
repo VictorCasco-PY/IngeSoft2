@@ -19,6 +19,7 @@ import IndicadorClientes from "../../components/ManejoStock/IndicadorClientes";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import { IoArrowBackSharp } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 
 const InfoServicios = () => {
   const { id } = useParams();
@@ -266,7 +267,7 @@ const InfoServicios = () => {
   const handleSelectCliente = (cliente) => {
     setSelectedCliente(cliente);
     setSearchCedulaTerm(""); // Limpiar el término de búsqueda
-    setSearchCedulaResults([]); 
+    setSearchCedulaResults([]);
   };
 
   //buscador mejorado
@@ -284,14 +285,14 @@ const InfoServicios = () => {
   const handleSearchChange = () => {
     console.log(searchTerm);
     if (searchTerm.length >= 4) {
-      searchServicios(searchTerm); 
+      searchServicios(searchTerm);
     } else {
       fetchSuscripciones(id, currentPage);
     }
   };
 
   return (
-    <div className="MaquetaCliente">
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -310,148 +311,146 @@ const InfoServicios = () => {
           },
         }}
       />
-      <div class="card">
-        <div class="container">
-          <div className="card-1">
-            <div className="title-container">
-              <Link to="/servicios" className="back-link">
-                <IoArrowBackSharp className="back-icon" />
-              </Link>
-              <h2 className="title">Clientes {actividadNombre}</h2>
-            </div>
-            <div className="card-body d-flex align-items-center ">
-              <form className="d-flex flex-grow-1">
-                <input
-                  id="input-search"
-                  className="form-control mt-3 custom-input"
-                  type="text"
-                  placeholder="Search"
-                  value={searchTerm}
-                  onChange={handleInputChange}
-                />
-                <ButtonBasic
-                  id="btn-buscar"
-                  text="Buscar"
-                  onClick={handleSearchChange}
-                />{" "}
-              </form>
-              <div className="dropdown">
-                <button
-                  id="btn-filtrar"
-                  type="button"
-                  className="btn btn-secundary dropdown-toggle btn-filtrar"
-                  data-bs-toggle="dropdown"
-                  style={{ fontSize: "1.02rem" }}
-                >
-                  Filtrar por estado
-                </button>
-                <ul className="dropdown-menu">
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      id="btn-pagado"
-                      onClick={() => handleFiltrar("pagado")}
-                    >
-                      Pagado
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      id="btn-pendiente"
-                      onClick={() => handleFiltrar("pendiente")}
-                    >
-                      Pendiente
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      id="btn-todos"
-                      onClick={() => handleFiltrar("")}
-                    >
-                      Todos
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <ButtonCrear
-                id="btn-Crear"
-                text="Nuevo Cliente"
-                onClick={() => setModalOpen(true)}
-                icon={<IoAdd />}
-                color="secondary"
+      <CartaPrincipal>
+        <div>
+          <div className="title-container">
+            <Link to="/servicios" className="back-link">
+              <IoArrowBackSharp className="back-icon" />
+            </Link>
+            <h2 className="title">Clientes {actividadNombre}</h2>
+          </div>
+          <div className="card-body d-flex align-items-center ">
+            <form className="d-flex flex-grow-1">
+              <input
+                id="input-search"
+                className="form-control mt-3 custom-input"
+                type="text"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={handleInputChange}
               />
+              <ButtonBasic
+                id="btn-buscar"
+                text="Buscar"
+                onClick={handleSearchChange}
+              />{" "}
+            </form>
+            <div className="dropdown">
+              <button
+                id="btn-filtrar"
+                type="button"
+                className="btn btn-secundary dropdown-toggle btn-filtrar"
+                data-bs-toggle="dropdown"
+                style={{ fontSize: "1.02rem" }}
+              >
+                Filtrar por estado
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <button
+                    className="dropdown-item"
+                    id="btn-pagado"
+                    onClick={() => handleFiltrar("pagado")}
+                  >
+                    Pagado
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    id="btn-pendiente"
+                    onClick={() => handleFiltrar("pendiente")}
+                  >
+                    Pendiente
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    id="btn-todos"
+                    onClick={() => handleFiltrar("")}
+                  >
+                    Todos
+                  </button>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div className="table-container">
-            <table className="custom-table">
-              <thead>
-                <tr>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">
-                    Estado <TbArrowDown />
-                  </th>
-                  <th scope="col">
-                    Plan <GoQuestion />
-                  </th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Numero de telefono</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {suscripcionesFiltradas.map((suscripcion) => (
-                  <tr key={suscripcion.id}>
-                    <td>
-                      <Link   id={`infoActividad${suscripcion.clienteDto.id}`} to={`/clientesinfo/${suscripcion.clienteDto.id}`}>
-                        {suscripcion.clienteDto.nombre}
-                      </Link>
-                    </td>
-                    <td>
-                      <EstadoPago estado={suscripcion.suscripcionDto.estado} />
-                    </td>
-                    <td>{suscripcion.suscripcionDto.modalidad}</td>
-                    <td>{suscripcion.clienteDto.email}</td>
-                    <td>{suscripcion.clienteDto.telefono}</td>
-                    <td className="custom-table2">
-                      <a
-                        href="#"
-                        style={{ marginRight: "15%" }}
-                        id={`eliminar-${suscripcion.suscripcionDto.id}`}
-                        onClick={() =>
-                          handleEliminarSuscripcion(
-                            suscripcion.suscripcionDto.id
-                          )
-                        }
-                      >
-                        <RiDeleteBinLine />
-                      </a>
-                      <a
-                        href="#"
-                        id={`editar-${suscripcion.suscripcionDto.id}`}
-                        onClick={() => handleEditSubscription(suscripcion)}
-                      >
-                        {" "}
-                        {/* Agregar onClick para editar */}
-                        <FiEdit2 />
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="pagination-container">
-            <Pagination
-              id="paginacion"
-              count={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
+            <ButtonCrear
+              id="btn-Crear"
+              text="Nuevo Cliente"
+              onClick={() => setModalOpen(true)}
+              icon={<IoAdd />}
+              color="secondary"
             />
           </div>
         </div>
-      </div>
+        <div className="table-container">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th scope="col">Cliente</th>
+                <th scope="col">
+                  Estado <TbArrowDown />
+                </th>
+                <th scope="col">
+                  Plan <GoQuestion />
+                </th>
+                <th scope="col">Email</th>
+                <th scope="col">Numero de telefono</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {suscripcionesFiltradas.map((suscripcion) => (
+                <tr key={suscripcion.id}>
+                  <td>
+                    <Link id={`infoActividad${suscripcion.clienteDto.id}`} to={`/clientesinfo/${suscripcion.clienteDto.id}`}>
+                      {suscripcion.clienteDto.nombre}
+                    </Link>
+                  </td>
+                  <td>
+                    <EstadoPago estado={suscripcion.suscripcionDto.estado} />
+                  </td>
+                  <td>{suscripcion.suscripcionDto.modalidad}</td>
+                  <td>{suscripcion.clienteDto.email}</td>
+                  <td>{suscripcion.clienteDto.telefono}</td>
+                  <td className="custom-table2">
+                    <a
+                      href="#"
+                      style={{ marginRight: "15%" }}
+                      id={`eliminar-${suscripcion.suscripcionDto.id}`}
+                      onClick={() =>
+                        handleEliminarSuscripcion(
+                          suscripcion.suscripcionDto.id
+                        )
+                      }
+                    >
+                      <RiDeleteBinLine />
+                    </a>
+                    <a
+                      href="#"
+                      id={`editar-${suscripcion.suscripcionDto.id}`}
+                      onClick={() => handleEditSubscription(suscripcion)}
+                    >
+                      {" "}
+                      {/* Agregar onClick para editar */}
+                      <FiEdit2 />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="pagination-container">
+          <Pagination
+            id="paginacion"
+            count={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      </CartaPrincipal>
       <ModalBase
         id="ModalAgregar"
         title="Agrgar Cliente"
@@ -476,7 +475,7 @@ const InfoServicios = () => {
               value={modalidad}
               onChange={(e) => setModalidad(e.target.value)}
             >
-              <option  id="mensual" value="MENSUAL">Mensual</option>
+              <option id="mensual" value="MENSUAL">Mensual</option>
               <option id="semanal" value="SEMANAL">Semanal</option>
             </select>
           </div>
@@ -495,37 +494,37 @@ const InfoServicios = () => {
           </div>
 
           <div>
-  <div className="label-container">
-    <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
-    <span className="required">*</span>
-  </div>
-  <div className="input-container">
-    <input
-      id="cedula"
-      type="text"
-      className="select"
-      placeholder="Ingrese el Nº CI completo del cliente"
-      value={searchCedulaTerm}
-      onChange={handleSearchCedulaChange}
-    />
-    {/* Botón para buscar clientes por cédula */}
-    <ButtonBasic id="btn-buscarCI"  text="Agregar" onClick={searchByCedula} style={{ width: '2cm',height:'0.87cm' }}/>
-  </div>
-  <ul>
-    {searchCedulaResults.map((cliente) => (
-      <li key={cliente.id}>
-        <button  id={`btn-cliente-${cliente.id}`}onClick={() => handleSelectCliente(cliente)}>
-          {cliente.nombre} - CI: {cliente.cedula}
-        </button>
-      </li>
-    ))}
-  </ul>
-</div>
+            <div className="label-container">
+              <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
+              <span className="required">*</span>
+            </div>
+            <div className="input-container">
+              <input
+                id="cedula"
+                type="text"
+                className="select"
+                placeholder="Ingrese el Nº CI completo del cliente"
+                value={searchCedulaTerm}
+                onChange={handleSearchCedulaChange}
+              />
+              {/* Botón para buscar clientes por cédula */}
+              <ButtonBasic id="btn-buscarCI" text="Agregar" onClick={searchByCedula} style={{ width: '2cm', height: '0.87cm' }} />
+            </div>
+            <ul>
+              {searchCedulaResults.map((cliente) => (
+                <li key={cliente.id}>
+                  <button id={`btn-cliente-${cliente.id}`} onClick={() => handleSelectCliente(cliente)}>
+                    {cliente.nombre} - CI: {cliente.cedula}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Mostrar el cliente seleccionado */}
           {selectedCliente && (
             <p>
-             <strong>Seleccionado:</strong> {selectedCliente.nombre} CI:{" "}
+              <strong>Seleccionado:</strong> {selectedCliente.nombre} CI:{" "}
               {selectedCliente.cedula}
             </p>
           )}
@@ -608,7 +607,7 @@ const InfoServicios = () => {
                 <span className="required">*</span>
               </div>
               <input
-                 id="fecha-InicioEdit"
+                id="fecha-InicioEdit"
                 className="select-activity"
                 type="date"
                 value={editingSubscription.suscripcionDto.fechaFin}
@@ -664,7 +663,7 @@ const InfoServicios = () => {
           cancelAction={handleCancelDelete}
         />
       )}
-    </div>
+    </>
   );
 };
 

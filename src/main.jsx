@@ -95,6 +95,25 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
+          <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
+            <Route
+              exact
+              path="/caja"
+              element={
+                <Layout>
+                  <MainCaja />
+                </Layout>
+              }
+            />
+          </Route>
+          <Route
+            path="/caja"
+            element={
+              <Layout>
+                <MainCaja />
+              </Layout>
+            }
+          />
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route
               exact
