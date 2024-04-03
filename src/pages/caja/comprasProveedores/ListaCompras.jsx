@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import FlechaAtras from '../../../components/flechaAtras/FlechaAtras';
 import CartaPrincipal from '../../../components/cartaPrincipal/CartaPrincipal';
 import TablaCaja from '../../../components/tables/TablaCaja';
@@ -7,19 +7,26 @@ import api from '../../../utils/api';
 
 const ListaCompras = () => {
   const { items = [], addItem } = useComprasCaja() || {};
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const obtenerFacturas = async () => {
+  const obtenerFacturas = async (page) => {
     try {
-      const response = await api.get('/facturas-proveedores/page/1');
+      const response = await api.get(`/facturas-proveedores/page/${page}`);
       response.data.items.forEach((factura) => addItem(factura));
+      setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error al obtener las facturas:', error);
     }
   };
 
   useEffect(() => {
-    obtenerFacturas();
-  }, []);
+    obtenerFacturas(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -28,7 +35,12 @@ const ListaCompras = () => {
           <FlechaAtras ruta="/caja" />
           <h2 style={{ marginLeft: '3rem' }}>Listar Compras Realizadas</h2>
         </div>
-        <TablaCaja items={items} />
+        <TablaCaja
+          items={items}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </CartaPrincipal>
     </>
   );

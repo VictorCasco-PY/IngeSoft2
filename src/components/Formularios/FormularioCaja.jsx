@@ -3,7 +3,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import LabelBase from "../labels/LabelBase";
 import ButtonCrear from "../bottons/ButtonCrear";
 import ButtonBasic from "../bottons/ButtonBasic";
-import DateTime from "react-datetime";
+
+import DatePicker from "react-datepicker";
 
 import { FacturaModal } from "../../pages/caja/FacturaModal";
 import { Toaster, toast } from "react-hot-toast";
@@ -14,8 +15,7 @@ import "react-datetime/css/react-datetime.css";
 import api from "../../utils/api";
 
 const FormularioCaja = () => {
-  const [openFacturaModal, setOpenFacturaModal] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [fecha, setFecha] = useState(new Date());
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().substr(0, 10);
   const [detallesParaMostrar, setDetallesParaMostrar] = useState([]);
@@ -24,7 +24,7 @@ const FormularioCaja = () => {
   const [codigo, setCodigo] = useState("");
   const [datosFactura, setDatosFactura] = useState({
     proveedorId: "",
-    timbrado: 0,
+    timbrado: "",
     fecha: formattedDate,
     nombreProveedor: "",
     rucProveedor: "",
@@ -49,17 +49,65 @@ const FormularioCaja = () => {
     precio: "",
     iva: "",
   });
-  const handleOpenFacturaModal = () => {
-    setModalVisible(true);
-    handleGuardarFactura(); // Prepara los datos para la factura
+
+  const handleFechaChange = (date) => {
+    setFecha(date);
   };
-  const handleGuardarFactura = () => {
-    // Lógica para preparar los datos de la factura
-    // Puedes utilizar el estado actual del formulario para obtener los datos necesarios
-    const datosFactura = {
-      // Datos de la factura
-    };
-    setDatosFactura(datosFactura);
+  const handleGuardarFactura = async (subTotal, iva5, iva10, total) => {
+    try {
+      // Preparar los datos de la factura
+      const datosFactura = {
+        factura: {
+          proveedorId: proveedorInfo.proveedorId,
+          timbrado: "1547884", // Ejemplo de número de timbrado
+          nombreProveedor: proveedorInfo.nombre,
+          rucProveedor: proveedorInfo.ruc,
+          fecha: formattedDate,
+          subTotal: subTotal,
+          iva5: iva5,
+          iva10: iva10,
+          total: total,
+          saldo: total,
+          pagado: true,
+        },
+        detalles: detallesParaEnviar,
+      };
+      // Enviar los datos al backend para guardar la factura
+      const response = await api.post("/facturas-proveedores", datosFactura);
+      toast.success("Factura generada correctamente");
+      if (response.status === 201) {
+        // Reiniciar los estados del formulario después de crear la factura
+        setProveedorInfo({
+          ruc: "",
+          nombre: "",
+          proveedorId: "",
+          direccion: "",
+        });
+        setDetallesParaMostrar([]);
+        setDetallesParaEnviar([]);
+        setDatosFactura({
+          proveedorId: "",
+          timbrado: "1547884",
+          fecha: formattedDate,
+          nombreProveedor: "",
+          rucCliente: "",
+          direccion: "",
+          subTotal: 0,
+          iva5: 0,
+          iva10: 0,
+          total: 0,
+          saldo: 0,
+        });
+        setCodigo("");
+      } else {
+        // Manejar posibles errores
+        toast.error("Error al guardar la factura");
+      }
+    } catch (error) {
+      // Manejar errores de la llamada a la API
+      console.error("Error al guardar la factura:", error);
+      toast.error("Error al guardar la factura");
+    }
   };
 
   const handleCrearFactura = async () => {
@@ -67,10 +115,10 @@ const FormularioCaja = () => {
     try {
       // Llamada a la API para crear la factura de proveedores con los datos de la factura
       const response = await api.post("/facturas-proveedores", datosFactura);
+
       if (response.status === 201) {
         // Si la factura se crea con éxito, cierra el modal y muestra un mensaje de éxito
         setModalVisible(false);
-        toast.success("La factura se ha creado correctamente");
       } else {
         // Si hay algún error en la respuesta de la API, muestra un mensaje de error
         toast.error("Error al crear la factura");
@@ -98,7 +146,7 @@ const FormularioCaja = () => {
       }
     } catch (error) {
       console.error("Error al obtener el proveedor:", error);
-      toast.error("Error al obtener el proveedor");
+      toast.error("No existe un proveedor con ese RUC");
     }
   };
 
@@ -122,7 +170,7 @@ const FormularioCaja = () => {
 
       setDatosFactura({
         proveedorId: proveedorInfo.proveedorId,
-        timbrado: 1547884,
+        timbrado: "1547884",
         fecha: formattedDate,
         nombreProveedor: proveedorInfo.nombre,
         rucCliente: proveedorInfo.ruc,
@@ -134,8 +182,7 @@ const FormularioCaja = () => {
         saldo: total,
       });
 
-      handleGuardarFactura();
-      toast.success("Factura generada correctamente");
+      await handleGuardarFactura(subTotal, iva5, iva10, total);
     } catch (error) {
       toast.error("No se pudo cargar la factura");
     }
@@ -161,6 +208,7 @@ const FormularioCaja = () => {
     console.log(nuevoDetalleEnviar);
     // Agregar nuevo detalle al estado detallesParaMostrar
     setDetallesParaMostrar([...detallesParaMostrar, nuevoDetalleMostrar]);
+    setDetallesParaEnviar([...detallesParaEnviar, nuevoDetalleEnviar]);
     // Limpiar los inputs de los items
     setProducto({
       id: "",
@@ -194,7 +242,7 @@ const FormularioCaja = () => {
         }
       } catch (error) {
         console.error("Error al obtener el producto:", error);
-        toast.error("Error al obtener el producto");
+        toast.error("No existe un prodducto con ese codigo");
       }
     }
   };
@@ -204,8 +252,6 @@ const FormularioCaja = () => {
     { label: "10%", value: 0.1 },
   ];
 
-  
-
   return (
     <form>
       <div>
@@ -214,13 +260,11 @@ const FormularioCaja = () => {
       <div className="row mb-3">
         <div className="col-md-4">
           <LabelBase htmlFor="fecha">Fecha</LabelBase>
-          <input
-            type="date"
-            id="fecha"
-            name="fecha"
+          <DatePicker
+            selected={fecha}
+            onChange={handleFechaChange}
+            dateFormat="dd/MM/yyyy"
             className="form-control"
-            value={formattedDate}
-            style={{ backgroundColor: "white" }}
           />
         </div>
       </div>
@@ -277,14 +321,10 @@ const FormularioCaja = () => {
             max={cantidadMaxima}
             onChange={(e) => {
               const nuevaCantidad = parseInt(e.target.value);
-              if (
-                !isNaN(nuevaCantidad) &&
-                nuevaCantidad >= 0 &&
-                nuevaCantidad <= cantidadMaxima
-              ) {
+              {
                 setProducto((prevProducto) => ({
                   ...prevProducto,
-                  cantidad: prevProducto.cantidad + nuevaCantidad,
+                  cantidad: nuevaCantidad,
                 }));
               }
             }}
@@ -384,16 +424,6 @@ const FormularioCaja = () => {
           onClick={handleSubmit}
         />
       </div>
-
-      {/* Modal de la factura */}
-      {modalVisible && (
-        <FacturaModal
-          open={modalVisible}
-          data={{ factura: datosFactura, detalles: detallesParaMostrar }}
-          closeModal={() => setModalVisible(false)}
-          guardar={handleCrearFactura} // Esta función se llamará al hacer clic en "Guardar Factura" en el modal
-        />
-      )}
     </form>
   );
 };

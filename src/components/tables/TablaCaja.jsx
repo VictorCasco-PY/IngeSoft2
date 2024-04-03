@@ -3,13 +3,16 @@ import ButtonBasic from "../bottons/ButtonBasic";
 import BotonCrear from "../bottons/ButtonCrear";
 import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
-const TablaCaja = ({ items }) => {
+const TablaCaja = ({ items, totalPages, currentPage, onPageChange  }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterByInvoice, setFilterByInvoice] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("");
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredFacturas, setFilteredFacturas] = useState([]);
+  // Calculamos el índice inicial y final de los elementos a mostrar en la página actual
+  const startIndex = (currentPage - 1) * 5;
+  const endIndex = Math.min(startIndex + 5, items.length);
+
+  // Extraemos los elementos a mostrar en la página actual
+  const currentPageItems = items.slice(startIndex, endIndex);
   const filteredItems = items.filter((item) => {
     const proveedorMatch = searchTerm
       ? item.factura.nombreProveedor
@@ -39,7 +42,7 @@ const TablaCaja = ({ items }) => {
     }
   };
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    onPageChange(page);
   };
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
@@ -63,31 +66,7 @@ const TablaCaja = ({ items }) => {
           />
           <ButtonBasic id="btn-buscar" text="Buscar" onClick={handleSearch} />
         </div>
-        <div className="dropdown">
-          <button
-            id="btn-filtrar"
-            type="button"
-            className="btn btn-secundary dropdown-toggle btn-filtrar"
-            data-bs-toggle="dropdown"
-            style={{ fontSize: "1.02rem" }}
-          >
-            Filtrar por...
-          </button>
-          <ul className="dropdown-menu">
-            <form className=" px-2 ">
-              <div className="mb-3">
-                <select
-                  id="filter-by-status"
-                  className="form-control"
-                  onChange={(e) => setFilterByStatus(e.target.value)}
-                >
-                  <option value="Pagado">Pagado</option>
-                  <option value="Pendiente">Pendiente</option>
-                </select>
-              </div>
-            </form>
-          </ul>
-        </div>
+        
       </div>
 
       <table className="table">
@@ -101,7 +80,7 @@ const TablaCaja = ({ items }) => {
             <th scope="col">Total(Gs)</th>
           </tr>
         </thead>
-        {filteredItems.map((item, index) => (
+        {currentPageItems.map((item, index) => (
           <tr key={index}>
             <td style={{ color: "#6941C6" }}>{item.factura.nroFactura}</td>
             <td>{item.factura.fecha}</td>
