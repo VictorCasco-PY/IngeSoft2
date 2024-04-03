@@ -5,13 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import './TablaActividades.css';
 import { capFirstMinRest, formatFecha } from '../../utils/Formatting';
 import api from '../../utils/api';
+import ErrorPagina from '../errores/ErrorPagina';
+import { ListaVacía } from '../errores/ListaVacía';
+import { Table } from '../table/Table';
 
 const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
     // no borrar
     //const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
     const [actividades, setActividades] = useState([]);
-    const [loadTable, setLoadTable] = useState(false);
+    const [loadTable, setLoadTable] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const navigate = useNavigate();
 
@@ -28,7 +32,10 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
             if (toast) {
                 if (error.response.status === 404) {
                     setActividades([]);
+                    //setErrorMessage(error.response.data.message) //no se usa porque no me gusta el formateo el error traido desde el back
+                    setErrorMessage("Este cliente no posee actividades.")
                 } else {
+                    setErrorMessage("Ha ocurrido un error al solicitar las cajas.")
                     toast.error("Error al cargar suscripciones. Revise la conexión.");
                 }
             }
@@ -67,37 +74,29 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
         getSuscripciones();
     }, [page]);
 
-    return (
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Modalidad</th>
-                    <th>Estado</th>
-                    <th>Fecha de Inscripcion</th>
-                    <th>Fecha de Vencimiento</th>
-                </tr>
-            </thead>
-            <tbody>
-                {loadTable ? (
-                    <tr>
-                        <td colSpan="5">
-                            <CircularProgress />
-                        </td>
-                    </tr>
-                ) : (
+    const switchRender = () => {
 
-                    <>
-                        {actividades && actividades.length === 0 ? (
-                            <tr>
-                                <td colSpan="5">
-                                    Este cliente no tiene actividades inscritas.
-                                </td>
-                            </tr>
-                        ) : (
-                            (actividades) && actividades.items.map((actividad) => (
-                                <tr key={actividad.id}>
-                                    <td onClick={() => { navigate(`/infoServicio/${actividad.actividadId}`) }} className='rowClickable'>
+        if (loadTable) return <Table headers={["Nombre", "Modalidad", "Estado", "Fecha de Inscripcion", "Fecha de Vencimiento"]} striped>
+            <td colSpan="5" style={{ textAlign: 'center' }}>
+                <div style={{ display: 'inline-block' }}>
+                    <CircularProgress />
+                </div>
+            </td>
+        </Table>
+
+        if (actividades.length <= 0 || actividades.items.length <= 0) return <ListaVacía mensaje={errorMessage} />
+
+        if (!actividades) return <ErrorPagina mensaje={errorMessage} />
+
+        if (actividades.items) {
+            return (
+                <>
+                    <Table headers={["Nombre", "Modalidad", "Estado", "Fecha de Inscripcion", "Fecha de Vencimiento"]} striped>
+                        {actividades.items.map(actividad => {
+                            return (
+
+                                <tr key={actividad.id} onClick={() => { navigate(`/infoServicio/${actividad.actividadId}`) }} className='rowClickable'>
+                                    <td style={{ color: "#7749F8" }} scope="row">
                                         {actividad.actividadNombre}
                                     </td>
                                     <td>{capFirstMinRest(actividad.modalidad)}</td>
@@ -105,22 +104,19 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                                     <td>{formatFecha(actividad.fechaInicio)}</td>
                                     <td>{formatFecha(actividad.fechaFin)}</td>
                                 </tr>
-                            ))
-                        )}
-                    </>
 
-                )}
-                {/*
-                {errorSuscripciones && (
-                    <tr>
-                        <td colSpan="4">
-                            Error al cargar suscripciones. Revise la conexión.
-                        </td>
-                    </tr>
-                )}
-                */}
-            </tbody>
-        </table>
+                            )
+                        })}
+                    </Table>
+                </>
+            );
+        }
+    };
+
+    return (
+        <>
+            {switchRender()}
+        </>
     );
 };
 

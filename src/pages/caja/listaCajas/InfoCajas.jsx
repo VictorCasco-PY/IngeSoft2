@@ -76,9 +76,9 @@ const InfoCajas = () => {
         </Table><Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}>
             </Pagination></div>
 
-        if (noCajasError) return <ErrorPagina mensaje={noCajasError} />
+        if (noCajasError) return <ListaVacía mensaje="No existen cajas registradas." /> //todo: el mensaje retornado del back no es correcto, se muestra "no hay actividades en la lista", deberia mostrar "No hay cajas en la lista"
 
-        if (errorCajas) return <ListaVacía mensaje="Ha ocurrido un error al solicitar las cajas." />
+        if (errorCajas) return <ErrorPagina mensaje="Ha ocurrido un error al solicitar las cajas, revise la conexión." />
 
         return (
             <>

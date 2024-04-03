@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import './AdministrarCaja.css'
 
-
 import toast, { Toaster } from "react-hot-toast";
 
 import useSesionCaja from "../../../hooks/useSesionCaja";
@@ -19,8 +18,8 @@ import UserStorage from "../../../utils/UserStorage";
 const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const navigate = useNavigate();
-    const { getCajaById, data: req_caja, isLoading: cargandoCaja, error: errorCajas } = useCaja();
-    const { getSesionCajaById, cerrarCajaById, data: req_sesion, isLoading: cargandoSesion, error: errorSesion } = useSesionCaja();
+    const { getCajaById, isLoading: cargandoCaja } = useCaja();
+    const { getSesionCajaById, cerrarCajaById, isLoading: cargandoSesion} = useSesionCaja();
     const [sesionCaja, setSesionCaja] = useState({});
     const [caja, setCaja] = useState({});
     const [user, setUser] = useState({});
@@ -74,14 +73,13 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
         navigate("/caja/pendientes");
     }
 
-    //AUN NO SE ACTUALIZA EL MONTO FINAL!!!! URGENTE
     const cerrarCajaActual = async () => {
         setDisabledCerrarCaja(true);
 
         const date = new Date();
         //hora-min-seg
         //agregar un cero si es menor a 10
-        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds();
+        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
 
         const putData = {
             horaCierre: hora
@@ -159,7 +157,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                     }
                 </div>
 
-                <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center">
+                <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center cajasContainer">
                     <div className="card cajaCard">
                         <p className="cajaFont">Ventas</p>
 
