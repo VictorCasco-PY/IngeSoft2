@@ -5,7 +5,6 @@ import { NavDropdown } from "./NavDropdown";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../../../context/UserContext";
 
-
 const UserDropDownTitle = ({ nombre }) => {
   return (
     <>
@@ -47,15 +46,23 @@ export const UserDropDown = () => {
     //cambio de andy
     await contextLogout();
     navigate("/");
-  }
+  };
 
   return (
     <>
-      <NavDropdown title={<UserDropDownTitle nombre={userData?.nombre} style={{minWidth:"max-content"}}/>} left>
+      <NavDropdown
+        title={
+          <UserDropDownTitle
+            nombre={userData?.nombre}
+            style={{ minWidth: "max-content" }}
+          />
+        }
+        left
+      >
         <NavBtn type="dropdownItem" href="#">
           Configurar Cuenta
         </NavBtn>
-        <NavBtn type="dropdownItem" href="#" onClick={handleLogout} >
+        <NavBtn type="dropdownItem" href="#" onClick={handleLogout}>
           Cerrar Sesión
         </NavBtn>
       </NavDropdown>

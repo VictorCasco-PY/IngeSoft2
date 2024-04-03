@@ -18,6 +18,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 
 const MainProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -335,7 +336,7 @@ const MainProductos = () => {
   };
 
   return (
-    <div className="MaquetaCliente">
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -355,318 +356,314 @@ const MainProductos = () => {
         }}
       />
 
-      <div class="card">
-        <div class="container">
-          <div className="card-1">
-            <h2>Tienda</h2>
-            <div className="card-body d-flex align-items-center ">
-              <form className="d-flex flex-grow-1 align-items-center">
-                <input
-                  id="input-search"
-                  className="form-control custom-input"
-                  type="text"
-                  placeholder="Buscar producto en tienda..."
-                  value={searchQuery}
-                  onChange={handleInputChange}
-                />
-                <ButtonBasic
-                  id="btn-buscar"
-                  text="Buscar"
-                  onClick={handleSearchClick}
-                />
-              </form>
-              <div className="dropdown">
-                <button
-                  id="btn-filtrar"
-                  type="button"
-                  className="btn btn-secundary dropdown-toggle btn-filtrar"
-                  data-bs-toggle="dropdown"
-                  style={{ fontSize: "1.02rem" }}
-                >
-                  <IoCheckmark />
-                  Filtrar por Precio
-                </button>
-                <ul className="dropdown-menu">
-                  <form className=" px-2 ">
-                    <div className="mb-3">
-                      <label htmlFor="minPrice" className="form-label">
-                        Precio mínimo
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="minPrice"
-                        value={minPrice}
-                        onChange={(e) => handlePriceInputChange(e, setMinPrice)}
-                      />
-                    </div>
-
-                    <label htmlFor="maxPrice" className="form-label">
-                      Precio máximo
+      <CartaPrincipal>
+        <div>
+          <h1>Tienda</h1>
+          <div className="card-body d-flex align-items-center ">
+            <form className="d-flex flex-grow-1 align-items-center">
+              <input
+                id="input-search"
+                className="form-control custom-input"
+                type="text"
+                placeholder="Buscar producto en tienda..."
+                value={searchQuery}
+                onChange={handleInputChange}
+              />
+              <ButtonBasic
+                id="btn-buscar"
+                text="Buscar"
+                onClick={handleSearchClick}
+              />
+            </form>
+            <div className="dropdown">
+              <button
+                id="btn-filtrar"
+                type="button"
+                className="btn btn-secundary dropdown-toggle btn-filtrar"
+                data-bs-toggle="dropdown"
+                style={{ fontSize: "1.02rem" }}
+              >
+                <IoCheckmark />
+                Filtrar por Precio
+              </button>
+              <ul className="dropdown-menu">
+                <form className=" px-2 ">
+                  <div className="mb-3">
+                    <label htmlFor="minPrice" className="form-label">
+                      Precio mínimo
                     </label>
                     <input
                       type="number"
                       className="form-control"
-                      id="maxPrice"
-                      value={maxPrice}
-                      onChange={(e) => handlePriceInputChange(e, setMaxPrice)}
+                      id="minPrice"
+                      value={minPrice}
+                      onChange={(e) => handlePriceInputChange(e, setMinPrice)}
                     />
-                    <div className="d-grid">
-                      <ButtonCrear
-                        id="btn-filtar-aplicar"
-                        text="Aplicar"
-                        onClick={() =>
-                          handleFilterByPriceRange(
-                            parseFloat(minPrice),
-                            parseFloat(maxPrice)
-                          )
-                        }
-                      />
-                    </div>
-                  </form>
-                </ul>
-              </div>
+                  </div>
 
-              <ButtonCrear
-                id="btn-crear"
-                text="Nuevo Producto"
-                onClick={handleNuevoProducto}
-                icon={<IoAdd />}
-                color="secondary"
+                  <label htmlFor="maxPrice" className="form-label">
+                    Precio máximo
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="maxPrice"
+                    value={maxPrice}
+                    onChange={(e) => handlePriceInputChange(e, setMaxPrice)}
+                  />
+                  <div className="d-grid">
+                    <ButtonCrear
+                      id="btn-filtar-aplicar"
+                      text="Aplicar"
+                      onClick={() =>
+                        handleFilterByPriceRange(
+                          parseFloat(minPrice),
+                          parseFloat(maxPrice)
+                        )
+                      }
+                    />
+                  </div>
+                </form>
+              </ul>
+            </div>
+
+            <ButtonCrear
+              id="btn-crear"
+              text="Nuevo Producto"
+              onClick={handleNuevoProducto}
+              icon={<IoAdd />}
+              color="secondary"
+            />
+          </div>
+        </div>
+
+        <ModalBase
+          open={showModal || showEditModal}
+          closeModal={handleCloseModal}
+          title={showModal ? "Crear Nuevo Producto" : "Editar Producto"}
+        >
+          <form className="mb-3">
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Nombre:" htmlFor="nombre" />
+                <span className="required">*</span>
+              </div>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                className="form-control"
+                value={productosData.nombre}
+                onChange={handleCampoChange}
+                required
               />
             </div>
-          </div>
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Descripcion:" htmlFor="descripcion" />
+                {/* No se requiere asterisco para campos opcionales */}
+              </div>
+              <input
+                type="text"
+                id="descripcion"
+                name="descripcion"
+                className="form-control"
+                value={productosData.descripcion}
+                onChange={handleCampoChange}
+                maxLength={40}
+              ></input>
+            </div>
+            <div className="d-flex justify-content-between">
+              <div className="d-flex flex-column">
+                <div className="mb-3 block">
+                  {" "}
+                  {/* Incrementé el margen inferior */}
+                  <div className="label-container">
+                    <LabelBase label="Codigo:" htmlFor="codigo" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="codigo"
+                    name="codigo"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.codigo}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="Cantidad:" htmlFor="cantidad" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="cantidad"
+                    name="cantidad"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.cantidad}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="d-flex flex-column">
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="Costo:" htmlFor="costo" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="costo"
+                    name="costo"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.costo}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="Precio:" htmlFor="precio" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="precio"
+                    name="precio"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.precio}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
 
-          <ModalBase
-            open={showModal || showEditModal}
-            closeModal={handleCloseModal}
-            title={showModal ? "Crear Nuevo Producto" : "Editar Producto"}
-          >
-            <form className="mb-3">
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Nombre:" htmlFor="nombre" />
-                  <span className="required">*</span>
-                </div>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  className="form-control"
-                  value={productosData.nombre}
-                  onChange={handleCampoChange}
-                  required
-                />
-              </div>
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Descripcion:" htmlFor="descripcion" />
-                  {/* No se requiere asterisco para campos opcionales */}
-                </div>
-                <input
-                  type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  className="form-control"
-                  value={productosData.descripcion}
-                  onChange={handleCampoChange}
-                  maxLength={40}
-                ></input>
-              </div>
-              <div className="d-flex justify-content-between">
-                <div className="d-flex flex-column">
-                  <div className="mb-3 block">
-                    {" "}
-                    {/* Incrementé el margen inferior */}
-                    <div className="label-container">
-                      <LabelBase label="Codigo:" htmlFor="codigo" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      type="number"
-                      id="codigo"
-                      name="codigo"
-                      className="form-control custom-input"
-                      style={{ width: "100%" }}
-                      value={productosData.codigo}
-                      onChange={handleCampoChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3 block">
-                    <div className="label-container">
-                      <LabelBase label="Cantidad:" htmlFor="cantidad" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      type="number"
-                      id="cantidad"
-                      name="cantidad"
-                      className="form-control custom-input"
-                      style={{ width: "100%" }}
-                      value={productosData.cantidad}
-                      onChange={handleCampoChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="d-flex flex-column">
-                  <div className="mb-3 block">
-                    <div className="label-container">
-                      <LabelBase label="Costo:" htmlFor="costo" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      type="number"
-                      id="costo"
-                      name="costo"
-                      className="form-control custom-input"
-                      style={{ width: "100%" }}
-                      value={productosData.costo}
-                      onChange={handleCampoChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3 block">
-                    <div className="label-container">
-                      <LabelBase label="Precio:" htmlFor="precio" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      type="number"
-                      id="precio"
-                      name="precio"
-                      className="form-control custom-input"
-                      style={{ width: "100%" }}
-                      value={productosData.precio}
-                      onChange={handleCampoChange}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Iva:" htmlFor="iva" />
-                  <span className="required">*</span>
-                </div>
-                <select
-                  id="iva"
-                  name="iva"
-                  className="form-control form-select"
-                  value={productosData.iva}
-                  onChange={handleCampoChange}
-                >
-                  {tipo_iva.map((opcion) => (
-                    <option key={opcion.value} value={opcion.value}>
-                      {opcion.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="campo-obligatorio">
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Iva:" htmlFor="iva" />
                 <span className="required">*</span>
-                <span className="message">Campo obligatorio</span>
               </div>
-              <div className="d-flex justify-content-center align-items-center float-end">
-                <button
-                  type="button"
-                  id="btn-cancelar"
-                  className="btn-cancelar"
-                  onClick={handleCloseModal}
-                >
-                  Cancelar
-                </button>
-                <ButtonCrear
-                  id="btn-guardar"
-                  text="Aceptar"
-                  onClick={() => handleAceptar()}
-                />
-              </div>
-            </form>
-          </ModalBase>
+              <select
+                id="iva"
+                name="iva"
+                className="form-control form-select"
+                value={productosData.iva}
+                onChange={handleCampoChange}
+              >
+                {tipo_iva.map((opcion) => (
+                  <option key={opcion.value} value={opcion.value}>
+                    {opcion.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="campo-obligatorio">
+              <span className="required">*</span>
+              <span className="message">Campo obligatorio</span>
+            </div>
+            <div className="d-flex justify-content-center align-items-center float-end">
+              <button
+                type="button"
+                id="btn-cancelar"
+                className="btn-cancelar"
+                onClick={handleCloseModal}
+              >
+                Cancelar
+              </button>
+              <ButtonCrear
+                id="btn-guardar"
+                text="Aceptar"
+                onClick={() => handleAceptar()}
+              />
+            </div>
+          </form>
+        </ModalBase>
 
-          {showAlert && productoToDelete && (
-            <CustomAlert
-              message={`¿Estás seguro de eliminar el producto ${productoToDelete.nombre}?`}
-              confirmText="Aceptar"
-              cancelText="Cancelar"
-              confirmAction={handleConfirmDelete}
-              cancelAction={handleCancelDelete}
-            />
-          )}
-          <div class="table-container">
-            {error && <ErrorPagina mensaje="No hay pruductos cargados aún " />}
-            {/* Muestra el componente de error si hay un error */}
-            {!error &&
-              filteredProductos.length === 0 &&
-              !searchResultsFound && (
-                <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
-              )}
-            {!error && filteredProductos.length === 0 && searchResultsFound && (
-              <ElementoNoEncontrado mensaje="Todavia no hay productos cargados" />
-            )}
-            {!error && filteredProductos.length > 0 && (
-              <table className="custom-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Nombre del Producto</th>
-                    <th scope="col">
-                      Stock <TbArrowDown />
-                    </th>
-                    <th scope="col">
-                      Codigo <GoQuestion />
-                    </th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Precio(Gs)</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProductos.map((producto) => (
-                    <tr key={producto.id}>
-                      <td>{producto.nombre}</td>
-                      <td>
-                        <StockIndicator stock={producto.cantidad} />
-                      </td>
-                      <td>{producto.codigo}</td>
-                      <td>{producto.descripcion}</td>
-                      <td>{formatNumber(producto.precio)}</td>
-                      <td class="text-center">
-                        <a
-                          id={`btn-eliminar-producto-${producto.id}`}
-                          href="#"
-                          onClick={() => handleShowAlert(producto)}
-                          style={{ fontSize: "1.2rem" }}
-                        >
-                          <RiDeleteBinLine />
-                        </a>
-                        <a
-                          id={`btn-editar-producto-${producto.id}`}
-                          href="#"
-                          onClick={() => handleEditarProducto(producto)}
-                          style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
-                        >
-                          <FiEdit2 />
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
-        <div className="pagination-container">
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+        {showAlert && productoToDelete && (
+          <CustomAlert
+            message={`¿Estás seguro de eliminar el producto ${productoToDelete.nombre}?`}
+            confirmText="Aceptar"
+            cancelText="Cancelar"
+            confirmAction={handleConfirmDelete}
+            cancelAction={handleCancelDelete}
           />
+        )}
+        <div class="table-container">
+          {error && <ErrorPagina mensaje="No hay pruductos cargados aún " />}
+          {/* Muestra el componente de error si hay un error */}
+          {!error &&
+            filteredProductos.length === 0 &&
+            !searchResultsFound && (
+              <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
+            )}
+          {!error && filteredProductos.length === 0 && searchResultsFound && (
+            <ElementoNoEncontrado mensaje="Todavia no hay productos cargados" />
+          )}
+          {!error && filteredProductos.length > 0 && (
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre del Producto</th>
+                  <th scope="col">
+                    Stock <TbArrowDown />
+                  </th>
+                  <th scope="col">
+                    Codigo <GoQuestion />
+                  </th>
+                  <th scope="col">Descripcion</th>
+                  <th scope="col">Precio(Gs)</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProductos.map((producto) => (
+                  <tr key={producto.id}>
+                    <td>{producto.nombre}</td>
+                    <td>
+                      <StockIndicator stock={producto.cantidad} />
+                    </td>
+                    <td>{producto.codigo}</td>
+                    <td>{producto.descripcion}</td>
+                    <td>{formatNumber(producto.precio)}</td>
+                    <td class="text-center">
+                      <a
+                        id={`btn-eliminar-producto-${producto.id}`}
+                        href="#"
+                        onClick={() => handleShowAlert(producto)}
+                        style={{ fontSize: "1.2rem" }}
+                      >
+                        <RiDeleteBinLine />
+                      </a>
+                      <a
+                        id={`btn-editar-producto-${producto.id}`}
+                        href="#"
+                        onClick={() => handleEditarProducto(producto)}
+                        style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                      >
+                        <FiEdit2 />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-      </div>
-    </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </CartaPrincipal>
+    </>
   );
 };
 

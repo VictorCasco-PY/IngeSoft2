@@ -6,6 +6,7 @@ import Pagination from "../../../../components/pagination/PaginationContainer";
 import { Btn } from "../../../../components/bottons/Button";
 import DetalleFacturaModal from "./DetalleFacturaModal";
 import { toast, Toaster } from "react-hot-toast";
+import { VolverAtras } from "../../../../components/bottons/VolverAtras";
 
 const ListaVentas = () => {
   const [facturas, setFacturas] = useState([]);
@@ -76,7 +77,7 @@ const ListaVentas = () => {
       <Toaster position="top-right" />
       <div className={classes.form_container}>
         <div className={classes.title_container}>
-          <FlechaAtras />
+          <FlechaAtras ruta={"/caja"} />
           <h1 className={classes.title}>Lista de ventas</h1>
         </div>
         <div className="row d-flex flex-grow-1 align-items-center m-3">

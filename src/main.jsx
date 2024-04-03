@@ -20,6 +20,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
+import MainVenta from "./pages/caja/ventas/factura/MainVenta";
 import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
@@ -89,6 +90,14 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
+          <Route
+            path="/caja"
+            element={
+              <Layout>
+                <MainCaja />
+              </Layout>
+            }
+          />
           <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
             <Route
               exact
@@ -128,7 +137,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
           <Route
-            path="/lista-ventas"
+            path="/caja/lista-ventas"
             element={
               <Layout>
                 <MainLista />

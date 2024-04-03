@@ -24,19 +24,20 @@ import Select from 'react-select/async';
 import Pagination from "../../../components/pagination/PaginationContainer";
 import { useCurrentUser } from "../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import ListIcon from '@mui/icons-material/List';
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
     const [openRegistrarModal, setOpenRegistrarModal] = useState(false);
 
     const { getAllCajas, data: req_cajas, isLoading: cargandoCajas, error: errorCajas } = useCaja();
-    const { createSesionCaja, data: req_sesion, isLoading: cargandoSesion, error: errorSesion, error400: errorMonto } = useSesionCaja();
+    const { createSesionCaja, isLoading: cargandoSesion, error400: errorMonto } = useSesionCaja();
 
     const [abrirDisabled, setAbrirDisabled] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [cajas, setCajas] = useState([]);
+    const [cajas, setCajas] = useState([]); //todo: arreglar hook
     const [totalPages, setTotalPages] = useState(1);
-    //const [selectedValue, setSelectedValue] = useState(null);
+    //const [selectedValue, setSelectedValue] = useState(null); //todo: react-select
     const { rol } = useCurrentUser();
 
     const navigate = useNavigate();
@@ -73,10 +74,10 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         if (cargandoSesion || cargandoCajas) return;
         const date = new Date();
         //anho-mes-fecha
-        const fecha = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "-" + (date.getDate() < 10 ? '0' : '') + date.getDate();
+        const fecha = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "-" + (date.getDate() < 10 ? '0' : '') + date.getDate(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
         //hora-min-seg
         //agregar un cero si es menor a 10
-        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds();
+        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
 
         const postData = {
             idCaja: values['id_caja'],
@@ -90,9 +91,9 @@ const CajaMainForm = ({ setSesionAbierta }) => {
 
         const success = await fetchAbrirSesion(postData);
 
+        //todo: transformar a buena practica, que el error se chequee primero
         if (success && success['id'] && success['idCaja']) { //si se devuelve un id de sesion
-            CajaStorage.setCajaId(success['idCaja']);
-            CajaStorage.setSesionCajaId(success['id']);
+            CajaStorage.abrirCaja(success)
             setSesionAbierta(true);
         } else if (errorMonto) { //si el monto no coincide
             toast.error(errorMonto)
@@ -106,14 +107,14 @@ const CajaMainForm = ({ setSesionAbierta }) => {
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} />
 
             <CartaPrincipal>
-                {/**/}
+                {/*TODO: agregar react-select para la seleccion de caja*/}
                 {/*{req_cajas.items && (
                     <Select />
                 )}*/}
                 {/**/}
 
                 {rol === "ADMIN" && <div className="d-flex justify-content-between">
-                    <Btn type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)}
+                    <Btn type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<ListIcon />}
                         onClick={() => { navigate("/caja/lista") }}>
                         Ver Cajas (ADMIN)
                     </Btn>
@@ -124,7 +125,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                 </div>}
 
                 <div className="d-flex align-items-center justify-content-center my-auto">
-                    <div className="d-flex flex-column p-4 py-5 card " style={{ "width": "30rem", marginLeft: 0 }}>
+                    <div className="d-flex flex-column p-4 py-5 card " style={{ "width": "30rem", marginLeft: 0, marginRight:0 }}>
                         <Formik
                             initialValues={{
                                 id_caja: '',
@@ -143,7 +144,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                 handleAbrirCaja(values)
                             }}
                         >
-                            <Form className="d-flex flex-column gap-2" style={{ minHeight: 364 }}>
+                            <Form className="d-flex flex-column gap-2 formaFont" style={{ minHeight: 364 }}>
                                 <h1>Abrir caja</h1>
                                 {cargandoCajas ? (
                                     <div className="d-flex flex-column align-items-center justify-content-center mt-2">
@@ -163,11 +164,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                     <option key={caja.id} value={caja.id}>{caja.nombre}</option>
                                                 ))}
                                             </FormSelect>
-                                            {/*<div className="align-self-start">
-                                                    <button onClick={() => {
-                                                        setCurrentPage(currentPage + 1);
-                                                    }} disabled={currentPage >= totalPages} className="mt-2">Siguiente Página</button>
-                                                </div> */}
                                             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
 
                                             <FormTextInput
@@ -176,6 +172,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 type="number"
                                                 placeholder="2000000"
                                                 required={true}
+                                                
                                             />
                                         </>
                                     ) : (

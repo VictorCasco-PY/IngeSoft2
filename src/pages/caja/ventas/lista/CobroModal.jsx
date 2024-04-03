@@ -3,19 +3,31 @@ import api from "../../../../utils/api";
 import { toast, Toaster } from "react-hot-toast";
 import { Btn } from "../../../../components/bottons/Button";
 
-const CobroModal = ({ factura, closeModal, open }) => {
-  const { total } = factura.factura;
+const CobroModal = ({ factura, closeModal, open, resetForm }) => {
+  const { total, id } = factura;
 
   const [efectivo, setEfectivo] = useState(0);
   const [tarjeta, setTarjeta] = useState(0);
-  const [cambio, setCambio] = useState(0);
+  const [transferencia, setTransferencia] = useState(0);
+
+  const [storedValue, setStoredValue] = useState("");
+
+  useEffect(() => {
+    // Obteniendo el valor almacenado en localStorage cuando el componente se monta
+    const storedItem = localStorage.getItem("sesionCajaId");
+
+    // Actualizando el estado con el valor almacenado, si existe
+    if (storedItem) {
+      setStoredValue(storedItem);
+    }
+  }, []);
 
   const cobrar = async () => {
     try {
       const movimiento = {
-        facturaId: factura.factura.id,
+        facturaId: id,
         facturaProveedorId: null,
-        sesionId: 1, // Este valor debo obtenerlo del localStorage cuando una mi parte con caja
+        sesionId: Number(storedValue), // Se obtiene el id de la sesion del LS
         total: total,
         entrada: true,
       };
@@ -36,12 +48,20 @@ const CobroModal = ({ factura, closeModal, open }) => {
         });
       }
 
+      if (transferencia > 0) {
+        detalles.push({
+          tipoDePagoId: 3, // Transferencia
+          monto: transferencia,
+        });
+      }
+
       const data = {
         movimiento: movimiento,
         detalles: detalles,
       };
 
       const response = await api.post("/movimientos", data);
+      resetForm();
       toast.success("Factura cobrada correctamente");
       closeModal();
     } catch (error) {
@@ -51,24 +71,24 @@ const CobroModal = ({ factura, closeModal, open }) => {
   };
 
   const handleChangeEfectivo = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    setEfectivo(value === "" ? 0 : parseFloat(value));
+    const value = event.target.value;
+    setEfectivo(Number(value));
   };
 
   const handleChangeTarjeta = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    setTarjeta(value === "" ? 0 : parseFloat(value));
+    const value = event.target.value;
+    setTarjeta(Number(value));
   };
 
-  useEffect(() => {
-    const calcularCambio = () => {
-      const totalPagado = efectivo + tarjeta;
-      const cambio = total - totalPagado;
-      setCambio(cambio >= 0 ? cambio.toLocaleString("es-ES") : 0);
-    };
+  const handleChangeTransferencia = (event) => {
+    const value = event.target.value;
+    setTransferencia(Number(value));
+  };
 
-    calcularCambio();
-  }, [efectivo, tarjeta]);
+  const handleCerrar = () => {
+    closeModal();
+    resetForm();
+  };
 
   return (
     <>
@@ -78,7 +98,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
         tabIndex="-1"
         style={{ display: open ? "block" : "none" }}
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Cobrar factura</h5>
@@ -89,7 +109,7 @@ const CobroModal = ({ factura, closeModal, open }) => {
               ></button>
             </div>
             <div className="modal-body">
-              <div>
+              <div className="mb-2">
                 <label htmlFor="total">Total</label>
                 <input
                   type="text"
@@ -98,44 +118,41 @@ const CobroModal = ({ factura, closeModal, open }) => {
                   value={total.toLocaleString("es-ES")}
                 />
               </div>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="efectivo">Efectivo</label>
                 <input
                   type="number"
                   name="efectivo"
                   className="form-control"
-                  value={efectivo.toLocaleString("es-ES")}
+                  value={efectivo}
                   onChange={handleChangeEfectivo}
                 />
               </div>
-              <div>
+              <div className="mb-2">
                 <label htmlFor="tarjeta">Tarjeta</label>
                 <input
                   type="number"
                   name="tarjeta"
                   className="form-control"
-                  value={tarjeta.toLocaleString("es-ES")}
+                  value={tarjeta}
                   onChange={handleChangeTarjeta}
                 />
               </div>
-              <div>
-                <label htmlFor="cambio">Cambio</label>
+              <div className="mb-2">
+                <label htmlFor="cambio">Transferencia</label>
                 <input
-                  type="text"
-                  disabled
+                  type="number"
+                  name="transferencia"
                   className="form-control"
-                  value={cambio}
+                  value={transferencia}
+                  onChange={handleChangeTransferencia}
                 />
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={closeModal}
-              >
+              <Btn type="secondary" onClick={handleCerrar}>
                 Cerrar
-              </button>
+              </Btn>
               <Btn type="primary" onClick={cobrar}>
                 Cobrar
               </Btn>

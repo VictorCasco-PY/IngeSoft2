@@ -1,9 +1,6 @@
 export const precioHandler = (precio) => {
   if(!precio) return;
   let result = precio.toString();
-  // Verificar si el precio es definido
-  if (typeof precio !== 'undefined') {
-    let result = precio.toString();
 
     // Dividir la cadena en grupos de 3 desde la derecha
     let grupos = [];
@@ -14,10 +11,11 @@ export const precioHandler = (precio) => {
 
     grupos.unshift(result); // Agregar el primer grupo
 
-    // Unir los grupos con puntos y devolver el resultado
-    return `${grupos.join(".")} Gs.`;
-  } else {
-    // Devolver un valor predeterminado o vacío si el precio es undefined
-    return 'Precio no disponible';
-  }
+  // Unir los grupos con puntos y devolver el resultado
+  return `${grupos.join(".")} Gs.`;
 };
+
+
+export const normalizarPrecio = (precio) => {
+  return parseInt(precio?.toString().replace(/\./g, ''));
+}
