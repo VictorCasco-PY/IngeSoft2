@@ -1,4 +1,4 @@
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalBase from '../../components/modals/ModalBase';
 import { Table } from '../../components/table/Table';
 import { Btn } from '../../components/bottons/Button';
@@ -16,7 +16,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
     const { getFacturaById } = useFactura();
 
 
-    const handleCobroModal = async() => {
+    const handleCobroModal = async () => {
         setCobroModal(false);
         setFactura(await getFacturaById(data?.factura?.id));
     }
@@ -51,7 +51,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
             <p className='text-end'>
                 <b>
                     Total: {precioHandler(factura?.factura?.total)}<br />
-                    Saldo: {precioHandler(factura?.factura?.saldo)}<br />
+                    {factura?.factura?.saldo ? `Saldo: ${precioHandler(factura?.factura?.saldo)}` : "Pagado"}
                 </b>
             </p>
 
@@ -59,7 +59,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
             <div className="d-flex justify-content-center align-items-center float-end mt-4 gap-3">
                 <Btn onClick={closeModal} type="secondary">Cerrar</Btn>
                 {guardar && <Btn type="secondary" onClick={() => guardar()} outline>Guardar Factura</Btn>}
-                <Btn type="primary" onClick={()=>setCobroModal(true)}>Cobrar Factura</Btn>
+                <Btn type="primary" onClick={() => setCobroModal(true)}>Cobrar Factura</Btn>
             </div>
 
         </div>
