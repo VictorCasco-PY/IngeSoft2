@@ -3,3 +3,33 @@
     align-items: center;
     justify-content: center;
 }
+.headerMi{
+    display: inline-block;
+    padding-left: 3%;
+    padding-top: 2% !important;
+}
+.editMi{
+    padding-top: 10%;
+}
+.liner{
+    margin: 3% 10% 3% 10%;
+}
+.prueba{
+    padding-top: 5%;
+}
+.linerSecundar{
+    margin: 0% 100% 3% 10%;
+}
+.btnDetalles{
+    background-color: #ffffff !important;
+    color: #6941C6;
+    border: none !important;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: 'pointer';
+    outline: none;
+    display: 'flex';
+    flex-direction: 'column';
+    align-items: 'center';
+    justify-content: 'center';
+}

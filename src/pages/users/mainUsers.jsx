@@ -16,6 +16,11 @@ import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
 import toast, { Toaster } from "react-hot-toast";
 
+export let filteredUsers;
+export let handleShowAlert;
+export let handleEditarUsuario;
+export let searchResultsFound;
+export let fetchUsers;
 const MainUsers = () => {
   const emptyUser = {
     nombre: "",
@@ -57,89 +62,88 @@ const MainUsers = () => {
     fetchUsers(currentPage);
   }, [currentPage]);
 
-     const getRoleName = (id) => {
-      if (id === 1) return 'Administrador';
-      if (id === 3) return 'Cajero';
-      if (id === 4) return 'Administrador';
-     };
-     
-     const handlePageChange = (pageNumber) => {
-      setCurrentPage(pageNumber);
-    };
-    
-     const fetchUsers = async (page) => {
-      try {
-        const response = await api.get(`/empleados/page/${page}`);
-        setUsers(response.data.items);
-        setFilteredUsers(response.data.items);
-        filterUsersByRole(selectedRole, response.data.items);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        // ver si mantener o borrar una vez que se resuelva el problema de la api
-        setUsers([]);
-        setFilteredUsers([]);
-        filterUsersByRole(selectedRole, []);
-        setTotalPages(1);
-        //setError(true);
-        console.error("Error al obtener los usuarios:", error);
-      }
-    };
-    const filterUsersByRole = (role, usersList) => {
-      if (role === null) {
-        setFilteredUsers(usersList);
+  const getRoleName = (id) => {
+    if (id === 1) return "Administrador";
+    if (id === 3) return "Cajero";
+    if (id === 4) return "Administrador";
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const fetchUsers = async (page) => {
+    try {
+      const response = await api.get(`/empleados/page/${page}`);
+      setUsers(response.data.items);
+      setFilteredUsers(response.data.items);
+      filterUsersByRole(selectedRole, response.data.items);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      // ver si mantener o borrar una vez que se resuelva el problema de la api
+      setUsers([]);
+      setFilteredUsers([]);
+      filterUsersByRole(selectedRole, []);
+      setTotalPages(1);
+      //setError(true);
+      console.error("Error al obtener los usuarios:", error);
+    }
+  };
+  const filterUsersByRole = (role, usersList) => {
+    if (role === null) {
+      setFilteredUsers(usersList);
+    } else {
+      const filtered = usersList.filter((user) => user.rol === role);
+      setFilteredUsers(filtered);
+    }
+  };
+
+  const searchUsuarios = async (term) => {
+    try {
+      const response = await api.get(
+        `/empleados/search/${term}/page/${currentPage}`
+      );
+      const filtered = response.data.items;
+      setFilteredUsers(filtered);
+      setSearchResultsFound(filtered.length > 0); // Si la longitud de 'filtered' es cero, establece 'searchResultsFound' en true
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Mostrar un mensaje de "Usuario no encontrado" cuando el servidor devuelve un 404
+        setFilteredUsers([]); // Establecer los usuarios filtrados como vacíos
+        setSearchResultsFound(false); // Indicar que no se encontraron resultados
       } else {
-        const filtered = usersList.filter((user) => user.rol === role);
-        setFilteredUsers(filtered);
+        // Manejar otros errores de manera similar a como lo haces actualmente
+        setSearchResultsFound(true);
+        console.error("Error al buscar usuario por nombre:", error);
       }
-    };
-    
-    
-    const searchUsuarios = async (term) => {
-      try {
-        const response = await api.get(
-          `/empleados/search/${term}/page/${currentPage}`
-        );
-        const filtered = response.data.items;
-        setFilteredUsers(filtered);
-        setSearchResultsFound(filtered.length > 0); // Si la longitud de 'filtered' es cero, establece 'searchResultsFound' en true
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          // Mostrar un mensaje de "Usuario no encontrado" cuando el servidor devuelve un 404
-          setFilteredUsers([]); // Establecer los usuarios filtrados como vacíos
-          setSearchResultsFound(false); // Indicar que no se encontraron resultados
-        } else {
-          // Manejar otros errores de manera similar a como lo haces actualmente
-          setSearchResultsFound(true);
-          console.error("Error al buscar usuario por nombre:", error);
-        }
-      }
-    };
-  
-    const handleSearchChange = (event) => {
-        const term = event.target.value;
-        setSearchTerm(term);
-      
-        if (term.length >= 4) {
-          searchClientes(term);
-        } else {
-          filterUsersByRole(selectedRole, users);
-          //setFilteredUsers(users);
-          // Siempre vuelve a la primera página cuando se borra el término de búsqueda
-          setCurrentPage(1);
-        }
-    };
-    const xClientes = (term) => {
-          const filtered = users.filter((user) => {
-          const nombre = user.nombre.toLowerCase();
-          const email = user.email.toLowerCase();
-    
-          return (
-            nombre.includes(term.toLowerCase()) ||
-            email.includes(term.toLowerCase())
-          );
-        });
-        setFilteredUsers(filtered);
-    };
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+
+    if (term.length >= 4) {
+      searchClientes(term);
+    } else {
+      filterUsersByRole(selectedRole, users);
+      //setFilteredUsers(users);
+      // Siempre vuelve a la primera página cuando se borra el término de búsqueda
+      setCurrentPage(1);
+    }
+  };
+  const xClientes = (term) => {
+    const filtered = users.filter((user) => {
+      const nombre = user.nombre.toLowerCase();
+      const email = user.email.toLowerCase();
+
+      return (
+        nombre.includes(term.toLowerCase()) ||
+        email.includes(term.toLowerCase())
+      );
+    });
+    setFilteredUsers(filtered);
+  };
 
   //Buscar una mejor implementacion
   const rolByID = (id) => {
