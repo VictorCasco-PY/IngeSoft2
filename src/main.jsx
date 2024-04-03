@@ -11,6 +11,7 @@ import MainProductos from "./pages/productos/MainProductos";
 import Servicios from "./pages/servicios/MainServicios";
 import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from "./pages/proveedores/MainProveedores";
+import MainMiUsuario from './pages/mi_usuario/mainMiUsuario';
 import MainCaja from "./pages/caja/MainCaja";
 import AdministrarCaja from "./pages/caja/administrarCaja/AdministrarCaja";
 import { CobrosPendientesVista } from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
@@ -25,6 +26,7 @@ import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
+
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -235,6 +237,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
+          <Route path="/miUsuario" element={<Layout><MainMiUsuario/></Layout>}/>
           {/*FIN, BORRAR LUEGO DE DEMO*/}
 
           <Route

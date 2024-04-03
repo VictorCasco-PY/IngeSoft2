@@ -17,6 +17,11 @@ import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado"
 import toast, { Toaster } from "react-hot-toast";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 
+export let filteredUsers;
+export let handleShowAlert;
+export let handleEditarUsuario;
+export let searchResultsFound;
+export let fetchUsers;
 const MainUsers = () => {
   const emptyUser = {
     nombre: "",
