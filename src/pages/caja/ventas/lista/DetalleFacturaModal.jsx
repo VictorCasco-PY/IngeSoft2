@@ -112,24 +112,25 @@ const DetalleFacturaModal = ({ factura, closeModal, open, ...props }) => {
               <Btn type="secondary" outline onClick={closeModal}>
                 Cerrar
               </Btn>
-              {pagado ? (
+              {/*pagado ? (
                 ""
               ) : (
                 <Btn type="primary" onClick={handleOpenCobroModal}>
                   Cobrar factura
                 </Btn>
-              )}
+              )*/}
             </div>
           </div>
         </div>
       </div>
-      {cobroModalOpen && (
+      {/**Funcion quitada por el momento, hasta decidir bien si se usa o no en esta pantalla */}
+      {/*cobroModalOpen && (
         <CobroModal
           factura={factura}
           closeModal={handleCloseCobroModal}
           open={cobroModalOpen}
         />
-      )}
+      )*/}
     </>
   );
 };
