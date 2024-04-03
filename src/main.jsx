@@ -20,6 +20,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RoleExclusivePage from "./pages/test/RoleExclusivePage";
 import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
+import MainVenta from "./pages/caja/ventas/factura/MainVenta";
 import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 
 createRoot(document.getElementById("root")).render(
@@ -86,12 +87,43 @@ createRoot(document.getElementById("root")).render(
           />
 
           {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
+          <Route
+            path="/caja"
+            element={
+              <Layout>
+                <MainCaja />
+              </Layout>
+            }
+          />
           <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
-            <Route exact path="/caja" element={<Layout><MainCaja /></Layout>} />
+            <Route
+              exact
+              path="/caja"
+              element={
+                <Layout>
+                  <MainCaja />
+                </Layout>
+              }
+            />
           </Route>
-          <Route path="/caja" element={<Layout><MainCaja /></Layout>} />
+          <Route
+            path="/caja"
+            element={
+              <Layout>
+                <MainCaja />
+              </Layout>
+            }
+          />
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
-            <Route exact path="/caja/lista" element={<Layout><InfoCajas /></Layout>} />
+            <Route
+              exact
+              path="/caja/lista"
+              element={
+                <Layout>
+                  <InfoCajas />
+                </Layout>
+              }
+            />
           </Route>
           <Route
             path="/caja/pendientes"
@@ -102,10 +134,18 @@ createRoot(document.getElementById("root")).render(
             }
           />
           <Route
-            path="/lista-ventas"
+            path="/caja/lista-ventas"
             element={
               <Layout>
                 <MainLista />
+              </Layout>
+            }
+          />
+          <Route
+            path="/caja/ventas"
+            element={
+              <Layout>
+                <MainVenta />
               </Layout>
             }
           />
@@ -120,8 +160,23 @@ createRoot(document.getElementById("root")).render(
             }
           />
           {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
-          <Route exact element={<ProtectedRoute roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]} />}>
-            <Route exact path="/role-todos" element={<Layout><RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" /></Layout>} />
+          <Route
+            exact
+            element={
+              <ProtectedRoute
+                roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]}
+              />
+            }
+          >
+            <Route
+              exact
+              path="/role-todos"
+              element={
+                <Layout>
+                  <RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" />
+                </Layout>
+              }
+            />
           </Route>
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route
