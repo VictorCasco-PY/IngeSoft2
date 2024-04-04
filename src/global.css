@@ -13,6 +13,8 @@ importar este modulo @import 'global.css';*/
 
     --card-height: 50rem; /*tamaño minimo de la carta principal*/
     --card-max-width: 1438px; /*anchura maxima de la carta principal*/
+
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
   }
   
   body {

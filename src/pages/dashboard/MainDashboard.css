@@ -1,6 +1,10 @@
+@import url('../../global.css');
+
 .seccionDash {
     padding: 1rem;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
     overflow-x: hidden;
     overflow-y: hidden;
+    background-color: var(--background-components);
+    color: var(--text-color);
 }
