@@ -1,12 +1,12 @@
 @import url('../../global.css');
 
 
-
-.MainDashboard {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
+.MDGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
 }
 
 .iconBoton {
@@ -15,14 +15,6 @@
 
 .iconBoton:hover {
     color: var(--primary);
-}
-
-.MDGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 1.5rem;
-    align-items: start;
 }
 
 .DashboardFirstSection {
@@ -37,22 +29,22 @@
 }
 
 .DashboardHeader {
-    display:flex;
+    display: flex;
     flex-direction: column;
 }
 
-@media (min-width: 1900px) {
-    .MainDashboard {
-        flex-direction: column;
-    }
-    
-    .MDGrid{
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
+@media (min-width: 1921px) {
+    .MDGrid {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
 }
 
 @media (max-width: 992px) {
+    .MDGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
 
     .maximizedSeccion {
         z-index: 9999;
@@ -64,6 +56,7 @@
     .DashboardFirstSection {
         flex-direction: column;
     }
+
     .DashboardSecondSection {
         flex-direction: column;
     }

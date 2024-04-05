@@ -250,81 +250,77 @@ const MainDashboard = () => {
 
     return (
         <CartaPrincipal hasCard={false}>
-            <div className='MainDashboard'>
-                <div className='align-self-start DashboardHeader'>
-                    <h1>Dashboard</h1>
-                    <h2>Septiembre 2024</h2>
-                </div>
-                <div className='gap-4 DashboardFirstSection'>
-                    <SeccionDashboard id="seccion-clientes">
-                        <div className='d-flex gap-1 align-items-center'>
-                            <nav onClick={() => { handleMaximize("seccion-clientes") }} className='iconBoton'><OpenInNewIcon /></nav>
-                            <h3>Porcentaje de Clientes en Mora</h3>
-                        </div>
-                        {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
-                        <div className='d-flex align-items-center justify-content-end gap-3' >
-                            <p className='m-0'>
-                                {filterTestBoolMorosos ? "Junio 2024" : "Julio 2024"}
-                            </p>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <PieChartDashboard data={morososDisplayingData} />
-                        </div>
-                        <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
-                    </SeccionDashboard>
+            <div className='align-self-start DashboardHeader'>
+                <h1>Dashboard</h1>
+                <h2>Septiembre 2024</h2>
+            </div>
+            <div className='MDGrid'>
+                <SeccionDashboard id="seccion-clientes">
+                    <div className='d-flex gap-1 align-items-center'>
+                        <nav onClick={() => { handleMaximize("seccion-clientes") }} className='iconBoton'><OpenInNewIcon /></nav>
+                        <h3>Porcentaje de Clientes en Mora</h3>
+                    </div>
+                    {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
+                    <div className='d-flex align-items-center justify-content-end gap-3' >
+                        <p className='m-0'>
+                            {filterTestBoolMorosos ? "Junio 2024" : "Julio 2024"}
+                        </p>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
+                            Filtrar
+                        </Btn>
+                    </div>
+                    <div className='graphSection'>
+                        <PieChartDashboard data={morososDisplayingData} />
+                    </div>
+                    <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
+                </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-actividades">
-                        <div className='d-flex gap-1 align-items-center'>
-                            <nav onClick={() => { handleMaximize("seccion-actividades") }} className='iconBoton'><OpenInNewIcon /></nav>
-                            <h3 className='m-0'>Actividades mas Suscritas</h3>
-                        </div>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={productDisplayingData} />
-                        </div>
-                    </SeccionDashboard>
-                </div>
+                <SeccionDashboard id="seccion-actividades">
+                    <div className='d-flex gap-1 align-items-center'>
+                        <nav onClick={() => { handleMaximize("seccion-actividades") }} className='iconBoton'><OpenInNewIcon /></nav>
+                        <h3 className='m-0'>Actividades mas Suscritas</h3>
+                    </div>
+                    {/*Este filtrado debe ser un un slider con los meses*/}
+                    <div className='align-self-end'>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
+                            Filtrar
+                        </Btn>
+                    </div>
+                    <div className='graphSection'>
+                        <LineChartDashboard data={productDisplayingData} />
+                    </div>
+                </SeccionDashboard>
 
-                <div className='gap-4 DashboardSecondSection'>
-                    <SeccionDashboard id="seccion-productos">
-                        <div className='d-flex gap-1 align-items-center'>
-                            <nav onClick={() => { handleMaximize("seccion-productos") }} className='iconBoton'><OpenInNewIcon /></nav>
-                            <h3 className='m-0'>Productos mas Vendidos</h3>
-                        </div>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={productDisplayingData} />
-                        </div>
-                    </SeccionDashboard>
-                    <SeccionDashboard id="seccion-movimientos">
-                        <div className='d-flex gap-1 align-items-center'>
-                            <nav onClick={() => { handleMaximize("seccion-movimientos") }} className='iconBoton'><OpenInNewIcon /></nav>
-                            <h3>Ingresos de Movimientos</h3>
-                        </div>
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='graphSection'>
-                            <LineIngresoChartDashboard data={ingresosDisplayingData} />
-                        </div>
-                    </SeccionDashboard>
-                </div>
+                <SeccionDashboard id="seccion-productos">
+                    <div className='d-flex gap-1 align-items-center'>
+                        <nav onClick={() => { handleMaximize("seccion-productos") }} className='iconBoton'><OpenInNewIcon /></nav>
+                        <h3 className='m-0'>Productos mas Vendidos</h3>
+                    </div>
+                    {/*Este filtrado debe ser un un slider con los meses*/}
+                    <div className='align-self-end'>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
+                            Filtrar
+                        </Btn>
+                    </div>
+                    <div className='graphSection'>
+                        <LineChartDashboard data={productDisplayingData} />
+                    </div>
+                </SeccionDashboard>
+                <SeccionDashboard id="seccion-movimientos">
+                    <div className='d-flex gap-1 align-items-center'>
+                        <nav onClick={() => { handleMaximize("seccion-movimientos") }} className='iconBoton'><OpenInNewIcon /></nav>
+                        <h3>Ingresos de Movimientos</h3>
+                    </div>
+                    <div className='align-self-end'>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
+                            Filtrar
+                        </Btn>
+                    </div>
+                    {/*Este filtrado debe ser un un slider con los meses*/}
+                    <div className='graphSection'>
+                        <LineIngresoChartDashboard data={ingresosDisplayingData} />
+                    </div>
+                </SeccionDashboard>
                 <SeccionDashboard>
                     <h3>Enlaces</h3>
                     <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
