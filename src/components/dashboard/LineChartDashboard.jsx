@@ -6,14 +6,14 @@ const LineChartDashboard = ({ data }) => {
         <ResponsiveBar
             data={data}
             keys={[
-                'hot dog',
-                'burger',
+                'Bebida Energetica',
+                'Agua',
+                'Barra Energetica',
                 'sandwich',
                 'kebab',
-                'fries',
-                'donut'
+                'Food'
             ]}
-            indexBy="country"
+            indexBy="mes"
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
             padding={0.3}
             groupMode="grouped"
@@ -43,7 +43,7 @@ const LineChartDashboard = ({ data }) => {
             fill={[
                 {
                     match: {
-                        id: 'fries'
+                        id: 'Food'
                     },
                     id: 'dots'
                 },
@@ -69,7 +69,7 @@ const LineChartDashboard = ({ data }) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'country',
+                legend: 'Mes',
                 legendPosition: 'middle',
                 legendOffset: 32,
                 truncateTickAt: 0
@@ -78,7 +78,7 @@ const LineChartDashboard = ({ data }) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'food',
+                legend: 'Ventas (cantidad)',
                 legendPosition: 'middle',
                 legendOffset: -40,
                 truncateTickAt: 0
@@ -120,7 +120,7 @@ const LineChartDashboard = ({ data }) => {
             ]}
             role="application"
             ariaLabel="Nivo bar chart demo"
-            barAriaLabel={e => e.id + ": " + e.formattedValue + " in country: " + e.indexValue}
+            barAriaLabel={e => e.id + ": " + e.formattedValue + " in mes: " + e.indexValue}
         />
     );
 };

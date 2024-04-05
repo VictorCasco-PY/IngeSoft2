@@ -23,6 +23,7 @@ import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
 import MainDashboard from "./pages/dashboard/MainDashboard";
+import RolEnum from "./utils/RolEnum";
 
 
 createRoot(document.getElementById("root")).render(
@@ -31,7 +32,7 @@ createRoot(document.getElementById("root")).render(
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>}/>
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>}/>
           </Route>
           <Route
             path="/clientes"
@@ -99,7 +100,7 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-          <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}>
             <Route
               exact
               path="/caja"
@@ -118,7 +119,7 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
             <Route
               exact
               path="/caja/lista"

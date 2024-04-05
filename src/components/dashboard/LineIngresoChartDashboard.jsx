@@ -11,7 +11,7 @@ const LineIngresoChartDashboard = ({data}) => {
                 type: 'linear',
                 min: 'auto',
                 max: 'auto',
-                stacked: true,
+                stacked: false,
                 reverse: false
             }}
             yFormat=" >-.2f"
@@ -21,7 +21,7 @@ const LineIngresoChartDashboard = ({data}) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'transportation',
+                legend: 'Mes',
                 legendOffset: 36,
                 legendPosition: 'middle',
                 truncateTickAt: 0
@@ -30,7 +30,7 @@ const LineIngresoChartDashboard = ({data}) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'count',
+                legend: 'Monto (gs)',
                 legendOffset: -40,
                 legendPosition: 'middle',
                 truncateTickAt: 0
@@ -39,6 +39,7 @@ const LineIngresoChartDashboard = ({data}) => {
             pointColor={{ theme: 'background' }}
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
+            minValue={0}
             pointLabelYOffset={-12}
             enableTouchCrosshair={true}
             useMesh={true}

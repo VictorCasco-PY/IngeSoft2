@@ -11,7 +11,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    display:flex;
+    display: flex;
     flex-direction: column;
     padding: 1rem 0.5rem;
 
@@ -21,14 +21,14 @@
     width: 100%;
     overflow-x: auto;
     color: var(--text-color);
-    min-height: 85vh;
+    min-height: 88vh;
 
     margin-left: auto;
     margin-right: auto;
 
-    display:flex;
+    display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     padding: 0.1rem 0.5rem;
 
 }
@@ -51,7 +51,7 @@
 
 .carta h1 a:hover {
     color: var(--primary);
-    background-color: var( --background-maincolor);
+    background-color: var(--background-maincolor);
 }
 
 .carta .loading {
@@ -75,7 +75,7 @@
 }
 
 .carta a {
-    color:black;
+    color: black;
     text-decoration: none;
 }
 
@@ -84,10 +84,11 @@
         max-width: 960px;
 
     }
+
     .noCarta {
         min-width: 980px;
     }
-    
+
 }
 
 @media (min-width: 1200px) {
@@ -96,6 +97,7 @@
         padding: 2rem 4rem;
 
     }
+
     .noCarta {
         min-width: 1240px;
     }
@@ -106,9 +108,8 @@
         max-width: var(--card-max-width);
         padding: 2rem 6rem;
     }
+
     .noCarta {
-        min-width: var(--card-max-width);
-        max-width: var(--card-max-width);
         padding: 0.1rem 6rem;
     }
 }
