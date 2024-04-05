@@ -23,6 +23,7 @@ import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
 import MainDashboard from "./pages/dashboard/MainDashboard";
+import MDGrid from "./pages/dashboard/MDGrid";
 
 
 createRoot(document.getElementById("root")).render(
@@ -32,6 +33,8 @@ createRoot(document.getElementById("root")).render(
         <Routes>
           <Route path="/" element={<Login />} />
           <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>}/>
+          </Route>
+          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}><Route exact path="/mdtest" element={<Layout><MDGrid /></Layout>}/>
           </Route>
           <Route
             path="/clientes"
