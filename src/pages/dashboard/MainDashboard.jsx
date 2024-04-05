@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CartaPrincipal from '../../components/cartaPrincipal/CartaPrincipal';
 
 import './MainDashboard.css'
@@ -9,6 +9,8 @@ import { Btn } from '../../components/bottons/Button';
 import ListIcon from '@mui/icons-material/List';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LineIngresoChartDashboard from '../../components/dashboard/LineIngresoChartDashboard';
+import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const lineData = [
     {
@@ -170,50 +172,80 @@ const data = [
     },
 ]
 
-const MainDashboard = () => (
-    <CartaPrincipal hasCard={false}>
-        <div className='align-self-start'>
-            <h1>Dashboard</h1>
-            <h2>Septiembre 2024</h2>
-        </div>
-        <div className='MainDashboard'>
-            <div className='d-flex flex-column gap-4'>
-                <div className='seccionDash'>
-                    <h3>Porcentaje de Clientes en Mora</h3>
-                    <div style={{ height: '330px', width: '550px' }}>
-                        <PieChartDashboard data={pieData} />
-                    </div>
-                    <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
-                </div>
-                <div className='seccionDash'>
-                    <h3>Enlaces</h3>
-                    <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
-                        Ver Cajas
-                    </Btn>
-                    <Btn type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
-                        Ver Ingresos
-                    </Btn>
-                </div>
+
+const MainDashboard = () => {
+
+    const [maximizedExists, setMaximizedExists] = useState(false)
+
+    const handleMaximize = (id) => {
+        const seccion = document.getElementById(id)
+        //si el componente tiene un atributo maximized = true, se quita
+        if (seccion.classList.contains("maximizedSeccion")) {
+            seccion.classList.remove("maximizedSeccion")
+            seccion.classList.add("seccionDashHover")
+            setMaximizedExists(false)
+            return
+        }
+        if (maximizedExists) return; //si ya hay un componente maximizado, no se puede maximizar otro
+        setMaximizedExists(true)
+        seccion.classList.remove("seccionDashHover")
+        seccion.style.width = "550px" //borrar esto si se encuentra una mejor solucion, esto tiene animacion horrible
+        seccion.classList.add("maximizedSeccion");
+    }
+
+    return (
+        <CartaPrincipal hasCard={false}>
+            <div className='align-self-start'>
+                <h1>Dashboard</h1>
+                <h2>Septiembre 2024</h2>
             </div>
-
-            <div className='d-flex flex-column gap-4'>
-                <div className='seccionDash'>
-                    <h3>Productos mas Vendidos</h3>
-                    <div style={{ height: '330px', width: '570px' }}>
-                        <LineChartDashboard data={data} />
-                    </div>
+            <div className='MainDashboard'>
+                <div className='d-flex flex-column gap-4'>
+                    <SeccionDashboard id="seccion-clientes">
+                        <div className='d-flex gap-1 align-items-center'>
+                            <nav onClick={() => { handleMaximize("seccion-clientes") }} className='iconBoton'><OpenInNewIcon /></nav>
+                            <h3>Porcentaje de Clientes en Mora</h3>
+                        </div>
+                        <div style={{ height: '330px', width: '560px' }}>
+                            <PieChartDashboard data={pieData} />
+                        </div>
+                        <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
+                    </SeccionDashboard>
+                    <SeccionDashboard>
+                        <h3>Enlaces</h3>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                            Ver Cajas
+                        </Btn>
+                        <Btn type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                            Ver Ingresos
+                        </Btn>
+                    </SeccionDashboard>
                 </div>
-                <div className='seccionDash'>
 
-                    <h3>Ingresos de Movimientos</h3>
-                    <div style={{ height: '330px', width: '550px' }}>
-                        <LineIngresoChartDashboard data={lineData} />
-                    </div>
+                <div className='d-flex flex-column gap-4'>
+                    <SeccionDashboard id="seccion-productos">
+                        <div className='d-flex gap-1 align-items-center'>
+                            <nav onClick={() => { handleMaximize("seccion-productos") }} className='iconBoton'><OpenInNewIcon /></nav>
+                            <h3 className='m-0'>Productos mas Vendidos</h3>
+                        </div>
+                        <div style={{ height: '330px', width: '550px' }}>
+                            <LineChartDashboard data={data} />
+                        </div>
+                    </SeccionDashboard>
+                    <SeccionDashboard id="seccion-movimientos">
+                        <div className='d-flex gap-1 align-items-center'>
+                            <nav onClick={() => { handleMaximize("seccion-movimientos") }} className='iconBoton'><OpenInNewIcon /></nav>
+                            <h3>Ingresos de Movimientos</h3>
+                        </div>
+                        <div style={{ height: '330px', width: '550px' }}>
+                            <LineIngresoChartDashboard data={lineData} />
+                        </div>
+                    </SeccionDashboard>
                 </div>
+
             </div>
-
-        </div>
-    </CartaPrincipal>
-);
+        </CartaPrincipal>
+    )
+}
 
 export default MainDashboard;

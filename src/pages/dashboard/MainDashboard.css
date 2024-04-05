@@ -1,17 +1,6 @@
 @import url('../../global.css');
 
-.seccionDash {
-    padding: 1rem;
-    box-shadow: var(--shadow-lg);
-    overflow-x: hidden;
-    overflow-y: hidden;
-    background-color: var(--background-components);
-    color: var(--text-color);
-}
 
-.seccionDash:hover {
-    transform: scale(1.1);
-}
 
 .MainDashboard {
     display: flex;
@@ -19,10 +8,25 @@
     gap: 2rem;
 }
 
+.iconBoton {
+    cursor: pointer;
+}
+
+.iconBoton:hover {
+    color: var(--primary);
+}
+
 @media (max-width: 992px) {
     .MainDashboard {
         flex-direction: column;
 
     }
-    
+
+    .maximizedSeccion {
+        z-index: 9999;
+        position: static;
+        transform: scale(1);
+        transition: all .2s ease-in-out;
+    }
+
 }
