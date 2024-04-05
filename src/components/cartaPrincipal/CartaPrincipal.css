@@ -19,16 +19,17 @@
 
 .noCarta {
     width: 100%;
-    min-height: var(--card-height);
     overflow-x: auto;
     color: var(--text-color);
+    min-height: 80vh;
 
     margin-left: auto;
     margin-right: auto;
 
     display:flex;
     flex-direction: column;
-    padding: 1rem 0.5rem;
+    align-items:center;
+    padding: 0.1rem 0.5rem;
 
 }
 
@@ -84,7 +85,7 @@
 
     }
     .noCarta {
-        max-width: 960px;
+        min-width: 980px;
     }
     
 }
@@ -96,8 +97,7 @@
 
     }
     .noCarta {
-        max-width: 1140px;
-        padding: 1rem 4rem;
+        min-width: 1240px;
     }
 }
 
@@ -107,7 +107,8 @@
         padding: 2rem 6rem;
     }
     .noCarta {
+        min-width: var(--card-max-width);
         max-width: var(--card-max-width);
-        padding: 1rem 6rem;
+        padding: 0.1rem 6rem;
     }
 }
