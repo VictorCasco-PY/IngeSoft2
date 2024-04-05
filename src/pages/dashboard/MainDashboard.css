@@ -17,6 +17,14 @@
     color: var(--primary);
 }
 
+.MDGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
 .DashboardFirstSection {
     display: flex;
     flex-direction: row;
@@ -36,6 +44,11 @@
 @media (min-width: 1900px) {
     .MainDashboard {
         flex-direction: column;
+    }
+    
+    .MDGrid{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
     }
 }
 
