@@ -23,7 +23,7 @@
 .DashboardHeader {
     display: flex;
     flex-direction: column;
-    align-self:start;
+    align-self: start;
 }
 
 @media (min-width: 1921px) {
@@ -63,4 +63,16 @@
 
 .notSelect {
     user-select: none;
+}
+
+.blurScreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    filter: blur(1px);
+    display:hidden;
+    z-index: 999;
 }

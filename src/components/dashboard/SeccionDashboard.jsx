@@ -20,16 +20,18 @@ const SeccionDashboard = ({ maximizedExists, setMaximizedExists, header, maximiz
     }
 
     return (
-        <div className='seccionDash seccionDashHover' id={id}>
-            {(!header && !maximizable) ?
-                (<></>)
-                :
-                (<div className='d-flex gap-1 align-items-center'>
-                    {maximizable && <nav onClick={() => { handleMaximize(id) }} className='iconBoton d-flex align-items-center'><OpenInNewIcon /></nav>}
-                    {header && <h3>{header}</h3>}
-                </div>)
-            }
-            {children}
+        <div> {/*este div ayuda a maximizar*/}
+            <div className='seccionDash seccionDashHover rounded-3' id={id}>
+                {(!header && !maximizable) ?
+                    (<></>)
+                    :
+                    (<div className='d-flex gap-1 align-items-center'>
+                        {maximizable && <nav onClick={() => { handleMaximize(id) }} className='iconBoton d-flex align-items-center'><OpenInNewIcon /></nav>}
+                        {header && <h3>{header}</h3>}
+                    </div>)
+                }
+                {children}
+            </div>
         </div>
     );
 }

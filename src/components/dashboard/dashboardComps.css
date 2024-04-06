@@ -44,17 +44,21 @@
 }
 
 .seccionDashHover:hover {
-    transform: scale(1.006);
+    transform: scale(1.005);
 }
 
 .maximizedSeccion {
     z-index: 9999;
-    position: absolute;
+    position: fixed;
     transform: scale(1.5);
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
+    top: 50%;
+    left: 50%;
+    margin-top: -300px;
+    margin-left: -250px;
+    /*z-index: 9999;
+    position: fixed;
+    left: 50%;
+    transform: scale(1.5);*/
 }
 
 @media (max-width: 1200px) {
@@ -77,6 +81,10 @@
         transform: scale(1);
     }
 
+    .iconBoton {
+        display: none !important;
+    }
+
 }
 
 /**/
@@ -86,7 +94,7 @@
     width: 100%;
     overflow-x: auto;
     color: var(--text-color);
-    min-height: 88vh;
+    min-height: 85vh;
 
     margin-left: auto;
     margin-right: auto;
@@ -108,7 +116,7 @@
 
 @media (min-width: 1200px) {
     .noCarta {
-        max-width: 1248px;
+        max-width: 1268px;
     }
 }
 

@@ -36,7 +36,7 @@ const PieChartDashboard = ({ data }) => {
             }}
             onClick={(data) => {
                 if (data.id === 'Pendientes') {
-                    alert('Clientes en mora: 112')
+                    alert('Mostrar lista clientes en mora')
                 }
             }}
             defs={[
