@@ -26,7 +26,7 @@ const SeccionDashboard = ({ maximizedExists, setMaximizedExists, header, maximiz
                     (<></>)
                     :
                     (<div className='d-flex gap-1 align-items-center'>
-                        {maximizable && <nav onClick={() => { handleMaximize(id) }} className='iconBoton d-flex align-items-center'><OpenInNewIcon /></nav>}
+                        {maximizable && <nav onClick={() => { handleMaximize(id) }} className='iconBoton d-flex align-items-center' id={`btn-maximizar-${id}`}><OpenInNewIcon /></nav>}
                         {header && <h3>{header}</h3>}
                     </div>)
                 }

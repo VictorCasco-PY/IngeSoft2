@@ -48,7 +48,7 @@
 }
 
 .maximizedSeccion {
-    z-index: 9999;
+    z-index: 99999;
     position: fixed;
     transform: scale(1.5);
     top: 50%;

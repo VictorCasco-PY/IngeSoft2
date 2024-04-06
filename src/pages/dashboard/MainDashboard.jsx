@@ -15,6 +15,7 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
+//todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
 const actividadDataOne = [
     {
         "mes": "Junio",
@@ -232,7 +233,7 @@ const MainDashboard = () => {
     const [filterTestBoolMorosos, setFilterTestBoolMorosos] = useState(false)
 
     //Estas funciones se borraran en la implementacion, solo de prueba
-    const filterProducts = (dataToDisplay) => {
+    const filterProducts = () => {
         if (filterTestBool) {
             setProductDisplayingData(productDataOne)
             setFilterTestBool(false)
@@ -242,7 +243,7 @@ const MainDashboard = () => {
         }
     }
 
-    const filterIngresos = (dataToDisplay) => {
+    const filterIngresos = () => {
         if (filterTestBoolIngresos) {
             setIngresosDisplayingData(lineDataOne)
             setFilterTestBoolIngresos(false)
@@ -252,7 +253,7 @@ const MainDashboard = () => {
         }
     }
 
-    const filterMorosos = (dataToDisplay) => {
+    const filterMorosos = () => {
         if (filterTestBoolMorosos) {
             setMorososDisplayingData(pieDataOne)
             setFilterTestBoolMorosos(false)
@@ -260,10 +261,16 @@ const MainDashboard = () => {
             setMorososDisplayingData(pieDataTwo)
             setFilterTestBoolMorosos(true)
         }
+    } 
+    /**/
+
+    const handleBlurClick = () => {
+        console.log("quitar blur")
     }
 
     return (
         <>
+            <div id="blur-screen" className={maximizedExists ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
                 <div className='DashboardHeader'>
                     <h1>Dashboard</h1>
@@ -276,7 +283,7 @@ const MainDashboard = () => {
                             <p className='m-0'>
                                 {filterTestBoolMorosos ? "Junio 2024" : "Julio 2024"}
                             </p>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
+                            <Btn id="btn-filtrar-morosos" type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
                                 Filtrar
                             </Btn>
                         </div>
@@ -287,14 +294,13 @@ const MainDashboard = () => {
                     </SeccionDashboard>
 
                     <div className='d-flex flex-column gap-4'>
-                        <SeccionDashboard >
+                        <SeccionDashboard header="Nuevos clientes este mes:">
                             <div className='d-flex flex-column gap-3'>
-                                <h3>Nuevos clientes este mes:</h3>
                                 <div className='d-flex gap-3'>
                                     <ArrowCircleUpIcon className='arrowIndicator aGreen' />
                                     <nav style={{ fontSize: '2rem' }} className='notSelect'>+12</nav>
                                 </div>
-                                <h3>Mes pasado:</h3>
+                                <h3 className='m-0 p-0'>Mes pasado:</h3>
                                 <div className='d-flex gap-3'>
                                     <ArrowCircleDownIcon className='arrowIndicator aRed' />
                                     <nav style={{ fontSize: '2rem' }} className='notSelect'>-6</nav>
@@ -303,10 +309,10 @@ const MainDashboard = () => {
                         </SeccionDashboard>
                         <SeccionDashboard header="Enlaces">
                             <div>
-                                <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                                <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
                                     Ver Cajas
                                 </Btn>
-                                <Btn type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                                <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
                                     Ver Movimientos
                                 </Btn>
                             </div>
@@ -316,7 +322,7 @@ const MainDashboard = () => {
                     <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                         {/*Este filtrado debe ser un un slider con los meses*/}
                         <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
+                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => {  }}>
                                 Filtrar
                             </Btn>
                         </div>

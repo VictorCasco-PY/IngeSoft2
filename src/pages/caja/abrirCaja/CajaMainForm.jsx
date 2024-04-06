@@ -115,11 +115,11 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                 {/**/}
 
                 {((rol === "ADMIN") || (rol === RolEnum.ADMIN)) && <div className="d-flex justify-content-between">
-                    <Btn type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<ListIcon />}
+                    <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<ListIcon />}
                         onClick={() => { navigate("/caja/lista") }}>
                         Ver Cajas
                     </Btn>
-                    <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
+                    <Btn id="btn-registrar-caja" type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
                         onClick={() => { setOpenRegistrarModal(true) }}>
                         Registrar Nueva Caja
                     </Btn>
@@ -159,6 +159,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 label="Caja"
                                                 name="id_caja"
                                                 required={true}
+                                                id="input-select-cajas"
                                             >
                                                 <option value="">Selecciona una Caja</option>
                                                 {req_cajas.items.map(caja => (
@@ -173,7 +174,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 type="number"
                                                 placeholder="2000000"
                                                 required={true}
-                                                
+                                                id="input-monto-inicial"
                                             />
                                         </>
                                     ) : (
@@ -181,7 +182,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                     )
                                 )}
 
-                                <Btn type="primary" className='mt-3 align-self-end mt-auto' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
+                                <Btn id="btn-abrir-caja" type="primary" className='mt-3 align-self-end mt-auto' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
                                     submit >
                                     Abrir Caja
                                 </Btn>
