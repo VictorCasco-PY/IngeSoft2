@@ -20,16 +20,6 @@ const BoxStyled = styled(Box)(BoxStyle);
 
 export const NewNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const { rol } = useCurrentUser();
-
-  //cambio de andy, tuve que tocar, pueden agregar navbars especificos a roles.
-  const switchRender = () => {
-    if ((rol === "ADMIN") || (rol === RolEnum.ADMIN)) { //si es admin.
-      return <NavBarAdmin />
-    } else { //aqui pueden agregar navbars especificos a roles
-      return <NavBarAdmin />
-    }
-  }
 
   return (
     <NavbarStyled position="static">
@@ -64,6 +54,9 @@ export const NewNavbar = () => {
               className={`${!showMenu && "d-none" || "d-block"
                 } d-lg-inline-block position-absolute position-lg-relative bg-white`}
             >
+              <NavBtn id="nav-dashboard" href="/dashboard" roles={[RolEnum.ADMIN]}>
+                Dashboard
+              </NavBtn>
               <NavBtn id="nav-clientes" href="/clientes">
                 Clientes
               </NavBtn>
@@ -77,7 +70,7 @@ export const NewNavbar = () => {
               <NavBtn id="nav-caja" href="/caja">
                 Caja
               </NavBtn>
-              <NavBtn id="nav-reportes" href="/reportes"  roles={[RolEnum.ADMIN]}>
+              <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
                 Reportes
               </NavBtn>
             </BoxStyled>

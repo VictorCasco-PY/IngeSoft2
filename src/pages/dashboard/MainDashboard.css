@@ -9,14 +9,6 @@
     align-items: start;
 }
 
-.iconBoton {
-    cursor: pointer;
-}
-
-.iconBoton:hover {
-    color: var(--primary);
-}
-
 .DashboardFirstSection {
     display: flex;
     flex-direction: row;
@@ -31,6 +23,7 @@
 .DashboardHeader {
     display: flex;
     flex-direction: column;
+    align-self:start;
 }
 
 @media (min-width: 1921px) {

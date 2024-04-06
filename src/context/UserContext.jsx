@@ -10,6 +10,8 @@ export const CurrentUserProvider = ({ children }) => {
     const [email, setEmail] = useState(null);
     const [nombre, setNombre] = useState(null);
     const [userId, setUserId] = useState(null);
+    //TODO: usar useReducer para manejar el estado de autenticación, porque useState no es lo más adecuado para este caso
+    const [isAuthenticated, setIsAuthenticated] = useState();
 
     const login = (user) => {
         const data = {
@@ -20,6 +22,7 @@ export const CurrentUserProvider = ({ children }) => {
             usuarioId: user.usuarioId,
         };
         UserStorage.setUser(data);
+        setIsAuthenticated(true);
     };
 
     const logout = () => {
@@ -29,6 +32,7 @@ export const CurrentUserProvider = ({ children }) => {
         setEmail(null);
         setNombre(null);
         setUserId(null);
+        setIsAuthenticated(false);
     };
 
     const setLocalStorage = () => {
@@ -39,12 +43,13 @@ export const CurrentUserProvider = ({ children }) => {
             setEmail(data.email);
             setNombre(data.nombre);
             setUserId(data.usuarioId);
+            setIsAuthenticated(true);
         }
     }
 
     useEffect(() => {
         setLocalStorage()
-    }, []);
+    }, [isAuthenticated]);
 
     return (
         <CurrentUserContext.Provider value={{ token, nombre, email, rol, userId, logout, login, }}>

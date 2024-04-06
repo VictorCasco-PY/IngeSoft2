@@ -13,6 +13,24 @@ import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
+const actividadDataOne = [
+    {
+        "mes": "Junio",
+        "Powerlifting": 167,
+        "PowerliftingColor": "hsl(224, 70%, 50%)",
+        "Pilates": 160,
+        "PilatesColor": "hsl(56, 70%, 50%)",
+        "Yoga": 142,
+        "YogaColor": "hsl(104, 70%, 50%)",
+    },
+]
+
+const actividadesLabel = [
+    'Powerlifting',
+    'Pilates',
+    'Yoga'
+]
+
 const lineDataOne = [
     {
         "id": "Ingresos",
@@ -190,6 +208,14 @@ const productDataTwo = [
     },
 ]
 
+const productosLabels = [
+    'Bebida Energetica',
+    'Agua',
+    'Barra Energetica',
+    'sandwich',
+    'kebab',
+    'Food'
+]
 
 const MainDashboard = () => {
 
@@ -250,16 +276,12 @@ const MainDashboard = () => {
 
     return (
         <CartaPrincipal hasCard={false}>
-            <div className='align-self-start DashboardHeader'>
+            <div className='DashboardHeader'>
                 <h1>Dashboard</h1>
                 <h2>Septiembre 2024</h2>
             </div>
             <div className='MDGrid'>
-                <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true}>
-                    <div className='d-flex gap-1 align-items-center'>
-                        <nav onClick={() => { handleMaximize("seccion-clientes") }} className='iconBoton'><OpenInNewIcon /></nav>
-                        <h3>Porcentaje de Clientes en Mora</h3>
-                    </div>
+                <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                     {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
                     <div className='d-flex align-items-center justify-content-end gap-3' >
                         <p className='m-0'>
@@ -275,11 +297,7 @@ const MainDashboard = () => {
                     <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
                 </SeccionDashboard>
 
-                <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true}>
-                    <div className='d-flex gap-1 align-items-center'>
-                        <nav onClick={() => { handleMaximize("seccion-actividades") }} className='iconBoton'><OpenInNewIcon /></nav>
-                        <h3 className='m-0'>Actividades mas Suscritas</h3>
-                    </div>
+                <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                     {/*Este filtrado debe ser un un slider con los meses*/}
                     <div className='align-self-end'>
                         <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
@@ -287,15 +305,12 @@ const MainDashboard = () => {
                         </Btn>
                     </div>
                     <div className='graphSection'>
-                        <LineChartDashboard data={productDisplayingData} />
+                        <LineChartDashboard data={actividadDataOne} keys={actividadesLabel} />
                     </div>
+                    <i className='p-0 m-0'>Actividad con mas inscritos: Powerlifting.</i>
                 </SeccionDashboard>
 
-                <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true}>
-                    <div className='d-flex gap-1 align-items-center'>
-                        <nav onClick={() => { handleMaximize("seccion-productos") }} className='iconBoton'><OpenInNewIcon /></nav>
-                        <h3 className='m-0'>Productos mas Vendidos</h3>
-                    </div>
+                <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                     {/*Este filtrado debe ser un un slider con los meses*/}
                     <div className='align-self-end'>
                         <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
@@ -303,14 +318,11 @@ const MainDashboard = () => {
                         </Btn>
                     </div>
                     <div className='graphSection'>
-                        <LineChartDashboard data={productDisplayingData} />
+                        <LineChartDashboard data={productDisplayingData} keys={productosLabels} />
                     </div>
+                    <i className='p-0 m-0'>Producto mas vendido: Bebida Energetica.</i>
                 </SeccionDashboard>
-                <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true}>
-                    <div className='d-flex gap-1 align-items-center'>
-                        <nav onClick={() => { handleMaximize("seccion-movimientos") }} className='iconBoton'><OpenInNewIcon /></nav>
-                        <h3>Ingresos de Movimientos</h3>
-                    </div>
+                <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                     <div className='align-self-end'>
                         <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
                             Filtrar
@@ -322,7 +334,6 @@ const MainDashboard = () => {
                     </div>
                 </SeccionDashboard>
                 <SeccionDashboard header="Enlaces">
-                    <h3>Enlaces</h3>
                     <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
                         Ver Cajas
                     </Btn>
