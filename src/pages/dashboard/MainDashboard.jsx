@@ -255,7 +255,7 @@ const MainDashboard = () => {
                 <h2>Septiembre 2024</h2>
             </div>
             <div className='MDGrid'>
-                <SeccionDashboard id="seccion-clientes">
+                <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true}>
                     <div className='d-flex gap-1 align-items-center'>
                         <nav onClick={() => { handleMaximize("seccion-clientes") }} className='iconBoton'><OpenInNewIcon /></nav>
                         <h3>Porcentaje de Clientes en Mora</h3>
@@ -275,7 +275,7 @@ const MainDashboard = () => {
                     <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
                 </SeccionDashboard>
 
-                <SeccionDashboard id="seccion-actividades">
+                <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true}>
                     <div className='d-flex gap-1 align-items-center'>
                         <nav onClick={() => { handleMaximize("seccion-actividades") }} className='iconBoton'><OpenInNewIcon /></nav>
                         <h3 className='m-0'>Actividades mas Suscritas</h3>
@@ -291,7 +291,7 @@ const MainDashboard = () => {
                     </div>
                 </SeccionDashboard>
 
-                <SeccionDashboard id="seccion-productos">
+                <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true}>
                     <div className='d-flex gap-1 align-items-center'>
                         <nav onClick={() => { handleMaximize("seccion-productos") }} className='iconBoton'><OpenInNewIcon /></nav>
                         <h3 className='m-0'>Productos mas Vendidos</h3>
@@ -306,7 +306,7 @@ const MainDashboard = () => {
                         <LineChartDashboard data={productDisplayingData} />
                     </div>
                 </SeccionDashboard>
-                <SeccionDashboard id="seccion-movimientos">
+                <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true}>
                     <div className='d-flex gap-1 align-items-center'>
                         <nav onClick={() => { handleMaximize("seccion-movimientos") }} className='iconBoton'><OpenInNewIcon /></nav>
                         <h3>Ingresos de Movimientos</h3>
@@ -321,7 +321,7 @@ const MainDashboard = () => {
                         <LineIngresoChartDashboard data={ingresosDisplayingData} />
                     </div>
                 </SeccionDashboard>
-                <SeccionDashboard>
+                <SeccionDashboard header="Enlaces">
                     <h3>Enlaces</h3>
                     <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
                         Ver Cajas
