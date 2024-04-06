@@ -23,10 +23,10 @@
 .DashboardHeader {
     display: flex;
     flex-direction: column;
-    align-self: start;
+
 }
 
-@media (min-width: 1921px) {
+@media (min-width: 1910px) {
     .MDGrid {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: 1fr 1fr;
