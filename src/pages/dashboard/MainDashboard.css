@@ -76,3 +76,15 @@
     display:hidden;
     z-index: 999;
 }
+
+.arrowIndicator {
+    font-size: 3rem;
+}
+
+.aRed {
+    color: var(--danger);
+}
+
+.aGreen {
+    color: var(--success);
+}

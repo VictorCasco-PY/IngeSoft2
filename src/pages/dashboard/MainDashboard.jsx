@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './MainDashboard.css'
-import TablaDashboard from '../../components/dashboard/TablaDashboard';
+import TablaDashboard from '../../components/dashboard/TablaDashboard'; //may be used
 import LineChartDashboard from '../../components/dashboard/LineChartDashboard';
 import PieChartDashboard from '../../components/dashboard/PieChartDashboard';
 import { Btn } from '../../components/bottons/Button';
@@ -13,6 +13,8 @@ import DashCarta from '../../components/dashboard/DashCarta';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
+
+//estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 const actividadDataOne = [
     {
         "mes": "Junio",
@@ -56,7 +58,7 @@ const lineDataOne = [
         "data": [
             {
                 "x": "Enero",
-                "y": 109
+                "y": 119
             },
             {
                 "x": "Febrero",
@@ -103,7 +105,7 @@ const lineDataTwo = [
         "data": [
             {
                 "x": "Enero",
-                "y": 109
+                "y": 119
             },
             {
                 "x": "Febrero",
@@ -224,6 +226,7 @@ const MainDashboard = () => {
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
+    //Estos estados son solo para test, se deben borrar en la implementacion
     const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
     const [filterTestBoolMorosos, setFilterTestBoolMorosos] = useState(false)
@@ -288,23 +291,25 @@ const MainDashboard = () => {
                             <div className='d-flex flex-column gap-3'>
                                 <h3>Nuevos clientes este mes:</h3>
                                 <div className='d-flex gap-3'>
-                                    <ArrowCircleUpIcon style={{ fontSize: '3rem', color: 'green' }} />
+                                    <ArrowCircleUpIcon className='arrowIndicator aGreen' />
                                     <nav style={{ fontSize: '2rem' }} className='notSelect'>+12</nav>
                                 </div>
                                 <h3>Mes pasado:</h3>
                                 <div className='d-flex gap-3'>
-                                    <ArrowCircleDownIcon style={{ fontSize: '3rem', color: 'red' }} />
+                                    <ArrowCircleDownIcon className='arrowIndicator aRed' />
                                     <nav style={{ fontSize: '2rem' }} className='notSelect'>-6</nav>
                                 </div>
                             </div>
                         </SeccionDashboard>
                         <SeccionDashboard header="Enlaces">
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
-                                Ver Cajas
-                            </Btn>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
-                                Ver Ingresos
-                            </Btn>
+                            <div>
+                                <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                                    Ver Cajas
+                                </Btn>
+                                <Btn type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                                    Ver Movimientos
+                                </Btn>
+                            </div>
                         </SeccionDashboard>
                     </div>
 
