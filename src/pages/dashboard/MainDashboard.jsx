@@ -221,8 +221,7 @@ const productosLabels = [
 ]
 
 const MainDashboard = () => {
-
-    const [maximizedExists, setMaximizedExists] = useState(false)
+    const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
     const [productDisplayingData, setProductDisplayingData] = useState(productDataOne)
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
@@ -265,19 +264,25 @@ const MainDashboard = () => {
     /**/
 
     const handleBlurClick = () => {
-        console.log("quitar blur")
+        //TODO: esta solucion es fea por el momento, si es del tipo elemento
+        if (!currentMaximized) return;
+        if (typeof(currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) { 
+            currentMaximized.classList.remove("maximizedSeccion")
+            currentMaximized.classList.add("seccionDashHover")
+            setCurrentMaximized(null)
+        }
     }
 
     return (
         <>
-            <div id="blur-screen" className={maximizedExists ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
+            <div id="blur-screen-dashboard" className={currentMaximized ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
                 <div className='DashboardHeader'>
                     <h1>Dashboard</h1>
                     <h2>Septiembre 2024</h2>
                 </div>
                 <div className='MDGrid position-relative'>
-                    <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
+                    <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
                         <div className='d-flex align-items-center justify-content-end gap-3' >
                             <p className='m-0'>
@@ -319,7 +324,7 @@ const MainDashboard = () => {
                         </SeccionDashboard>
                     </div>
 
-                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
+                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         {/*Este filtrado debe ser un un slider con los meses*/}
                         <div className='align-self-end'>
                             <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => {  }}>
@@ -332,7 +337,7 @@ const MainDashboard = () => {
                         <i className='p-0 m-0'>Actividad con mas inscritos: Powerlifting.</i>
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
+                    <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         {/*Este filtrado debe ser un un slider con los meses*/}
                         <div className='align-self-end'>
                             <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
@@ -345,7 +350,7 @@ const MainDashboard = () => {
                         <i className='p-0 m-0'>Producto mas vendido: Bebida Energetica.</i>
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
+                    <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         <div className='align-self-end'>
                             <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
                                 Filtrar

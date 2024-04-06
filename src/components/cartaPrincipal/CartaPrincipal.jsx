@@ -1,7 +1,7 @@
 import React from 'react'
 import "./CartaPrincipal.css";
 
-const CartaPrincipal = ({ children, isCentered = true}) => {
+const CartaPrincipal = ({ children }) => {
   return (
     <>
       <div className={'carta rounded-3'}>

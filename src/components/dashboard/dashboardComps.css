@@ -79,6 +79,8 @@
         z-index: 9999;
         position: static;
         transform: scale(1);
+        margin-top: 0;
+        margin-left: 0;
     }
 
     .iconBoton {
