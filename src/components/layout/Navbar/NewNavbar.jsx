@@ -12,8 +12,6 @@ import { ProveedoresDropdown } from "./DropDown/ProveedoresDropdown";
 import { UserDropDown } from "./DropDown/UserDropDown";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
-import { useCurrentUser } from "../../../context/UserContext";
-import NavBarAdmin from "./roles/NavBarAdmin";
 import RolEnum from "../../../utils/RolEnum";
 
 const NavbarStyled = styled(AppBar)(AppBarStyle);
@@ -66,7 +64,22 @@ export const NewNavbar = () => {
               className={`${!showMenu && "d-none" || "d-block"
                 } d-lg-inline-block position-absolute position-lg-relative bg-white`}
             >
-              {switchRender()}
+              <NavBtn id="nav-clientes" href="/clientes">
+                Clientes
+              </NavBtn>
+              <ProveedoresDropdown />
+              <NavBtn id="nav-usuarios" href="/users" roles={[RolEnum.ADMIN]}>
+                Usuarios
+              </NavBtn>
+              <NavBtn id="nav-servicios" href="/servicios">
+                Servicios
+              </NavBtn>
+              <NavBtn id="nav-caja" href="/caja">
+                Caja
+              </NavBtn>
+              <NavBtn id="nav-reportes" href="/reportes"  roles={[RolEnum.ADMIN]}>
+                Reportes
+              </NavBtn>
             </BoxStyled>
           </div>
 
