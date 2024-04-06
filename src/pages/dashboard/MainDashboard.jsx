@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import CartaPrincipal from '../../components/cartaPrincipal/CartaPrincipal';
-
 import './MainDashboard.css'
 import TablaDashboard from '../../components/dashboard/TablaDashboard';
 import LineChartDashboard from '../../components/dashboard/LineChartDashboard';
@@ -10,8 +8,10 @@ import ListIcon from '@mui/icons-material/List';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LineIngresoChartDashboard from '../../components/dashboard/LineIngresoChartDashboard';
 import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import DashCarta from '../../components/dashboard/DashCarta';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 const actividadDataOne = [
     {
@@ -275,7 +275,7 @@ const MainDashboard = () => {
     }
 
     return (
-        <CartaPrincipal hasCard={false}>
+        <DashCarta>
             <div className='DashboardHeader'>
                 <h1>Dashboard</h1>
                 <h2>Septiembre 2024</h2>
@@ -296,7 +296,20 @@ const MainDashboard = () => {
                     </div>
                     <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
                 </SeccionDashboard>
-
+                <SeccionDashboard >
+                    <div className='d-flex flex-column gap-3'>
+                        <h3>Nuevos clientes este mes:</h3>
+                        <div className='d-flex gap-3'>
+                            <ArrowCircleUpIcon style={{ fontSize: '3rem', color: 'green' }} />
+                            <nav style={{ fontSize: '2rem' }} className='notSelect'>+12</nav>
+                        </div>
+                        <h3>Mes pasado:</h3>
+                        <div className='d-flex gap-3'>
+                            <ArrowCircleDownIcon style={{ fontSize: '3rem', color: 'red' }} />
+                            <nav style={{ fontSize: '2rem' }} className='notSelect'>-6</nav>
+                        </div>
+                    </div>
+                </SeccionDashboard>
                 <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedExists={maximizedExists} setMaximizedExists={setMaximizedExists}>
                     {/*Este filtrado debe ser un un slider con los meses*/}
                     <div className='align-self-end'>
@@ -333,6 +346,7 @@ const MainDashboard = () => {
                         <LineIngresoChartDashboard data={ingresosDisplayingData} />
                     </div>
                 </SeccionDashboard>
+
                 <SeccionDashboard header="Enlaces">
                     <Btn type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
                         Ver Cajas
@@ -342,7 +356,7 @@ const MainDashboard = () => {
                     </Btn>
                 </SeccionDashboard>
             </div>
-        </CartaPrincipal>
+        </DashCarta>
     )
 }
 

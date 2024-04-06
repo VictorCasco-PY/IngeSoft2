@@ -17,22 +17,6 @@
 
 }
 
-.noCarta {
-    width: 100%;
-    overflow-x: auto;
-    color: var(--text-color);
-    min-height: 88vh;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.1rem 0.5rem;
-
-}
-
 .carta h1 {
     font-weight: normal;
     padding: 0.5rem 0;
@@ -85,10 +69,6 @@
 
     }
 
-    .noCarta {
-        min-width: 980px;
-    }
-
 }
 
 @media (min-width: 1200px) {
@@ -97,19 +77,11 @@
         padding: 2rem 4rem;
 
     }
-
-    .noCarta {
-        min-width: 1240px;
-    }
 }
 
 @media (min-width: 1400px) {
     .carta {
         max-width: var(--card-max-width);
         padding: 2rem 6rem;
-    }
-
-    .noCarta {
-        padding: 0.1rem 6rem;
     }
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import "./CartaPrincipal.css";
 
-const CartaPrincipal = ({ children, isCentered = true, hasCard = true }) => {
+const CartaPrincipal = ({ children, isCentered = true}) => {
   return (
     <>
-      <div className={hasCard ? 'carta rounded-3' : 'noCarta'}>
+      <div className={'carta rounded-3'}>
           {children}
       </div>
     </>
