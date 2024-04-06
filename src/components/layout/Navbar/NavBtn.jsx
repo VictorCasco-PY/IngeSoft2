@@ -5,6 +5,8 @@ import { NavButtonBase } from "./styles/NavButtonBase";
 import { NavBtnDropdownStyle } from "./styles/NavBtnDropdownStyle";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useCurrentUser } from "../../../context/UserContext";
+import RolEnum from "../../../utils/RolEnum";
 
 const BtnNavbar = styled(Button)(() => NavButton);
 const BtnNavbarBase = styled(Button)(() => NavButtonBase);
@@ -19,15 +21,19 @@ const BtnContent = ({ icon, children }) => {
   );
 };
 
-export const NavBtn = ({ children, icon, type, href, className, ...props }) => {
+export const NavBtn = ({ children, icon, type, href, className, roles, ...props }) => {
 
   const [selected, setSelected] = useState(false);
+  const { rol: validRol } = useCurrentUser();
 
   const location = useLocation();
 
+   
   useEffect(() => {
     setSelected(location.pathname.includes(href));
   }, [location]);
+
+  if (roles && (!roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
 
   switch (type) {
     case "base":
