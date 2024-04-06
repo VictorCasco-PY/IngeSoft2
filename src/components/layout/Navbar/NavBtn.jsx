@@ -33,7 +33,7 @@ export const NavBtn = ({ children, icon, type, href, className, roles, ...props 
     setSelected(location.pathname.includes(href));
   }, [location]);
 
-  if (roles && (roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
+  if (roles && (!roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
 
   switch (type) {
     case "base":
