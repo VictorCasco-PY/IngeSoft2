@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import { useNavigate , Outlet } from 'react-router-dom';
 import { useCurrentUser } from '../context/UserContext';
 import UserStorage from './UserStorage';
+import RolEnum from './RolEnum';
 
-const ProtectedRoute = ({ roles = ["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"] }) => {
-  const { rol, userId } = useCurrentUser();
+const ProtectedRoute = ({ roles = [RolEnum.ADMIN, RolEnum.CAJERO, RolEnum.CLIENTE, RolEnum.ENTRENADOR] }) => {
+  const { rol } = useCurrentUser();
   const isAuthenticated = localStorage.getItem("user") !== null;
   const navigate = useNavigate();
 
