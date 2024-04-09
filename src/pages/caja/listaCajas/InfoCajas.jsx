@@ -83,11 +83,13 @@ const InfoCajas = () => {
         return (
             <>
                 <div className='' style={{ minHeight: 435 }}>
-                    <Table headers={["Nombre", "Monto de la Caja"]} striped>
+                    <Table headers={["Nombre", "Número de Caja", "Número de Factura", "Monto de la Caja"]} striped>
                         {cajas.map(caja => {
                             return (
                                 <tr key={caja.id} onClick={() => select(caja.id)}>
                                     <th className="py-3" scope="row" style={{ color: "#7749F8" }}>{caja.nombre}</th>
+                                    <td className="py-3">{caja.numeroCaja}</td>
+                                    <td className="py-3">{caja.numeroFactura ? caja.numeroFactura : "No tiene"}</td>
                                     <td className="py-3">{precioHandler(caja.monto)}</td>
                                 </tr>
                             )
