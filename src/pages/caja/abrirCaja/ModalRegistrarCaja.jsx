@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import '../MainCaja.css'
@@ -10,9 +10,19 @@ import ModalFormik from "../../../components/modals/ModalFormik";
 import { Btn } from "../../../components/bottons/Button";
 import { FormTextInput } from "../../../components/forms/FormInputs";
 
-const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
+const ModalRegistrarCaja = ({toast, fetchFunction, editMode, selectedCaja, ...props }) => {
 
-    const { createCaja, isLoading: cargandoCaja } = useCaja();
+    const { createCaja, modificarCaja, isLoading: cargandoCaja } = useCaja();
+
+    const [nombre, setNombre] = useState('')
+    const [monto, setMonto] = useState('')
+
+    useEffect(() => {
+        if (editMode) {
+            setNombre(selectedCaja.nombre)
+            setMonto(selectedCaja.monto)
+        }
+    }, [editMode, selectedCaja])
 
     const handleRegistrarCaja = async (values) => {
 
@@ -23,11 +33,11 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
             monto: values['monto'],
         }
 
-        const success = await createCaja(postData);
+        const success = !editMode ? await createCaja(postData) : await modificarCaja(selectedCaja.id, postData)
 
         if (success.id) {
             props.closeModal()
-            toast.success("Caja registrada correctamente")
+            toast.success(!editMode ? "Caja registrada exitosamente" : "Caja modificada exitosamente")
 
             //funcion ejecutada en el componente padre si existe
             if (fetchFunction) {
@@ -40,13 +50,13 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
                 toast.error("Ya existe una caja con ese nombre.")
                 document.getElementById("input-nombre-caja").focus()
             } else {
-                toast.error("Error al registrar caja. Revise la conexión.")
+                toast.error(!editMode ? "Error al registrar la caja" : "Error al modificar la caja")
             }
         }
     }
 
     return (
-        <ModalFormik title={"Registrar una Caja"} {...props}>
+        <ModalFormik title={!editMode ? "Registrar una Caja" : `Modificar Caja: ${selectedCaja.nombre}`} {...props}>
             <Formik
                 initialValues={{
                     nombre: '',
@@ -88,7 +98,7 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
                         id="btn-registrar-caja"
                         submit
                         >
-                            Registrar Caja
+                            {editMode ? "Modificar Caja" : "Registrar Caja"}
                         </Btn>
 
                     </div>

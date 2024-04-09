@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from '../../../components/table/Table';
 import useCaja from '../../../hooks/useCaja';
-import toast from 'react-hot-toast';
+import {toast, Toaster} from 'react-hot-toast';
 import CajaStorage from '../../../utils/CajaStorage';
 import UserStorage from '../../../utils/UserStorage';
 import CartaPrincipal from '../../../components/cartaPrincipal/CartaPrincipal';
@@ -11,11 +11,16 @@ import FlechaAtras from '../../../components/flechaAtras/FlechaAtras';
 import { CircularProgress } from '@mui/material';
 import { ListaVacía } from '../../../components/errores/ListaVacía';
 import ErrorPagina from '../../../components/errores/ErrorPagina';
-import { Loader } from '../../../components/layout/Loader';
 import { Btn } from '../../../components/bottons/Button';
 import { Input } from '../../../components/input/input';
+import ModalRegistrarCaja from '../abrirCaja/ModalRegistrarCaja';
+import EditIcon from '@mui/icons-material/Edit';
+import '../MainCaja.css';
 
 const InfoCajas = () => {
+
+    const [openRegistrarModal, setOpenRegistrarModal] = useState(false);
+    const [selectedCaja, setSelectedCaja] = useState(null); //se utiliza para editar caja
 
     const { getAllCajas, searchCajaByName, data: req_cajas, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
     const [currentPage, setCurrentPage] = useState(1);
@@ -55,6 +60,11 @@ const InfoCajas = () => {
         }
     }, [currentPage])
 
+    const selectCajaModal = (caja) => {
+        setSelectedCaja(caja);
+        setOpenRegistrarModal(true);
+    }
+
     const switchRender = () => {
 
         if (cargandoCajas) return <div className='' style={{ minHeight: 435 }}><Table headers={["Nombre", "Monto de la Caja"]} striped>
@@ -83,7 +93,7 @@ const InfoCajas = () => {
         return (
             <>
                 <div className='' style={{ minHeight: 435 }}>
-                    <Table headers={["Nombre", "Número de Caja", "Número de Factura", "Monto de la Caja"]} striped>
+                    <Table headers={["Nombre", "Número de Caja", "Número de Factura", "Monto de la Caja (Gs)", ""]} striped>
                         {cajas.map(caja => {
                             return (
                                 <tr key={caja.id} onClick={() => select(caja.id)}>
@@ -91,6 +101,9 @@ const InfoCajas = () => {
                                     <td className="py-3">{caja.numeroCaja}</td>
                                     <td className="py-3">{caja.numeroFactura ? caja.numeroFactura : "No tiene"}</td>
                                     <td className="py-3">{precioHandler(caja.monto)}</td>
+                                    <td className="py-3">
+                                        <EditIcon className='hCursor' onClick={() => { selectCajaModal(caja) }} />
+                                    </td>
                                 </tr>
                             )
                         })}
@@ -102,21 +115,43 @@ const InfoCajas = () => {
     };
 
     return (
-        <CartaPrincipal>
-            <div className='d-flex align-items-center gap-3'>
-                <FlechaAtras ruta='/caja' />
-                <h1>Lista de Cajas Creadas</h1>
-            </div>
-            <div className="p-2">
-                <form className="d-flex gap-4 flex-wrap w-100">
-                    <span className="d-flex w-50 gap-3">
-                        <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                        <Btn outline onClick={fetchCajas}>Buscar</Btn>
-                    </span>
-                </form>
-            </div>
-            {switchRender()}
-        </CartaPrincipal>
+        <>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: "#75B798",
+                            color: "#0A3622",
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: "#FFDBD9",
+                            color: "#D92D20",
+                        },
+                    },
+                }}
+            />
+            <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} editMode={true} selectedCaja={selectedCaja} />
+
+            <CartaPrincipal>
+                <div className='d-flex align-items-center gap-3'>
+                    <FlechaAtras ruta='/caja' />
+                    <h1>Lista de Cajas Creadas</h1>
+                </div>
+                <div className="p-2">
+                    <form className="d-flex gap-4 flex-wrap w-100">
+                        <span className="d-flex w-50 gap-3">
+                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            <Btn outline onClick={fetchCajas}>Buscar</Btn>
+                        </span>
+                    </form>
+                </div>
+                {switchRender()}
+            </CartaPrincipal>
+        </>
     );
 };
 
