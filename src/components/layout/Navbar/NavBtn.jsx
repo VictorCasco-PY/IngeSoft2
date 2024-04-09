@@ -33,6 +33,10 @@ export const NavBtn = ({ children, icon, type, href, className, roles, ...props 
     setSelected(location.pathname.includes(href));
   }, [location]);
 
+
+  // Validamos que el rol del usuario actual sea el mismo que el rol requerido para mostrar el botón.
+  // Si el rol del usuario actual no es el mismo que el rol requerido, no se muestra el botón.
+  // El admin puede ver todos los botones, por lo que no se valida su rol.
   if (roles && (!roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
 
   switch (type) {
