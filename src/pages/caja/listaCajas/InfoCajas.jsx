@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from '../../../components/table/Table';
 import useCaja from '../../../hooks/useCaja';
-import {toast, Toaster} from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 import CajaStorage from '../../../utils/CajaStorage';
 import UserStorage from '../../../utils/UserStorage';
 import CartaPrincipal from '../../../components/cartaPrincipal/CartaPrincipal';
@@ -15,7 +15,9 @@ import { Btn } from '../../../components/bottons/Button';
 import { Input } from '../../../components/input/input';
 import ModalRegistrarCaja from '../abrirCaja/ModalRegistrarCaja';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import '../MainCaja.css';
+import PopupAlert from '../../../components/alert/PopupAlert';
 
 const InfoCajas = () => {
 
@@ -26,6 +28,8 @@ const InfoCajas = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+
+    const [deletePopupOpen, setDeletePopupOpen] = useState(false)
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -92,7 +96,7 @@ const InfoCajas = () => {
 
         return (
             <>
-                <div className='' style={{ minHeight: 435 }}>
+                <div className='text-c' style={{ minHeight: 435 }}>
                     <Table headers={["Nombre", "Número de Caja °", "Número de Factura #", "Monto de la Caja (Gs)", ""]} striped>
                         {cajas.map(caja => {
                             return (
@@ -101,8 +105,9 @@ const InfoCajas = () => {
                                     <td className="py-3">{caja.numeroCaja}</td>
                                     <td className="py-3">{caja.numeroFactura ? caja.numeroFactura : "No tiene"}</td>
                                     <td className="py-3">{precioHandler(caja.monto)}</td>
-                                    <td className="py-3">
-                                        <EditIcon className='hCursor' onClick={() => { selectCajaModal(caja) }} />
+                                    <td className="py-3 d-flex gap-2">
+                                        <DeleteIcon className='hCursor clickableIcon' id={`btn-delete-caja-${caja.id}`} onClick={() => { setDeletePopupOpen(true) }} />
+                                        <EditIcon className='hCursor clickableIcon' id={`btn-edit-caja-${caja.id}`} onClick={() => { selectCajaModal(caja) }} />
                                     </td>
                                 </tr>
                             )
@@ -135,6 +140,15 @@ const InfoCajas = () => {
                 }}
             />
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} editMode={true} selectedCaja={selectedCaja} />
+
+            <PopupAlert
+                message={`¿Estás seguro de eliminar esta Caja?\nSe marcará como eliminada.`}
+                open={deletePopupOpen}
+                closePopup={() => { setDeletePopupOpen(false) }}
+                id="popup-delete"
+                confirmText="Borrar"
+                cancelText="Cancelar"
+            />
 
             <CartaPrincipal>
                 <div className='d-flex align-items-center gap-3'>
