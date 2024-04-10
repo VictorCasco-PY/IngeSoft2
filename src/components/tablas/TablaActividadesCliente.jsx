@@ -9,9 +9,17 @@ import ErrorPagina from '../errores/ErrorPagina';
 import { ListaVacía } from '../errores/ListaVacía';
 import { Table } from '../table/Table';
 
-const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
+/*
+    USO: se usa el prop clienteId para obtener las actividades de un cliente en específico.
+    Se usa el prop toast para mostrar mensajes de error.
+    Se usa el prop setParentTotalPages para setear el total de páginas en el componente padre. (En el componente padre, implementarlo como una funcion)
+        esta función se llama cada vez que se obtienen las actividades.
+    Se usa el prop page para setear la página actual.
+*/
 
-    // no borrar
+const TablaActividadesCliente = ({ toast, clienteId, setParentTotalPages, page = 1 }) => {
+
+    // TODO: no borrar
     //const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
     const [actividades, setActividades] = useState([]);
     const [loadTable, setLoadTable] = useState(true);
@@ -28,6 +36,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                 setActividades([])
             }
             setActividades(res.data)
+            if (setParentTotalPages) setParentTotalPages(res.data.totalPages) // se usa para setear el total de paginas en el componente padre
         } catch (error) {
             if (toast) {
                 if (error.response.status === 404) {
@@ -47,7 +56,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
     useEffect(() => {
 
-        // no borrar esto, no tomar en cuenta en  code review, lo usare en el sig sprint.
+        //TODO: no borrar esto, no tomar en cuenta en  code review, lo usare en el sig sprint.
 
         /*const fetchData = async () => {
             setLoadTable(true);
