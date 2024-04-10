@@ -138,7 +138,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
                         {sesionCaja.horaCierre ? <p className="p-0 m-0 cajaMiscFont">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>}
-                        <Btn outline onClick={cerrarCajaActual} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-cerrar-caja" outline onClick={cerrarCajaActual} disabled={disabledCerrarCaja}>
                             Cerrar Caja
                         </Btn>
                     </div>
@@ -161,29 +161,29 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                     <div className="card cajaCard">
                         <p className="cajaFont">Ventas</p>
 
-                        <Btn type="primary" onClick={goToNuevaVenta} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-nueva-venta" type="primary" onClick={goToNuevaVenta} disabled={disabledCerrarCaja}>
                             Nueva Venta
                         </Btn>
 
-                        <Btn outline onClick={goToListarVentas} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-listar-ventas" outline onClick={goToListarVentas} disabled={disabledCerrarCaja}>
                             Listar Ventas
                         </Btn>
                     </div>
                     <div className="card cajaCard">
                         <p className="cajaFont">Compras</p>
 
-                        <Btn type="primary" onClick={goToNuevaCompra} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-nueva-compra" type="primary" onClick={goToNuevaCompra} disabled={disabledCerrarCaja}>
                             Nueva Compra
                         </Btn>
 
-                        <Btn outline onClick={goToListarCompras} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-listar-compras"  outline onClick={goToListarCompras} disabled={disabledCerrarCaja}>
                             Listar Compras
                         </Btn>
                     </div>
                     <div className="card cajaCard">
                         <p className="cajaFont">Cobros Pendientes</p>
 
-                        <Btn outline onClick={goToListarCobros} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-listar-cobros" outline onClick={goToListarCobros} disabled={disabledCerrarCaja}>
                             Listar Cobros Pendientes
                         </Btn>
                     </div>

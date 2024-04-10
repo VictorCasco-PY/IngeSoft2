@@ -3,7 +3,7 @@
 .carta {
     width: 100%;
     min-height: var(--card-height);
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+    box-shadow: var(--shadow-lg);
     overflow-x: auto;
     background-color: var(--background-components);
     color: var(--text-color);
@@ -11,7 +11,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    display:flex;
+    display: flex;
     flex-direction: column;
     padding: 1rem 0.5rem;
 
@@ -35,7 +35,7 @@
 
 .carta h1 a:hover {
     color: var(--primary);
-    background-color: var( --background-maincolor);
+    background-color: var(--background-maincolor);
 }
 
 .carta .loading {
@@ -59,7 +59,7 @@
 }
 
 .carta a {
-    color:black;
+    color: black;
     text-decoration: none;
 }
 
@@ -68,7 +68,7 @@
         max-width: 960px;
 
     }
-    
+
 }
 
 @media (min-width: 1200px) {
@@ -77,7 +77,6 @@
         padding: 2rem 4rem;
 
     }
-    
 }
 
 @media (min-width: 1400px) {
@@ -85,5 +84,4 @@
         max-width: var(--card-max-width);
         padding: 2rem 6rem;
     }
-    
 }

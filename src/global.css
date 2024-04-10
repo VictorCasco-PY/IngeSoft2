@@ -6,13 +6,23 @@ importar este modulo @import 'global.css';*/
     --background-components: #fff;
 
     --primary: #6941C6;
-    --secondary: #E5D0FF;
+    --secondary: #E5D0FF; /*debe ser primary-light*/
+
+    /*colores sacados de la pantalla productos*/
+    --success: rgb(2, 122, 72);
+    --success-light: rgb(6, 213, 127);;
+
+    --danger: rgb(217, 45, 32);
+    --danger-light: rgb(255, 219, 217);
 
     --text-color:#667085;
 
-
     --card-height: 50rem; /*tamaño minimo de la carta principal*/
     --card-max-width: 1438px; /*anchura maxima de la carta principal*/
+    --card-nocard-max-width: 1538px; /*anchura maxima de la carta sin el blanco*/
+
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    --shadow-m: 0 1rem 1.5rem rgba(0, 0, 0, 0.175);
   }
   
   body {
