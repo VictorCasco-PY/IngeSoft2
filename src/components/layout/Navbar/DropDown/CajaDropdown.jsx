@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavBtn } from "../NavBtn";
 import { NavDropdown } from "./NavDropdown";
 import { useLocation } from "react-router-dom";
+import RolEnum from "../../../../utils/RolEnum";
 
 export const CajaDropdown = () => {
   const location = useLocation();
@@ -12,11 +13,11 @@ export const CajaDropdown = () => {
     }, [])
 
   return (
-    <NavDropdown title="Caja" className={isSelected && "selected" } showArrow>
+    <NavDropdown title="Caja" className={isSelected && "selected" } roles={[RolEnum.ADMIN, RolEnum.CAJERO]} showArrow>
       <NavBtn type="dropdownItem" href="/caja">
         Caja
       </NavBtn>
-      <NavBtn type="dropdownItem" href="/caja/historial">
+      <NavBtn type="dropdownItem" href="/caja/historial" >
         Historial de Movimientos
       </NavBtn>
     </NavDropdown>
