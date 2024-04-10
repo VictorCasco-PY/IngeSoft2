@@ -3,6 +3,7 @@ import UserStorage from "../utils/UserStorage";
 
 const CurrentUserContext = createContext();
 
+
 export const CurrentUserProvider = ({ children }) => {
 
     const [token, setToken] = useState(null);

@@ -26,6 +26,8 @@ import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
+import InformacionClientes from "./pages/clients/InfoClientes/InformacionClientes";
+import { InfoClientsProvider } from "./context/InfoClientesContext";
 
 
 createRoot(document.getElementById("root")).render(
@@ -54,7 +56,10 @@ createRoot(document.getElementById("root")).render(
             path="/clientesinfo/:id"
             element={
               <Layout>
-                <InfoClients />
+                <InfoClientsProvider>
+                  <InformacionClientes />
+                </InfoClientsProvider>
+                
               </Layout>
             }
           />
