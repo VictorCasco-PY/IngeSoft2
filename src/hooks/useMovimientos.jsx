@@ -28,14 +28,18 @@ export const useMovimientos = () => {
         }
     }
 
-    const crearMovimiento = async (movimiento) => {
-       try{
-        return handleRequest(async () => await api.post(`${DIR}`, movimiento))
-       } catch(error) {
-        setError(error)
-       }
+    const getMovimientos = async (page=1) => {
+        return handleRequest(async () => await api.get(`${DIR}/page/${page}`))
     }
 
-    return { crearMovimiento, error, notFound, isLoading }
+    const getMovimientoPorId = async (id) => {
+        return handleRequest(async () => await api.get(`${DIR}/${id}`))
+    }
+
+    const crearMovimiento = async (movimiento) => {
+        return handleRequest(async () => await api.post(`${DIR}`, movimiento))
+    }
+
+    return { crearMovimiento, getMovimientos, getMovimientoPorId, error, notFound, isLoading }
 
 }
