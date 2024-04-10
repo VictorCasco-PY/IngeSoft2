@@ -13,6 +13,7 @@ import { UserDropDown } from "./DropDown/UserDropDown";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import RolEnum from "../../../utils/RolEnum";
+import { CajaDropdown } from "./DropDown/CajaDropdown";
 
 const NavbarStyled = styled(AppBar)(AppBarStyle);
 const ToolbarStyled = styled(Toolbar)(ToolbarStyle);
@@ -67,9 +68,7 @@ export const NewNavbar = () => {
               <NavBtn id="nav-servicios" href="/servicios">
                 Servicios
               </NavBtn>
-              <NavBtn id="nav-caja" href="/caja">
-                Caja
-              </NavBtn>
+              <CajaDropdown />
               <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
                 Reportes
               </NavBtn>
