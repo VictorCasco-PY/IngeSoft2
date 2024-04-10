@@ -88,7 +88,7 @@ const ModalRegistrarCaja = ({ toast, fetchFunction, editMode, selectedCaja, ...p
                             id="input-nombre-caja"
                         />
                         <FormTextInput
-                            label="Monto"
+                            label="Monto (Gs)"
                             name="monto"
                             type="text"
                             placeholder="2000000"

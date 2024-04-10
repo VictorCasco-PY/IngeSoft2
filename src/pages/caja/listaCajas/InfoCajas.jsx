@@ -23,8 +23,10 @@ const InfoCajas = () => {
 
     const [openRegistrarModal, setOpenRegistrarModal] = useState(false);
     const [selectedCaja, setSelectedCaja] = useState(null); //se utiliza para editar caja
+    //se utiliza para borrar caja, TODO: deberia utilizar la misma variable que selectedCaja, pero para asegurar la demo y enforcarme en otras tareas usare ese State
+    const [deleteSelected, setDeleteSelected] = useState(null);
 
-    const { getAllCajas, searchCajaByName, data: req_cajas, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
+    const { getAllCajas, searchCajaByName, deleteCaja, data: req_cajas, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
     const [currentPage, setCurrentPage] = useState(1);
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -68,6 +70,21 @@ const InfoCajas = () => {
         setSelectedCaja(caja);
         setOpenRegistrarModal(true);
     }
+    const selectCajaBorrarPopup = (caja) => {
+        setDeleteSelected(caja);
+        setDeletePopupOpen(true);
+    }
+
+    const borrarCaja = async () => {
+        const res = await deleteCaja(deleteSelected.id);
+        if (res && !errorCajas && !noCajasError) { //TODO: esto funciona, pero podria encontrarse una mejor forma de chequear el error
+            toast.success("Caja eliminada correctamente.");
+            fetchCajas();
+        } else {
+            toast.error("Error al eliminar la caja. Revise la conexión.");
+        }
+        setDeletePopupOpen(false);
+    }
 
     const switchRender = () => {
 
@@ -100,13 +117,13 @@ const InfoCajas = () => {
                     <Table headers={["Nombre", "Número de Caja °", "Número de Factura #", "Monto de la Caja (Gs)", ""]} striped>
                         {cajas.map(caja => {
                             return (
-                                <tr key={caja.id} onClick={() => select(caja.id)}>
+                                <tr key={caja.id}>
                                     <th className="py-3" scope="row" style={{ color: "#7749F8" }}>{caja.nombre}</th>
                                     <td className="py-3">{caja.numeroCaja}</td>
                                     <td className="py-3">{caja.numeroFactura ? caja.numeroFactura : "No tiene"}</td>
                                     <td className="py-3">{precioHandler(caja.monto)}</td>
                                     <td className="py-3 d-flex gap-2">
-                                        <DeleteIcon className='hCursor clickableIcon' id={`btn-delete-caja-${caja.id}`} onClick={() => { setDeletePopupOpen(true) }} />
+                                        <DeleteIcon className='hCursor clickableIcon' id={`btn-delete-caja-${caja.id}`} onClick={() => { selectCajaBorrarPopup(caja) }} />
                                         <EditIcon className='hCursor clickableIcon' id={`btn-edit-caja-${caja.id}`} onClick={() => { selectCajaModal(caja) }} />
                                     </td>
                                 </tr>
@@ -142,12 +159,16 @@ const InfoCajas = () => {
             <ModalRegistrarCaja open={openRegistrarModal} closeModal={() => { setOpenRegistrarModal(false) }} toast={toast} fetchFunction={fetchCajas} editMode={true} selectedCaja={selectedCaja} />
 
             <PopupAlert
-                message={`¿Estás seguro de eliminar esta Caja?\nSe marcará como eliminada.`}
+                header={`${deleteSelected ? `Borrar ${deleteSelected.nombre}` : 'Borrar Caja'}`} //Se necesita hacer el chequeuo o sino da error null
+                message={`¿Estás seguro de borrar esta Caja?\nSe marcará como eliminada.`}
                 open={deletePopupOpen}
                 closePopup={() => { setDeletePopupOpen(false) }}
                 id="popup-delete"
                 confirmText="Borrar"
+                confirmAction={borrarCaja}
                 cancelText="Cancelar"
+                loading={cargandoCajas}
+                disabled={cargandoCajas}
             />
 
             <CartaPrincipal>
