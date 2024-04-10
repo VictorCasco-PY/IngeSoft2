@@ -177,12 +177,16 @@ const InfoCajas = () => {
                     <h1>Lista de Cajas Creadas</h1>
                 </div>
                 <div className="p-2">
-                    <form className="d-flex gap-4 flex-wrap w-100">
+                    <div className="d-flex gap-4 flex-wrap w-100">
                         <span className="d-flex w-50 gap-3">
-                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter")
+                                        fetchCajas()
+                                }} />
                             <Btn outline onClick={fetchCajas}>Buscar</Btn>
                         </span>
-                    </form>
+                    </div>
                 </div>
                 {switchRender()}
             </CartaPrincipal>
