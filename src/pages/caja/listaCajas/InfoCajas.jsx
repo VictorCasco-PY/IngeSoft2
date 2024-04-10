@@ -93,7 +93,7 @@ const InfoCajas = () => {
         return (
             <>
                 <div className='' style={{ minHeight: 435 }}>
-                    <Table headers={["Nombre", "Número de Caja", "Número de Factura", "Monto de la Caja (Gs)", ""]} striped>
+                    <Table headers={["Nombre", "Número de Caja °", "Número de Factura #", "Monto de la Caja (Gs)", ""]} striped>
                         {cajas.map(caja => {
                             return (
                                 <tr key={caja.id} onClick={() => select(caja.id)}>

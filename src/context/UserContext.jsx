@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import UserStorage from "../utils/UserStorage";
+import { useNavigate } from "react-router-dom";
+import CajaStorage from "../utils/CajaStorage";
+import { toast } from 'react-hot-toast';
 
 const CurrentUserContext = createContext();
 
@@ -13,6 +16,8 @@ export const CurrentUserProvider = ({ children }) => {
     //TODO: usar useReducer para manejar el estado de autenticación, porque useState no es lo más adecuado para este caso
     const [isAuthenticated, setIsAuthenticated] = useState();
 
+    const navigate = useNavigate();
+
     const login = (user) => {
         const data = {
             accessToken: user.accessToken,
@@ -25,7 +30,15 @@ export const CurrentUserProvider = ({ children }) => {
         setIsAuthenticated(true);
     };
 
-    const logout = () => {
+    const logout =  () => {
+        //si hay una sesion de caja abierta, cerrarla
+        //TODO: que sea un popup advirtiendo que hay una caja abierta y opcion de cerrar o cancelar.
+        const isCajaAbierta = CajaStorage.getCajaId() || CajaStorage.getSesionCajaId();
+        if (isCajaAbierta) {
+            CajaStorage.cerrarCaja();
+            toast.success("Se cerró la sesión de caja abierta..")
+        }
+        
         UserStorage.removeUser();
         setToken(null);
         setRol(null);
@@ -33,6 +46,11 @@ export const CurrentUserProvider = ({ children }) => {
         setNombre(null);
         setUserId(null);
         setIsAuthenticated(false);
+        if (isCajaAbierta) {
+            setTimeout(() => {navigate("/");}, 1000);
+        } else {
+            navigate("/");
+        }
     };
 
     const setLocalStorage = () => {

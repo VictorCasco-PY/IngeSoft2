@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import '../MainCaja.css'
-import { Formik, Form } from 'formik';
+import { Formik, Form, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
 import useCaja from "../../../hooks/useCaja";
@@ -10,17 +10,17 @@ import ModalFormik from "../../../components/modals/ModalFormik";
 import { Btn } from "../../../components/bottons/Button";
 import { FormTextInput } from "../../../components/forms/FormInputs";
 
-const ModalRegistrarCaja = ({toast, fetchFunction, editMode, selectedCaja, ...props }) => {
+const ModalRegistrarCaja = ({ toast, fetchFunction, editMode, selectedCaja, ...props }) => {
 
     const { createCaja, modificarCaja, isLoading: cargandoCaja } = useCaja();
 
-    const [nombre, setNombre] = useState('')
-    const [monto, setMonto] = useState('')
+    const [cajaNombre, setCajaNombre] = useState('')
+    const [cajaMonto, setCajaMonto] = useState('')
 
     useEffect(() => {
-        if (editMode) {
-            setNombre(selectedCaja.nombre)
-            setMonto(selectedCaja.monto)
+        if (editMode && selectedCaja) {
+            setCajaNombre(selectedCaja.nombre)
+            setCajaMonto(selectedCaja.monto)
         }
     }, [editMode, selectedCaja])
 
@@ -56,15 +56,16 @@ const ModalRegistrarCaja = ({toast, fetchFunction, editMode, selectedCaja, ...pr
     }
 
     return (
-        <ModalFormik title={!editMode ? "Registrar una Caja" : `Modificar Caja: ${selectedCaja.nombre}`} {...props}>
+        <ModalFormik title={(!editMode && selectedCaja) ? "Registrar una Caja" : `Modificar Caja`} {...props}>
             <Formik
                 initialValues={{
-                    nombre: '',
-                    monto: '',
+                    nombre: cajaNombre,
+                    monto: cajaMonto,
                 }}
+                enableReinitialize={true}
                 validationSchema={Yup.object({
                     nombre: Yup.string()
-                        .max(15, 'Debe tener 15 caracteres o menos')
+                        .max(20, 'Debe tener 20 caracteres o menos')
                         .min(5, 'Debe tener 5 caracteres o más')
                         .required('Requerido'),
                     monto: Yup.number()
@@ -94,9 +95,9 @@ const ModalRegistrarCaja = ({toast, fetchFunction, editMode, selectedCaja, ...pr
                             required={true}
                             id="input-monto-caja"
                         />
-                        <Btn type="primary" className='mt-3 align-self-end' loading={cargandoCaja} disabled={(cargandoCaja)} 
-                        id="btn-registrar-caja"
-                        submit
+                        <Btn type="primary" className='mt-3 align-self-end' loading={cargandoCaja} disabled={(cargandoCaja)}
+                            id="btn-registrar-caja"
+                            submit
                         >
                             {editMode ? "Modificar Caja" : "Registrar Caja"}
                         </Btn>

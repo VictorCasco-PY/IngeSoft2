@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { NavBtn } from "../NavBtn";
 import { HiUser } from "react-icons/hi";
 import { NavDropdown } from "./NavDropdown";
-import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../../../context/UserContext";
 
 const UserDropDownTitle = ({ nombre }) => {
@@ -39,18 +38,15 @@ export const UserDropDown = () => {
     setUserData(user);
   }, []);
 
-  const navigate = useNavigate();
-
   const handleLogout = async () => {
     //localStorage.removeItem("user");
     //cambio de andy
     await contextLogout();
-    navigate("/");
   };
 
   return (
     <>
-      <NavDropdown title={<UserDropDownTitle nombre={userData?.nombre} style={{minWidth:"max-content"}}/>} left>
+      <NavDropdown title={<UserDropDownTitle nombre={userData?.nombre} style={{ minWidth: "max-content" }} />} left>
         <NavBtn type="dropdownItem" href="/miUsuario">
           Mi Usuario
         </NavBtn>

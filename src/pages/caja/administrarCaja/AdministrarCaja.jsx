@@ -14,15 +14,17 @@ import useCaja from "../../../hooks/useCaja";
 import CajaStorage from "../../../utils/CajaStorage";
 import { CircularProgress } from "@mui/material";
 import UserStorage from "../../../utils/UserStorage";
+import { useCurrentUser } from "../../../context/UserContext";
+import RolEnum from "../../../utils/RolEnum";
 
 const AdministrarCaja = ({ setSesionAbierta }) => {
 
     const navigate = useNavigate();
-    const { getCajaById, isLoading: cargandoCaja } = useCaja();
-    const { getSesionCajaById, cerrarCajaById, isLoading: cargandoSesion} = useSesionCaja();
+    const { getCajaById, isLoading: cargandoCaja, error: cajaError } = useCaja();
+    const { getSesionCajaById, cerrarCajaById, isLoading: cargandoSesion, error: sesionError } = useSesionCaja();
     const [sesionCaja, setSesionCaja] = useState({});
     const [caja, setCaja] = useState({});
-    const [user, setUser] = useState({});
+    const { nombre: userNombre, userId, rol: userRol } = useCurrentUser();
 
     const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
@@ -31,19 +33,33 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
         const data2 = await getSesionCajaById(CajaStorage.getSesionCajaId());
         setCaja(data1);
         setSesionCaja(data2);
+
+        //si el usuario que abrio la caja no es el mismo que esta logueado, cerrar la caja, excepto si el usuario es admin
+        if (userId && data2) {
+            if ((userId !== data2?.idUsuario) && userRol !== RolEnum.ADMIN) {
+                toast.error("El usuario logueado no es el mismo que abrió la caja.")
+                setDisabledCerrarCaja(true);
+                setTimeout(() => {
+                    CajaStorage.cerrarCaja();
+                    setSesionAbierta(false)
+                }, 1500);
+            }
+        }
     }
 
     useEffect(() => {
         if (CajaStorage.getCajaId() && CajaStorage.getSesionCajaId()) {
             fetchData();
+            setDisabledCerrarCaja(false); //TODO: innecesario
         } else {
             toast.error("No se ha abierto una caja. No deberías de estar viendo esto...");
             setTimeout(() => {
                 setSesionAbierta(false)
             }, 2500);
         }
-        if (UserStorage.getUser()) {
-            setUser(UserStorage.getUser());
+        if (sesionError) { //TODO: esto no funciona, el hook usa el valor de error anterior, no el actual, 
+            toast.error("Error al cargar caja. Revise la conexión.");
+            setDisabledCerrarCaja(true);
         }
     }, [])
 
@@ -145,9 +161,9 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                 </div>
 
                 <div>
-                    {(user && user.nombre) &&
+                    {(userNombre) &&
                         <>
-                            <p className="p-0 m-0 cajaMiscFont">Cajero: {user.nombre}</p>
+                            <p className="p-0 m-0 cajaMiscFont">Cajero: {userNombre}</p>
                             {(sesionCaja && sesionCaja.horaApertura && sesionCaja.fecha) &&
                                 <>
                                     <p className="p-0 m-0 cajaMiscFont">Hora de Apertura: {sesionCaja.horaApertura}</p>
@@ -176,7 +192,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                             Nueva Compra
                         </Btn>
 
-                        <Btn id="btn-listar-compras"  outline onClick={goToListarCompras} disabled={disabledCerrarCaja}>
+                        <Btn id="btn-listar-compras" outline onClick={goToListarCompras} disabled={disabledCerrarCaja}>
                             Listar Compras
                         </Btn>
                     </div>

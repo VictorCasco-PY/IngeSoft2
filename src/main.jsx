@@ -28,11 +28,12 @@ import RolEnum from "./utils/RolEnum";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CurrentUserProvider>
-      <Router>
+
+    <Router>
+      <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>}/></Route>
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>} /></Route>
           <Route
             path="/clientes"
             element={
@@ -183,7 +184,8 @@ createRoot(document.getElementById("root")).render(
             }
           />
         </Routes>
-      </Router>
-    </CurrentUserProvider>
+      </CurrentUserProvider>
+    </Router>
+
   </React.StrictMode>
 );
