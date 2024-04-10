@@ -24,6 +24,7 @@ import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
 import MainDashboard from "./pages/dashboard/MainDashboard";
 import RolEnum from "./utils/RolEnum";
+import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 
 
 createRoot(document.getElementById("root")).render(
@@ -173,6 +174,18 @@ createRoot(document.getElementById("root")).render(
           />
 
           <Route path="/miUsuario" element={<Layout><MainMiUsuario /></Layout>} />
+
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+            <Route
+              exact
+              path="/caja/historial"
+              element={
+                <Layout>
+                  <MovimientosVista />
+                </Layout>
+              }
+            />
+          </Route>
 
           <Route
             path="*"
