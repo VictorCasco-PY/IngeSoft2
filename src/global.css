@@ -10,7 +10,10 @@ importar este modulo @import 'global.css';*/
 
     /*colores sacados de la pantalla productos*/
     --success: rgb(2, 122, 72);
-    --success-light: rgb(6, 213, 127);;
+    --success-light: rgb(6, 213, 127);
+
+    --warning: rgb(122, 108, 2);
+    --warning-light: rgb(240, 224, 168);
 
     --danger: rgb(217, 45, 32);
     --danger-light: rgb(255, 219, 217);

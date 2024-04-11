@@ -47,18 +47,6 @@
     display: block !important;
 }
 
-.arrowIndicator {
-    font-size: 2.5rem !important;
-}
-
-.aRed {
-    color: var(--danger);
-}
-
-.aGreen {
-    color: var(--success);
-}
-
 @media (min-width: 1910px) {
     .MDGrid {
         grid-template-columns: 1fr 1fr 1fr;

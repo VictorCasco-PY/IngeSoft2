@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MainDashboard.css'
 import TablaDashboard from '../../components/dashboard/TablaDashboard'; //may be used
 import LineChartDashboard from '../../components/dashboard/LineChartDashboard';
@@ -12,6 +12,10 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DashCarta from '../../components/dashboard/DashCarta';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import useReporteClientes from '../../hooks/useReporteClientes';
+import { formatDate } from '../../utils/DateStatics';
+import NewClientsSection from '../../components/dashboard/NewClientsSection';
+import NewClientsENUM from '../../utils/NuevosClientesENUM';
 
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
@@ -128,38 +132,6 @@ const lineDataTwo = [
     }
 ]
 
-const pieDataOne =
-    [
-        {
-            "id": "Pagados",
-            "label": "En Regla",
-            "value": 400,
-            "color": "hsl(48, 70%, 50%)"
-        },
-        {
-            "id": "Pendientes",
-            "label": "Morosos",
-            "value": 200,
-            "color": "hsl(273, 70%, 50%)"
-        }
-    ]
-
-const pieDataTwo =
-    [
-        {
-            "id": "Pagados",
-            "label": "En Regla",
-            "value": 489,
-            "color": "hsl(48, 70%, 50%)"
-        },
-        {
-            "id": "Pendientes",
-            "label": "Morosos",
-            "value": 56,
-            "color": "hsl(273, 70%, 50%)"
-        }
-    ]
-
 const productDataOne = [
     {
         "mes": "Junio",
@@ -220,16 +192,71 @@ const productosLabels = [
     'Food'
 ]
 
+const pieDataOne = [
+    {
+        "id": "Pagados",
+        "label": "Pagados",
+        "value": 1,
+        "color": "hsl(225, 70%, 50%)"
+    },
+    {
+        "id": "Pendientes",
+        "label": "Pendientes",
+        "value": 0,
+        "color": "hsl(297, 70%, 50%)"
+    }
+]
+
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
     const [productDisplayingData, setProductDisplayingData] = useState(productDataOne)
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
+    //SECCION NUEVOS CLIENTES
+    const [nuevosClientesNumber, setNuevosClientesNumber] = useState(0)
+    const [nuevosClientesLastMonth, setNuevosClientesLastMonth] = useState(0)
+    const [nuevosClientesDisplaying, setNuevosClientesDisplaying] = useState(NewClientsENUM.NUEVOS)
+
     //Estos estados son solo para test, se deben borrar en la implementacion
     const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
-    const [filterTestBoolMorosos, setFilterTestBoolMorosos] = useState(false)
+
+    const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, data, error, setIsLoading } = useReporteClientes();
+
+    const fetchMorosos = async () => {
+        const res = await getCantidadPorEstadoSuscripcion()
+        if (res) {
+            setMorososDisplayingData(res)
+        }
+    }
+
+    const fetchNuevosEsteMes = async () => {
+        let today = new Date()
+        //now a month ago
+        let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
+        let twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, today.getDate())
+        today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);
+        const resCurrent = await getNuevosClientesPorFechas(monthAgo, today)
+        const resLastMonth = await getNuevosClientesPorFechas(twoMonthsAgo, monthAgo)
+        if (resCurrent && resLastMonth) {
+            setNuevosClientesNumber(resCurrent.cantidadNuevosClientes)
+            setNuevosClientesLastMonth(resLastMonth.cantidadNuevosClientes)
+            //para el display de flechas de la seccion, se chequean 3 casos
+            if (resCurrent.cantidadNuevosClientes > resLastMonth.cantidadNuevosClientes) { //mas nuevos este mes
+                setNuevosClientesDisplaying(NewClientsENUM.NUEVOS)
+            } else if (resCurrent.cantidadNuevosClientes < resLastMonth.cantidadNuevosClientes) { //menos nuevos este mes
+                setNuevosClientesDisplaying(NewClientsENUM.PERDIDOS)
+            } else { //iguales
+                setNuevosClientesDisplaying(NewClientsENUM.RETENIDOS)
+            }
+        }
+    }
+
+    useEffect(() => {
+        //fetchMorosos()
+        fetchNuevosEsteMes()
+    }, [])
 
     //Estas funciones se borraran en la implementacion, solo de prueba
     const filterProducts = () => {
@@ -252,21 +279,11 @@ const MainDashboard = () => {
         }
     }
 
-    const filterMorosos = () => {
-        if (filterTestBoolMorosos) {
-            setMorososDisplayingData(pieDataOne)
-            setFilterTestBoolMorosos(false)
-        } else {
-            setMorososDisplayingData(pieDataTwo)
-            setFilterTestBoolMorosos(true)
-        }
-    } 
-    /**/
 
     const handleBlurClick = () => {
         //TODO: esta solucion es fea por el momento, si es del tipo elemento
         if (!currentMaximized) return;
-        if (typeof(currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) { 
+        if (typeof (currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) {
             currentMaximized.classList.remove("maximizedSeccion")
             currentMaximized.classList.add("seccionDashHover")
             setCurrentMaximized(null)
@@ -286,11 +303,8 @@ const MainDashboard = () => {
                         {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
                         <div className='d-flex align-items-center justify-content-end gap-3' >
                             <p className='m-0'>
-                                {filterTestBoolMorosos ? "Junio 2024" : "Julio 2024"}
+                                Julio 2024
                             </p>
-                            <Btn id="btn-filtrar-morosos" type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
-                                Filtrar
-                            </Btn>
                         </div>
                         <div className='graphSection'>
                             <PieChartDashboard data={morososDisplayingData} />
@@ -300,17 +314,7 @@ const MainDashboard = () => {
 
                     <div className='d-flex flex-column gap-4'>
                         <SeccionDashboard header="Nuevos clientes este mes:">
-                            <div className='d-flex flex-column gap-3'>
-                                <div className='d-flex gap-3'>
-                                    <ArrowCircleUpIcon className='arrowIndicator aGreen' />
-                                    <nav style={{ fontSize: '2rem' }} className='notSelect'>+12</nav>
-                                </div>
-                                <h3 className='m-0 p-0'>Mes pasado:</h3>
-                                <div className='d-flex gap-3'>
-                                    <ArrowCircleDownIcon className='arrowIndicator aRed' />
-                                    <nav style={{ fontSize: '2rem' }} className='notSelect'>-6</nav>
-                                </div>
-                            </div>
+                            <NewClientsSection displayENUM={nuevosClientesDisplaying} nuevosActual={nuevosClientesNumber} nuevosAnterior={nuevosClientesLastMonth} />
                         </SeccionDashboard>
                         <SeccionDashboard header="Enlaces">
                             <div>
@@ -327,7 +331,7 @@ const MainDashboard = () => {
                     <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         {/*Este filtrado debe ser un un slider con los meses*/}
                         <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => {  }}>
+                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { }}>
                                 Filtrar
                             </Btn>
                         </div>
