@@ -213,16 +213,11 @@ const MainDashboard = () => {
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
-    //SECCION NUEVOS CLIENTES
-    const [nuevosClientesNumber, setNuevosClientesNumber] = useState(0)
-    const [nuevosClientesLastMonth, setNuevosClientesLastMonth] = useState(0)
-    const [nuevosClientesDisplaying, setNuevosClientesDisplaying] = useState(NewClientsENUM.NUEVOS)
-
     //Estos estados son solo para test, se deben borrar en la implementacion
     const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
 
-    const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, data, error, setIsLoading } = useReporteClientes();
+    const { getCantidadPorEstadoSuscripcion, data, error, setIsLoading } = useReporteClientes();
 
     const fetchMorosos = async () => {
         const res = await getCantidadPorEstadoSuscripcion()
@@ -230,33 +225,6 @@ const MainDashboard = () => {
             setMorososDisplayingData(res)
         }
     }
-
-    const fetchNuevosEsteMes = async () => {
-        let today = new Date()
-        //now a month ago
-        let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
-        let twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, today.getDate())
-        today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);
-        const resCurrent = await getNuevosClientesPorFechas(monthAgo, today)
-        const resLastMonth = await getNuevosClientesPorFechas(twoMonthsAgo, monthAgo)
-        if (resCurrent && resLastMonth) {
-            setNuevosClientesNumber(resCurrent.cantidadNuevosClientes)
-            setNuevosClientesLastMonth(resLastMonth.cantidadNuevosClientes)
-            //para el display de flechas de la seccion, se chequean 3 casos
-            if (resCurrent.cantidadNuevosClientes > resLastMonth.cantidadNuevosClientes) { //mas nuevos este mes
-                setNuevosClientesDisplaying(NewClientsENUM.NUEVOS)
-            } else if (resCurrent.cantidadNuevosClientes < resLastMonth.cantidadNuevosClientes) { //menos nuevos este mes
-                setNuevosClientesDisplaying(NewClientsENUM.PERDIDOS)
-            } else { //iguales
-                setNuevosClientesDisplaying(NewClientsENUM.RETENIDOS)
-            }
-        }
-    }
-
-    useEffect(() => {
-        //fetchMorosos()
-        fetchNuevosEsteMes()
-    }, [])
 
     //Estas funciones se borraran en la implementacion, solo de prueba
     const filterProducts = () => {
@@ -314,7 +282,7 @@ const MainDashboard = () => {
 
                     <div className='d-flex flex-column gap-4'>
                         <SeccionDashboard header="Nuevos clientes este mes:">
-                            <NewClientsSection displayENUM={nuevosClientesDisplaying} nuevosActual={nuevosClientesNumber} nuevosAnterior={nuevosClientesLastMonth} />
+                            <NewClientsSection />
                         </SeccionDashboard>
                         <SeccionDashboard header="Enlaces">
                             <div>
