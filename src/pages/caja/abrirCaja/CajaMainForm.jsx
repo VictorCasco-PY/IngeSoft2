@@ -83,11 +83,8 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         const postData = {
             idCaja: values['id_caja'],
             idUsuario: UserStorage.getEmpleadoId(),
-            montoInicial: values['montoInicial'],
-            montoFinal: null,
             fecha: fecha,
             horaApertura: hora,
-            horaCierre: null
         }
 
         const success = await fetchAbrirSesion(postData);
@@ -135,11 +132,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                             validationSchema={Yup.object({
                                 id_caja: Yup.string()
                                     .required('Requerido'),
-                                montoInicial: Yup.number()
-                                    .typeError('El monto debe ser un numero')
-                                    .required('Requerido')
-                                    .positive('Debe ser un número positivo')
-                                ,
                             })}
                             onSubmit={async (values) => {
                                 handleAbrirCaja(values)
@@ -167,15 +159,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 ))}
                                             </FormSelect>
                                             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
-
-                                            <FormTextInput
-                                                label="Monto Inicial en Efectivo"
-                                                name="montoInicial"
-                                                type="number"
-                                                placeholder="2000000"
-                                                required={true}
-                                                id="input-monto-inicial"
-                                            />
                                         </>
                                     ) : (
                                         <p className="pt-2">No se encontraron cajas, registra una nueva caja.</p>
@@ -186,10 +169,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                     submit >
                                     Abrir Caja
                                 </Btn>
-
-                                {/*<nav>
-                                        {errorSesion && <p className="text-danger">Error al abrir caja. Revise la conexión.</p>}
-                                    </nav>*/}
                             </Form>
                         </Formik>
                     </div>
