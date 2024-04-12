@@ -4,9 +4,11 @@ import ReporteStorage from '../../utils/ReportesStorage';
 import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
+import { formatDate } from '../../utils/DateStatics';
+import { CircularProgress } from '@mui/material';
 
 /*
-FORMATO:
+FORMATO para los datos:
 [
     {
         "mes": "Julio",
@@ -24,7 +26,7 @@ FORMATO:
         "Producto3": 30
     }
 ]
-*/ 
+*/
 
 const LineChartDashboard = () => {
 
@@ -51,7 +53,11 @@ const LineChartDashboard = () => {
     }
 
     const ordenarDatos = async () => {
-        let data = await getProductosMasVendidos()
+        let today = new Date();
+        let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
+        today = formatDate(today); monthAgo = formatDate(monthAgo);
+
+        let data = await getProductosMasVendidos(monthAgo, today)
 
         setProductosMasVendidos(setDataFromKeys(data))
         const labels = data.map(producto => producto.nombreProducto)
@@ -74,7 +80,7 @@ const LineChartDashboard = () => {
                 </Btn>
             </div>
             <div className='graphSection'>
-                <ResponsiveBar
+                {isLoadingProductosMasVendidos ? (<CircularProgress />) : (<ResponsiveBar
                     data={productosMasVendidos}
                     keys={producotsLabels}
                     indexBy="mes"
@@ -172,7 +178,7 @@ const LineChartDashboard = () => {
                     role="application"
                     ariaLabel="Nivo bar chart demo"
                     barAriaLabel={e => e.id + ": " + e.formattedValue + " in mes: " + e.indexValue}
-                />
+                />)}
             </div>
             {productoMasVendido && (<i className='p-0 m-0'>Producto mas vendido: {productoMasVendido}.</i>)}
         </>

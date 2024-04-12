@@ -1,5 +1,6 @@
 const NEW_CLIENTS_LABEL = 'ls_new_clients';
 const PRODUCTOS_MAS_VENDIDOS_LABEL = 'ls_productos_mas_vendidos';
+const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'ls_productos_fecha';
 
 class ReporteStorage {
     static setNewClientsData(data) {
@@ -52,6 +53,25 @@ class ReporteStorage {
         const data = localStorage.getItem(PRODUCTOS_MAS_VENDIDOS_LABEL);
         return data ? JSON.parse(data) : null;
     }
+
+    static setFechaProductosMasVendidosData(fecha) {
+        if (!fecha) {
+            return null;
+        }
+        //formato
+        // ls_productos_fecha = {fechaInicio: fecha, fechaFin: fecha} 
+
+        //transformar a string
+        let dataStringified = JSON.stringify(fecha);
+        localStorage.setItem(FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL, dataStringified);
+        return fecha;
+    }
+
+    static getFechaProductosMasVendidosData() {
+        const data = localStorage.getItem(FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL);
+        return data ? JSON.parse(data) : null;
+    }
+
 }
 
 export default ReporteStorage;
