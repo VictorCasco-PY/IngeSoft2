@@ -3,39 +3,41 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import NewClientsENUM from '../../utils/NuevosClientesENUM';
-import useReporteClientes from '../../hooks/useReporteClientes';
 import CircularProgress from "@mui/material/CircularProgress";
 import { useDashboard } from '../../context/DashboardContext';
+import ReporteStorage from '../../utils/ReportesStorage';
 
 const NewClientsSection = () => {
     //SECCION NUEVOS CLIENTES
     const [nuevosClientesNumber, setNuevosClientesNumber] = useState(0)
     const [nuevosClientesLastMonth, setNuevosClientesLastMonth] = useState(0)
     const [nuevosClientesDisplaying, setNuevosClientesDisplaying] = useState(NewClientsENUM.NUEVOS)
-    const { isDataStored, nuevosClientesData, getReportesData, isLoading } = useDashboard();
+    const { isDataStored, getNewClients, isLoadingNewClients } = useDashboard();
 
     const ordenarDatos = async () => {
-        if (isDataStored) {
-            const presentClients = nuevosClientesData.nuevosToday
-            const lastMonthClients = nuevosClientesData.nuevosLastMonth
-            setNuevosClientesNumber(presentClients)
-            setNuevosClientesLastMonth(lastMonthClients)
-            //para el display de flechas de la seccion, se chequean 3 casos
-            if (presentClients > lastMonthClients) { //mas nuevos este mes
-                setNuevosClientesDisplaying(NewClientsENUM.NUEVOS)
-            } else if (presentClients < lastMonthClients) { //menos nuevos este mes
-                setNuevosClientesDisplaying(NewClientsENUM.PERDIDOS)
-            } else { //iguales
-                setNuevosClientesDisplaying(NewClientsENUM.RETENIDOS)
-            }
+        let data;
+        if (!isDataStored) {
+            data = await getNewClients()
+        } else {
+            data = ReporteStorage.getNewClientsData();;
+        }
+        const presentClients = data.nuevosToday
+        const lastMonthClients = data.nuevosLastMonth
+        setNuevosClientesNumber(presentClients)
+        setNuevosClientesLastMonth(lastMonthClients)
+        //para el display de flechas de la seccion, se chequean 3 casos
+        if (presentClients > lastMonthClients) { //mas nuevos este mes
+            setNuevosClientesDisplaying(NewClientsENUM.NUEVOS)
+        } else if (presentClients < lastMonthClients) { //menos nuevos este mes
+            setNuevosClientesDisplaying(NewClientsENUM.PERDIDOS)
+        } else { //iguales
+            setNuevosClientesDisplaying(NewClientsENUM.RETENIDOS)
         }
     }
 
     useEffect(() => {
-        getReportesData()
         ordenarDatos()
-        console.log(isLoading)
-    }, [isLoading])
+    }, [isLoadingNewClients])
 
     const getArrowClassName = (nuevosClientesDisplaying, position) => {
         if ((nuevosClientesDisplaying === NewClientsENUM.NUEVOS && position === 1) || (nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && position === 2)) {
@@ -56,14 +58,14 @@ const NewClientsSection = () => {
                 {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleUpIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleDownIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoading ? (<CircularProgress />) : (nuevosClientesNumber)}</nav>
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<CircularProgress />) : (nuevosClientesNumber)}</nav>
             </div>
             <h3 className='m-0 p-0'>Mes pasado:</h3>
             <div className='d-flex gap-3'>
                 {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleDownIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleUpIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoading ? (<CircularProgress />) : (nuevosClientesLastMonth)}</nav>
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<CircularProgress />) : (nuevosClientesLastMonth)}</nav>
             </div>
         </div>
     );

@@ -10,13 +10,10 @@ import LineIngresoChartDashboard from '../../components/dashboard/LineIngresoCha
 import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DashCarta from '../../components/dashboard/DashCarta';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import useReporteClientes from '../../hooks/useReporteClientes';
-import { formatDate } from '../../utils/DateStatics';
 import NewClientsSection from '../../components/dashboard/NewClientsSection';
-import NewClientsENUM from '../../utils/NuevosClientesENUM';
-
+import { useDashboard } from '../../context/DashboardContext';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
@@ -217,14 +214,7 @@ const MainDashboard = () => {
     const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
 
-    const { getCantidadPorEstadoSuscripcion, data, error, setIsLoading } = useReporteClientes();
-
-    const fetchMorosos = async () => {
-        const res = await getCantidadPorEstadoSuscripcion()
-        if (res) {
-            setMorososDisplayingData(res)
-        }
-    }
+    const { refreshData, isLoadingNewClients } = useDashboard();
 
     //Estas funciones se borraran en la implementacion, solo de prueba
     const filterProducts = () => {
@@ -265,6 +255,7 @@ const MainDashboard = () => {
                 <div className='DashboardHeader'>
                     <h1>Dashboard</h1>
                     <h2>Septiembre 2024</h2>
+                    <Btn type="primary" onClick={refreshData} icon={<RefreshIcon/>} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Refrescar</Btn>
                 </div>
                 <div className='MDGrid position-relative'>
                     <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>

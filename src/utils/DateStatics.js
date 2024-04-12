@@ -4,3 +4,8 @@ export const formatDate = (date) => {
     return fecha
 }
 
+export const getCurrentDate = () => {
+    const today = new Date();
+    return formatDate(today);
+}
+
