@@ -48,6 +48,7 @@ const useClienteData = (id) => {
   const crearMedicion = async (id, params) => {
     return handleRequest(() => api.post(`${Mediciones_URL}`, params))
   }
+  
   // Obtiene la medición de un cliente por id y página
   const getMedicionClienteById = async (id, page = 1, params) => {
     return handleRequest(() =>

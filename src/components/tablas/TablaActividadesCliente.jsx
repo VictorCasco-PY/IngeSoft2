@@ -8,7 +8,7 @@ import api from '../../utils/api';
 import ErrorPagina from '../errores/ErrorPagina';
 import { ListaVacía } from '../errores/ListaVacía';
 import { Table } from '../table/Table';
-
+import Pagination from '../pagination/PaginationContainer';
 /*
     USO: se usa el prop clienteId para obtener las actividades de un cliente en específico.
     Se usa el prop toast para mostrar mensajes de error.
@@ -24,7 +24,8 @@ const TablaActividadesCliente = ({ toast, clienteId, setParentTotalPages, page =
     const [actividades, setActividades] = useState([]);
     const [loadTable, setLoadTable] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null)
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
     const getSuscripciones = async () => {
@@ -80,9 +81,12 @@ const TablaActividadesCliente = ({ toast, clienteId, setParentTotalPages, page =
 
         fetchData();*/
 
-        getSuscripciones();
-    }, [page]);
+        getSuscripciones(currentPage);
+    }, [currentPage]);
 
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    }
     const switchRender = () => {
 
         if (loadTable) return <Table headers={["Nombre", "Modalidad", "Estado", "Fecha de Inscripcion", "Fecha de Vencimiento"]} striped>
@@ -117,6 +121,13 @@ const TablaActividadesCliente = ({ toast, clienteId, setParentTotalPages, page =
                             )
                         })}
                     </Table>
+                    <div className="d-flex justify-content-center mt-4">
+                    <Pagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
                 </>
             );
         }

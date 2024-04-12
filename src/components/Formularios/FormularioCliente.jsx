@@ -21,7 +21,7 @@ const FormularioCliente = ({ cliente, onInputChange, onAceptar }) => {
         <select id="plan-actual" name="plan-actual" className="form-select">
           <option value="mensual">Mensual</option>
           <option value="semanal">Semanal</option>
-          <option value="diario">Diario</option>
+          
         </select>
       </div>
       <div className="mb-2 block">

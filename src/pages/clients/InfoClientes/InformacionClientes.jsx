@@ -5,28 +5,26 @@ import "../InfoClients.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams, useSearchParams } from "react-router-dom";
 import { IoArrowBackSharp, IoAdd } from "react-icons/io5";
-import Alert from "@mui/material/Alert";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
 import { IoPencilOutline } from "react-icons/io5";
-import Pagination from "../../../components/pagination/PaginationContainer.jsx";
 
 import ButtonBasic from "../../../components/bottons/ButtonBasic.jsx";
 
 import ModalBase from "../../../components/modals/ModalBase.jsx";
+import CustomAlert from "../../../components/alert/CustomAlert.jsx";
 
-import EstadoPago from "../../../components/estado_pago/EstadoPago.jsx";
 import { Link } from "react-router-dom";
 import TablaActividadesCliente from "../../../components/tablas/TablaActividadesCliente.jsx";
-
+import TablaMedicionesCliente from "../../../components/tablas/TablaMedicionesClientes.jsx";
+import TablaPagosClientes from "../../../components/tablas/TablaPagosClientes.jsx";
 import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal.jsx";
 import FormularioCliente from "../../../components/Formularios/FormularioCliente.jsx";
 import FormularioMedicion from "../../../components/Formularios/FormularioMedicion.jsx";
-import { RiDeleteBinLine } from "react-icons/ri";
+
 import useClienteData from "../../../hooks/useClientesData";
 import { useInfoClients } from "../../../context/InfoClientesContext.jsx";
-import ErrorPagina from "../../../components/errores/ErrorPagina.jsx";
+
 const InformacionClientes = () => {
   const { id } = useParams();
   const {
@@ -48,13 +46,14 @@ const InformacionClientes = () => {
   const [showMeasurements, setShowMeasurements] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
 
+  const [showAlert, setShowAlert] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [value, setValue] = useState("one");
   const [editingClient, setEditingClient] = useState(null);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [modalAction, setModalAction] = useState(null); // 'editClient' o 'nuevaMedicion'
   const [editingMedicion, setEditingMedicion] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null);
   const [pagos, setPagos] = useState([]);
 
   const [totalPages, setTotalPages] = useState(1);
@@ -99,31 +98,22 @@ const InformacionClientes = () => {
       console.error("Error al obtener datos del cliente y mediciones:", error);
     }
   };
-  const handleEliminarMedicion = async (medicionId) => {
+
+  const handleConfirmDelete = async (medicionId) => {
     try {
       await eliminarMedicion(medicionId);
-      // Actualiza la lista de mediciones después de eliminar una medición
-      const medicionesResponse = await getMedicionClienteById(id, 1);
+      // Actualiza el estado de las mediciones después de la eliminación
+      const medicionesResponse = await getMedicionClienteById(id, currentPage);
       setMediciones(medicionesResponse.items);
+      setShowAlert(false); // Oculta el mensaje de confirmación
       toast.success("Medición eliminada con éxito");
-      // También puedes recargar la página para actualizar los datos
-      // window.location.reload();
     } catch (error) {
       console.error("Error al eliminar medición:", error);
       toast.error("Error al eliminar la medición");
     }
   };
-
-  const handlePageChange = async (pageNumber) => {
-    setCurrentPage(pageNumber); // Actualiza la página actual
-
-    try {
-      // Llama a fetchData con el número de página actual
-      await fetchData(pageNumber);
-    } catch (error) {
-      // Manejo de errores
-      console.error("Error al obtener datos del cliente y mediciones:", error);
-    }
+  const handleCancelDelete = () => {
+    setShowAlert(false); // Oculta la alerta
   };
 
   useEffect(() => {
@@ -134,7 +124,11 @@ const InformacionClientes = () => {
   // Función para obtener las iniciales del nombre y del apellido
   const getInitials = (name) => {
     const words = name.split(" ");
-    const initials = words.map((word) => word.charAt(0)).join("");
+    // Tomar solo las iniciales de los dos primeros nombres
+    const initials = words
+      .slice(0, 2)
+      .map((word) => word.charAt(0))
+      .join("");
     return initials.toUpperCase();
   };
   const initials = cliente ? getInitials(cliente.nombre) : "";
@@ -204,13 +198,18 @@ const InformacionClientes = () => {
 
   const handleCrearMedicion = async (e) => {
     e.preventDefault();
+    // Verificar si algún campo está vacío
+    const isEmpty = Object.values(formValues).some((value) => value === "");
+    if (isEmpty) {
+      toast.error("Por favor completa todos los campos.");
+      return;
+    }
     try {
       await crearMedicion(id, formValues);
       // Actualizar la lista de mediciones después de crear una nueva
-      const medicionesResponse = await getMedicionClienteById(id, 1);
+      const medicionesResponse = await getMedicionClienteById(id, currentPage);
       setMediciones(medicionesResponse.items);
       toast.success("Medición creada con éxito");
-      fetchData(currentPage);
       setModalOpen(false); // Cerrar el modal después de crear la medición
     } catch (error) {
       console.error("Error al crear medición:", error);
@@ -361,88 +360,41 @@ const InformacionClientes = () => {
 
           {/* Renderiza la tabla de pagos si showPayments es true */}
           {showPayments && (
-            <>
-              {pagos.length > 0 ? (
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">N° Factura</th>
-                      <th scope="col">Fecha</th>
-                      <th scope="col">Monto</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pagos.map((pago) => (
-                      <tr key={pago.id}>
-                        <td style={{ color: "#6941C6" }}>{pago.nroFactura}</td>
-                        <td>{pago.fecha}</td>
-                        <td>{pago.monto}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p>{errorMessage}</p>
-              )}
-            </>
+            <TablaPagosClientes
+              clienteId={id}
+              page={currentPage}
+              setParentTotalPages={setCurrentPage}
+            />
           )}
 
           {/* Renderiza la tabla de mediciones si showMeasurements es true */}
           {showMeasurements && (
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Peso(kg)</th>
-                  <th scope="col">Altura(cm)</th>
-                  <th scope="col">Imc</th>
-                  <th scope="col">Brazo(cm)</th>
-                  <th scope="col">Piernas(cm)</th>
-                  <th scope="col">Cintura(cm)</th>
-                  <th scope="col">Pecho(cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mediciones && mediciones.length > 0 ? (
-                  mediciones.map((medicion, index) => (
-                    <tr key={index}>
-                      <td style={{ color: "#6941C6" }}>{medicion.fecha}</td>
-                      <td>{medicion.peso}</td>
-                      <td>{medicion.altura}</td>
-                      <td>{medicion.imc}</td>
-                      <td>{medicion.cirBrazo}</td>
-                      <td>{medicion.cirPiernas}</td>
-                      <td>{medicion.cirCintura}</td>
-                      <td>{medicion.cirPecho}</td>
-                      <td>
-                        <button
-                          className="btn"
-                          onClick={() => handleEliminarMedicion(medicion.id)}
-                        >
-                          <RiDeleteBinLine />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5">No hay mediciones disponibles</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <TablaMedicionesCliente
+              clienteId={id}
+              toast={toast}
+              page={currentPage}
+              setParentTotalPages={setCurrentPage}
+              handleEliminarMedicion={handleConfirmDelete}
+            />
+          )}
+          {showAlert && (
+            <CustomAlert
+              message={`¿Estás seguro de eliminar esta medición?`}
+              confirmText="Aceptar"
+              cancelText="Cancelar"
+              confirmAction={() => handleConfirmDelete(id)}
+              cancelAction={handleCancelDelete}
+              show={showAlert} // Pasa el estado para controlar si se muestra el mensaje de confirmación
+            />
           )}
 
           {showActivities && (
-            <TablaActividadesCliente clienteId={id} toast={toast} />
-          )}
-          <div className="d-flex justify-content-center mt-4">
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
+            <TablaActividadesCliente
+              clienteId={id}
+              toast={toast}
+              page={currentPage}
             />
-          </div>
+          )}
         </div>
       </CartaPrincipal>
     </>
