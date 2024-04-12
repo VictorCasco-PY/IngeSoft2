@@ -7,6 +7,7 @@ import { Btn } from '../bottons/Button';
 import { formatDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
 import ReactDatePicker from 'react-datepicker';
+import CajaStorage from '../../utils/CajaStorage';
 
 /*
 FORMATO para los datos:
@@ -33,12 +34,12 @@ const LineChartDashboard = () => {
 
     const { isDataStored, getProductosMasVendidos, isLoadingProductosMasVendidos } = useDashboard();
     const [productosMasVendidos, setProductosMasVendidos] = useState(null);
-    const [producotsLabels, setProductosLabels] = useState(null);
+    const [producotsLabels, setProductosLabels] = useState(null); //nombres en string de los productos como un arreglo
 
-    const [productoMasVendido, setProductoMasVendido] = useState(null);
+    const [productoMasVendido, setProductoMasVendido] = useState(null); //un producto singular el cual es el mas vendido
 
     const setDataFromKeys = (data) => {
-        const months = ['Julio'] //hardcoded, TODO: filtrar por fechas
+        const months = ['Productos'] //hardcoded, TODO: filtrar por fechas
         let newData = [];
 
         //por cada mes se hace el bucle, añadiendo los productos y su cantidad
@@ -53,6 +54,7 @@ const LineChartDashboard = () => {
         return newData
     }
 
+    //llamar a esta funcion cuando se quieran cambiar los datos en el grafico
     const ordenarDatos = async (fechaInicio, fechaFin) => {
         //asumiendo que las fechas de los states ya estan formateados, importante, formato: yyyy-mm-dd
         let data = await getProductosMasVendidos(fechaInicio, fechaFin)
@@ -62,10 +64,13 @@ const LineChartDashboard = () => {
         setProductosLabels(labels)
 
         //tambien obtener el producto que fue mas vendido
-        const productoMasVendido = data.reduce((prev, current) => (prev.cantidadVendida > current.cantidadVendida) ? prev : current)
-        setProductoMasVendido(productoMasVendido.nombreProducto)
+        if (data.length > 0) {
+            const productoMasVendido = data.reduce((prev, current) => (prev.cantidadVendida > current.cantidadVendida) ? prev : current)
+            setProductoMasVendido(productoMasVendido.nombreProducto)
+        }
     }
 
+    //estos states por el momento solo se usan para el display en pantalla, no funcionan bien si los utilizo directamente en la funcion de ordenarDatos
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
@@ -76,18 +81,15 @@ const LineChartDashboard = () => {
             const fechas = ReporteStorage.getFechaProductosMasVendidosData();
             fechaInicio = fechas.fechaInicio
             fechaFin = fechas.fechaFin
-            console.log(fechaInicio, fechaFin)
-            setStartDate(fechaInicio)
-            setEndDate(fechaFin)
-
         } else { //si no hay fechas guardadas, se traen los producots desde hace un mes hasta hoy
             fechaFin = new Date();
             fechaInicio = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
             fechaFin = formatDate(today); fechaInicio = formatDate(monthAgo);
-            setStartDate(fechaInicio)
-            setEndDate(fechaFin)
         }
         ordenarDatos(fechaInicio, fechaFin)
+        //popular date picker
+        setStartDate(fechaInicio)
+        setEndDate(fechaFin)
     }, [])
 
     return (
@@ -146,7 +148,7 @@ const LineChartDashboard = () => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: 'Mes',
+                        legend: `Productos mas vendidos`,
                         legendPosition: 'middle',
                         legendOffset: 32,
                         truncateTickAt: 0
@@ -206,3 +208,5 @@ const LineChartDashboard = () => {
 };
 
 export default LineChartDashboard;
+
+//${ReporteStorage.getFechaProductosMasVendidosData() ? `${ReporteStorage.getFechaProductosMasVendidosData().fechaInicio} hasta ${ReporteStorage.getFechaProductosMasVendidosData().fechaFin}` : 'Productos mas vendidos'}

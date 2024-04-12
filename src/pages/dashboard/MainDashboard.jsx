@@ -201,7 +201,6 @@ const MainDashboard = () => {
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
     //Estos estados son solo para test, se deben borrar en la implementacion
-    const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
 
     const { refreshData, isLoadingNewClients } = useDashboard();

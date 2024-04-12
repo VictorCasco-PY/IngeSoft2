@@ -64,7 +64,7 @@ export const DashboardProvider = ({ children }) => {
             return null
         }
     }
-    ///////// FIN FETCHES ////////////////
+    ///////// FIN FETCHES /////////
 
     //esto es para guardar los reportes en el local storage
     const getNewClients = async () => {
