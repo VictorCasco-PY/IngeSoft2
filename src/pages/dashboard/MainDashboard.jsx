@@ -180,15 +180,6 @@ const productDataTwo = [
     },
 ]
 
-const productosLabels = [
-    'Bebida Energetica',
-    'Agua',
-    'Barra Energetica',
-    'sandwich',
-    'kebab',
-    'Food'
-]
-
 const pieDataOne = [
     {
         "id": "Pagados",
@@ -255,7 +246,7 @@ const MainDashboard = () => {
                 <div className='DashboardHeader'>
                     <h1>Dashboard</h1>
                     <h2>Septiembre 2024</h2>
-                    <Btn type="primary" onClick={refreshData} icon={<RefreshIcon/>} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Refrescar</Btn>
+                    <Btn type="primary" onClick={refreshData} icon={<RefreshIcon />} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Refrescar</Btn>
                 </div>
                 <div className='MDGrid position-relative'>
                     <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
@@ -288,29 +279,11 @@ const MainDashboard = () => {
                     </div>
 
                     <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={actividadDataOne} keys={actividadesLabel} />
-                        </div>
-                        <i className='p-0 m-0'>Actividad con mas inscritos: Powerlifting.</i>
+                        <LineChartDashboard />
                     </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={productDisplayingData} keys={productosLabels} />
-                        </div>
-                        <i className='p-0 m-0'>Producto mas vendido: Bebida Energetica.</i>
+                        <LineChartDashboard />
                     </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>

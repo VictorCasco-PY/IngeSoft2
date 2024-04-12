@@ -39,7 +39,7 @@ class ReporteStorage {
         data.forEach(producto => {
             dataStringified.push({
                 nombreProducto: producto['nombreProducto'],
-                cantidad: producto['cantidad']
+                cantidadVendida: producto['cantidadVendida']
             })
         })
         //transformar a string

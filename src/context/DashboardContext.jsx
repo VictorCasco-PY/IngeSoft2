@@ -24,7 +24,6 @@ export const DashboardProvider = ({ children }) => {
     //fetch data del api
     const fetchReportesData = async () => {
         let today = getCurrentDate();
-        //now a month ago
         let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
         let twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, today.getDate())
         today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);
@@ -44,8 +43,7 @@ export const DashboardProvider = ({ children }) => {
 
     //fetch data del api
     const fetchProductosMasVendidosData = async () => {
-        let today = getCurrentDate();
-        //now a month ago
+        let today = new Date();
         let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
         let twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, today.getDate())
         today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);
@@ -74,7 +72,7 @@ export const DashboardProvider = ({ children }) => {
         } else {
             setLocalStorage();
             setIsDataStored(true);
-            return null
+            return ReporteStorage.getNewClientsData()
         }
     }
 
@@ -86,7 +84,7 @@ export const DashboardProvider = ({ children }) => {
             return res
         } else {
             setLocalStorage();
-            return null
+            return ReporteStorage.getProductosMasVendidosData()
         }
     }
 
