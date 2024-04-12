@@ -22,10 +22,13 @@ export const DashboardProvider = ({ children }) => {
     const refreshData = async () => {
         console.log("Refrescando datos del dashboard...")
         fetchReportesData();
-        fetchProductosMasVendidosData();
+        if (ReporteStorage.getFechaProductosMasVendidosData()) {
+            const fechas = ReporteStorage.getFechaProductosMasVendidosData();
+            fetchProductosMasVendidosData(fechas.fechaInicio, fechas.fechaFin);
+        }
     }
 
-    /*FETCHES*/ 
+    /*FETCHES*/
     //fetch data del api
     const fetchReportesData = async () => {
         let today = new Date();
@@ -47,16 +50,16 @@ export const DashboardProvider = ({ children }) => {
     }
 
     //fetch data del api
-    const fetchProductosMasVendidosData = async () => {
-        const fechas = ReporteStorage.getFechaProductosMasVendidosData();
-        const res = await getProductosMasVendidosPorFecha(fechas.fechaInicio, fechas.fechaFin)
+    const fetchProductosMasVendidosData = async (fechaInicio, fechaFin) => {
+        const res = await getProductosMasVendidosPorFecha(fechaInicio, fechaFin)
         if (res) {
             setProductosMasVendidosData(res);
             ReporteStorage.setProductosMasVendidosData(res);
+            ReporteStorage.setFechaProductosMasVendidosData({ fechaInicio, fechaFin });
             setIsDataStored(true);
             return res
         } else {
-            toast.error("Error al cargar los datos de nuevos clientes. Revise la conexión.");
+            toast.error("Error al cargar los datos de productos mas vendidos. Revise la conexión.");
             setIsDataStored(false)
             return null
         }
@@ -71,7 +74,7 @@ export const DashboardProvider = ({ children }) => {
             ReporteStorage.setNewClientsData(res);
             setIsDataStored(true);
             return res
-        } else {
+        } else { //si los datons ya estan cargados en local ejecutar esta seccion
             setLocalStorage();
             setIsDataStored(true);
             return ReporteStorage.getNewClientsData()
@@ -81,15 +84,16 @@ export const DashboardProvider = ({ children }) => {
     //TERMINAR PARA ESTE SPRNITY
     const getProductosMasVendidos = async (fechaInicio, fechaFin) => {
         //si no hay datos en el local storage o si las fechas son diferentes, se hace el fetch
-        if (!ReporteStorage.getProductosMasVendidosData() || (!ReporteStorage.getFechaProductosMasVendidosData())
-            || (ReporteStorage.getFechaProductosMasVendidosData().fechaInicio !== fechaInicio) || (ReporteStorage.getFechaProductosMasVendidosData().fechaFin !== fechaFin)) {
+        if (!ReporteStorage.getProductosMasVendidosData()
+            || (!ReporteStorage.getFechaProductosMasVendidosData())
+            || (ReporteStorage.getFechaProductosMasVendidosData().fechaInicio !== fechaInicio)
+            || (ReporteStorage.getFechaProductosMasVendidosData().fechaFin !== fechaFin)) {
+
             const res = await fetchProductosMasVendidosData(fechaInicio, fechaFin);
-            setProductosMasVendidosData(res);
-            ReporteStorage.setProductosMasVendidosData(res);
-            ReporteStorage.setFechaProductosMasVendidosData({ fechaInicio, fechaFin });
             return res
-        } else {
+        } else { //si los datons ya estan cargados en local ejecutar esta seccion
             setLocalStorage();
+            setIsDataStored(true);
             return ReporteStorage.getProductosMasVendidosData()
         }
     }

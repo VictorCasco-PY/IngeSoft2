@@ -6,6 +6,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
 import { formatDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
+import ReactDatePicker from 'react-datepicker';
 
 /*
 FORMATO para los datos:
@@ -52,12 +53,9 @@ const LineChartDashboard = () => {
         return newData
     }
 
-    const ordenarDatos = async () => {
-        let today = new Date();
-        let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
-        today = formatDate(today); monthAgo = formatDate(monthAgo);
-
-        let data = await getProductosMasVendidos(monthAgo, today)
+    const ordenarDatos = async (fechaInicio, fechaFin) => {
+        //asumiendo que las fechas de los states ya estan formateados, importante, formato: yyyy-mm-dd
+        let data = await getProductosMasVendidos(fechaInicio, fechaFin)
 
         setProductosMasVendidos(setDataFromKeys(data))
         const labels = data.map(producto => producto.nombreProducto)
@@ -68,16 +66,38 @@ const LineChartDashboard = () => {
         setProductoMasVendido(productoMasVendido.nombreProducto)
     }
 
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
     useEffect(() => {
-        ordenarDatos()
-    }, [isLoadingProductosMasVendidos])
+        let fechaInicio;
+        let fechaFin;
+        if (ReporteStorage.getFechaProductosMasVendidosData()) {
+            const fechas = ReporteStorage.getFechaProductosMasVendidosData();
+            fechaInicio = fechas.fechaInicio
+            fechaFin = fechas.fechaFin
+            console.log(fechaInicio, fechaFin)
+            setStartDate(fechaInicio)
+            setEndDate(fechaFin)
+
+        } else { //si no hay fechas guardadas, se traen los producots desde hace un mes hasta hoy
+            fechaFin = new Date();
+            fechaInicio = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
+            fechaFin = formatDate(today); fechaInicio = formatDate(monthAgo);
+            setStartDate(fechaInicio)
+            setEndDate(fechaFin)
+        }
+        ordenarDatos(fechaInicio, fechaFin)
+    }, [])
 
     return (
         <>
-            <div className='align-self-end'>
-                <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />}>
-                    Filtrar
-                </Btn>
+            <div className='align-self-end d-flex align-items-center justify-content-center gap-3'>
+                <p className='m-0 p-0'>De: </p>
+                <ReactDatePicker selected={startDate} onChange={(date) => setStartDate(formatDate(date))} />
+                <p className='m-0 p-0'>Hasta: </p>
+                <ReactDatePicker selected={endDate} onChange={(date) => setEndDate(formatDate(date))} />
+                <Btn icon={<FilterAltIcon />} onClick={() => ordenarDatos(startDate, endDate)} />
             </div>
             <div className='graphSection'>
                 {isLoadingProductosMasVendidos ? (<CircularProgress />) : (<ResponsiveBar

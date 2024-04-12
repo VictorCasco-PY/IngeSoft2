@@ -197,7 +197,6 @@ const pieDataOne = [
 
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
-    const [productDisplayingData, setProductDisplayingData] = useState(productDataOne)
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
     const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
@@ -206,17 +205,6 @@ const MainDashboard = () => {
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
 
     const { refreshData, isLoadingNewClients } = useDashboard();
-
-    //Estas funciones se borraran en la implementacion, solo de prueba
-    const filterProducts = () => {
-        if (filterTestBool) {
-            setProductDisplayingData(productDataOne)
-            setFilterTestBool(false)
-        } else {
-            setProductDisplayingData(productDataTwo)
-            setFilterTestBool(true)
-        }
-    }
 
     const filterIngresos = () => {
         if (filterTestBoolIngresos) {
