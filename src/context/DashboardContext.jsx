@@ -75,7 +75,6 @@ export const DashboardProvider = ({ children }) => {
             setIsDataStored(true);
             return res
         } else { //si los datons ya estan cargados en local ejecutar esta seccion
-            setLocalStorage();
             setIsDataStored(true);
             return ReporteStorage.getNewClientsData()
         }
@@ -92,7 +91,6 @@ export const DashboardProvider = ({ children }) => {
             const res = await fetchProductosMasVendidosData(fechaInicio, fechaFin);
             return res
         } else { //si los datons ya estan cargados en local ejecutar esta seccion
-            setLocalStorage();
             setIsDataStored(true);
             return ReporteStorage.getProductosMasVendidosData()
         }
