@@ -5,6 +5,26 @@ import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
 
+/*
+FORMATO:
+[
+    {
+        "mes": "Julio",
+        "Producto1": 10,
+        (OPCIONAL) "Producto1Color": "hsl(0, 70%, 50%)",
+        "Producto2": 20,
+        (OPCIONAL) "Producto2Color": "hsl(0, 70%, 50%)",
+        "Producto3": 30
+        (OPCIONAL) "Producto3Color": "hsl(0, 70%, 50%)",
+    },
+    {
+        "mes": "Agosto",
+        "Producto1": 10,
+        "Producto2": 20,
+        "Producto3": 30
+    }
+]
+*/ 
 
 const LineChartDashboard = () => {
 
@@ -12,11 +32,13 @@ const LineChartDashboard = () => {
     const [productosMasVendidos, setProductosMasVendidos] = useState(null);
     const [producotsLabels, setProductosLabels] = useState(null);
 
+    const [productoMasVendido, setProductoMasVendido] = useState(null);
+
     const setDataFromKeys = (data) => {
-        //each array should be a month
         const months = ['Julio'] //hardcoded, TODO: filtrar por fechas
         let newData = [];
 
+        //por cada mes se hace el bucle, añadiendo los productos y su cantidad
         months.forEach(month => {
             let newProducto = {}
             newProducto['mes'] = month
@@ -29,12 +51,15 @@ const LineChartDashboard = () => {
     }
 
     const ordenarDatos = async () => {
-        let data;
-        data = await getProductosMasVendidos()
+        let data = await getProductosMasVendidos()
 
         setProductosMasVendidos(setDataFromKeys(data))
         const labels = data.map(producto => producto.nombreProducto)
         setProductosLabels(labels)
+
+        //tambien obtener el producto que fue mas vendido
+        const productoMasVendido = data.reduce((prev, current) => (prev.cantidadVendida > current.cantidadVendida) ? prev : current)
+        setProductoMasVendido(productoMasVendido.nombreProducto)
     }
 
     useEffect(() => {
@@ -149,7 +174,7 @@ const LineChartDashboard = () => {
                     barAriaLabel={e => e.id + ": " + e.formattedValue + " in mes: " + e.indexValue}
                 />
             </div>
-            <i className='p-0 m-0'>Producto mas vendido: Bebida Energetica.</i>
+            {productoMasVendido && (<i className='p-0 m-0'>Producto mas vendido: {productoMasVendido}.</i>)}
         </>
     );
 };

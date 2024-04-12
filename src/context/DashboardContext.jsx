@@ -42,12 +42,12 @@ export const DashboardProvider = ({ children }) => {
     }
 
     //fetch data del api
-    const fetchProductosMasVendidosData = async () => {
-        let today = new Date();
+    const fetchProductosMasVendidosData = async (fechaInicio, fechaFin) => {
+        /*let today = new Date();
         let monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
         let twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, today.getDate())
-        today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);
-        const res = await getProductosMasVendidosPorFecha(monthAgo, today)
+        today = formatDate(today); monthAgo = formatDate(monthAgo); twoMonthsAgo = formatDate(twoMonthsAgo);*/
+        const res = await getProductosMasVendidosPorFecha(fechaInicio, fechaFin)
         if (res) {
             console.log(res)
             setProductosMasVendidosData(res);
@@ -76,7 +76,9 @@ export const DashboardProvider = ({ children }) => {
         }
     }
 
+    //TERMINAR PARA ESTE SPRNITY
     const getProductosMasVendidos = async () => {
+        //HACER QUE SEA POR FECHA, guardar la fecha y si la fecha no coincide con los parametros pasados, hacer nuevo fetch
         if (!ReporteStorage.getProductosMasVendidosData()) {
             const res = await fetchProductosMasVendidosData();
             setProductosMasVendidosData(res);
