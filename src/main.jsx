@@ -22,6 +22,8 @@ import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
+import InformacionClientes from "./pages/clients/InfoClientes/InformacionClientes";
+import { InfoClientsProvider } from "./context/InfoClientesContext";
 import MainDashboard from "./pages/dashboard/MainDashboard";
 import RolEnum from "./utils/RolEnum";
 import DashboardProvider from "./context/DashboardContext";
@@ -29,8 +31,9 @@ import DashboardProvider from "./context/DashboardContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CurrentUserProvider>
-      <Router>
+
+    <Router>
+      <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
 
@@ -62,7 +65,10 @@ createRoot(document.getElementById("root")).render(
             path="/clientesinfo/:id"
             element={
               <Layout>
-                <InfoClients />
+                <InfoClientsProvider>
+                  <InformacionClientes />
+                </InfoClientsProvider>
+                
               </Layout>
             }
           />
@@ -192,7 +198,8 @@ createRoot(document.getElementById("root")).render(
             }
           />
         </Routes>
-      </Router>
-    </CurrentUserProvider>
+      </CurrentUserProvider>
+    </Router>
+
   </React.StrictMode>
 );

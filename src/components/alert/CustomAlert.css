@@ -15,6 +15,8 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+
   }
   
   .button-container {
@@ -30,10 +32,16 @@
     border-radius: 0.8em; 
     padding: 0.6em 1.6em;
     cursor: pointer; 
-    margin: 1em;  
+    margin-left: 2em;  
     font-size: 0.9em; 
 }
 
 .confirm-button:hover {
     background-color: #6a1b9a; 
+}
+
+
+/****/
+.popupStructure {
+  margin:auto;
 }
