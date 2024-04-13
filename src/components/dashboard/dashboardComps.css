@@ -55,10 +55,36 @@
     left: 50%;
     margin-top: -300px;
     margin-left: -250px;
+    width: 566px;
     /*z-index: 9999;
     position: fixed;
     left: 50%;
     transform: scale(1.5);*/
+}
+
+.arrowIndicator {
+    font-size: 2.5rem !important;
+}
+
+.aRed {
+    color: var(--danger);
+}
+
+.aGreen {
+    color: var(--success);
+}
+
+.aYellow {
+    color: var(--warning);
+}
+
+.graphSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 @media (max-width: 1200px) {
@@ -81,6 +107,7 @@
         transform: scale(1);
         margin-top: 0;
         margin-left: 0;
+        width: 100%;
     }
 
     .iconBoton {
@@ -100,6 +127,8 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
+
+    padding-bottom:80px;
 
 }
 

@@ -43,6 +43,61 @@ const LineIngresoChartDashboard = ({data}) => {
             pointLabelYOffset={-12}
             enableTouchCrosshair={true}
             useMesh={true}
+            layers={['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'legends']}
+            curve='linear'
+            enableGridX={true}
+            enableGridY={true}
+            enablePoints={true}
+            enablePointLabel={true}
+            pointLabel={(d) => d.y}
+            colors={{ scheme: 'category10' }}
+            enableArea={false}
+            areaOpacity={0.1}
+            areaBlendMode='normal'
+            areaBaselineValue={0}
+            lineWidth={2}
+            isInteractive={true}
+            debugMesh={false}
+            tooltip={({ point }) => {
+                return (
+                    <div
+                        style={{
+                            background: 'white',
+                            padding: '9px 12px',
+                            border: '1px solid #ccc',
+                        }}
+                    >
+                        <strong>{point.data.xFormatted}</strong>
+                        <br />
+                        <strong>{point.data.serieId}</strong>
+                        <br />
+                        <strong>{point.data.yFormatted}</strong>
+                    </div>
+                );}}
+            enableSlices='x'
+            debugSlices={false}
+            sliceTooltip={({ slice }) => {
+                return (
+                    <div
+                        style={{
+                            background: 'white',
+                            padding: '9px 12px',
+                            border: '1px solid #ccc',
+                        }}
+                    >
+                        <strong>{slice.points[0].data.xFormatted}</strong>
+                        <br />
+                        <strong>{slice.points[0].data.serieId}</strong>
+                        <br />
+                        <strong>{slice.points[0].data.yFormatted}</strong>
+                    </div>
+                );
+            }}
+            enableCrosshair={true}
+            crosshairType='bottom'
+            role='img'
+            defs={[]}
+            fill={[]}
             legends={[
                 {
                     anchor: 'bottom-right',

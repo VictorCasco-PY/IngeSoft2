@@ -47,16 +47,16 @@
     display: block !important;
 }
 
-.arrowIndicator {
-    font-size: 2.5rem !important;
-}
-
-.aRed {
-    color: var(--danger);
-}
-
-.aGreen {
+.lastRefreshAbsolute{ 
+    position: absolute;
+    right: 13%;
+    top:15%;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: #666;
+    background-color: var(--success-light);
     color: var(--success);
+    border-radius: 18px;
 }
 
 @media (min-width: 1910px) {
@@ -67,6 +67,13 @@
 }
 
 @media (max-width: 992px) {
+    .lastRefreshAbsolute{ 
+        right: 5%;
+        top:14%;
+        display: flex;
+        flex-direction: column;
+    }
+
     .MDGrid {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;

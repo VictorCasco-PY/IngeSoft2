@@ -23,7 +23,6 @@ const SeccionDashboard = ({ maximizedElement, setMaximizedElement, header, maxim
     const maximize = (element) => {
         setMaximizedElement(element) //se guarda el elemento maximizado
         element.classList.remove("seccionDashHover")
-        element.style.width = "566px" //borrar esto si se encuentra una mejor solucion, esto tiene animacion horrible
         element.classList.add("maximizedSeccion");
     }
 

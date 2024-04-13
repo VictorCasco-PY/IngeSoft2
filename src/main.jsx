@@ -26,6 +26,7 @@ import InformacionClientes from "./pages/clients/InfoClientes/InformacionCliente
 import { InfoClientsProvider } from "./context/InfoClientesContext";
 import MainDashboard from "./pages/dashboard/MainDashboard";
 import RolEnum from "./utils/RolEnum";
+import DashboardProvider from "./context/DashboardContext";
 
 
 createRoot(document.getElementById("root")).render(
@@ -35,7 +36,15 @@ createRoot(document.getElementById("root")).render(
       <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={<Layout><MainDashboard /></Layout>} /></Route>
+
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={
+            <Layout>
+              <DashboardProvider>
+                <MainDashboard />
+              </DashboardProvider>
+            </Layout>} />
+          </Route>
+
           <Route
             path="/clientes"
             element={
