@@ -22,7 +22,7 @@ import InfoIcon from '@mui/icons-material/Info';
 const lineDataOne = [
     {
         "id": "Ingresos",
-        "color": "hsl(297, 70%, 50%)",
+        "color": "rgb(44, 160, 44)",
         "data": [
             {
                 "x": "Enero",
@@ -40,7 +40,7 @@ const lineDataOne = [
     },
     {
         "id": "Egresos",
-        "color": "hsl(225, 70%, 50%)",
+        "color": "rgb(214, 39, 40)",
         "data": [
             {
                 "x": "Enero",
@@ -61,7 +61,7 @@ const lineDataOne = [
 const lineDataTwo = [
     {
         "id": "Ingresos",
-        "color": "hsl(297, 70%, 50%)",
+        "color": "rgb(44, 160, 44)",
         "data": [
             {
                 "x": "Enero",
@@ -87,7 +87,7 @@ const lineDataTwo = [
     },
     {
         "id": "Egresos",
-        "color": "hsl(225, 70%, 50%)",
+        "color": "rgb(214, 39, 40)",
         "data": [
             {
                 "x": "Enero",

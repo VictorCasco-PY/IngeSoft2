@@ -150,9 +150,9 @@ const LineChartDashboard = () => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: `Productos mas vendidos`,
+                        legend: `${startDate ? `${startDate} hasta ${endDate}` : 'Productos mas vendidos'}`,
                         legendPosition: 'middle',
-                        legendOffset: 32,
+                        legendOffset: 38,
                         truncateTickAt: 0
                     }}
                     axisLeft={{
