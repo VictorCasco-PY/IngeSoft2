@@ -210,11 +210,3 @@ const InfoCajas = () => {
 };
 
 export default InfoCajas;
-
-/*
-Bugs Solucionados
-
-1- Solucionado, ahora al borrar hay un retraso de medio segundo en el cual se resetea la búsqueda en la página actual.
-
-*- Solucionado bug al buscar una caja cuando se está en una página distinta a 1, el resultado de la búsqueda usará la página actual, mostrando resultados no correctos.
-*/
