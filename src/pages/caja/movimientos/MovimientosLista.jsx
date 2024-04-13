@@ -1,5 +1,6 @@
 import { Table } from "../../../components/table/Table";
-
+import { HiOutlinePlusSm } from "react-icons/hi";
+import { HiOutlineMinusSm } from "react-icons/hi";
 
 export const MovimientosLista = ({ movimientos }) => {
     
@@ -10,8 +11,8 @@ export const MovimientosLista = ({ movimientos }) => {
     }
 
     const getMonto = (movimiento) => {
-        if(movimiento.entrada===true) return <span className="text-success">{movimiento.total}</span>;
-        return <span className="text-danger">{movimiento.total}</span>;
+        if(movimiento.entrada===true) return <span className="text-success fw-bold"><HiOutlinePlusSm /> {movimiento.total}</span>;
+        return <span className="text-danger fw-bold"><HiOutlineMinusSm /> {movimiento.total}</span>;
     }
 
     return <>
