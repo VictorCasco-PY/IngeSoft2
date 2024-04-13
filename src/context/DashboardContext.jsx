@@ -77,7 +77,11 @@ export const DashboardProvider = ({ children }) => {
             setNuevosClientesData({ nuevosToday: resCurrent, nuevosLastMonth: resLastMonth });
             ReporteStorage.setNewClientsData({ nuevosToday: resCurrent, nuevosLastMonth: resLastMonth });
             setIsDataStored(true);
-            return { nuevosToday: resCurrent, nuevosLastMonth: resLastMonth }
+            let dataSimplified = {
+                nuevosToday: resCurrent['cantidadNuevosClientes'],
+                nuevosLastMonth: resLastMonth['cantidadNuevosClientes']
+            }
+            return dataSimplified
         } else {
             toast.error("Error al cargar los datos de nuevos clientes. Revise la conexión.");
             setIsDataStored(false)

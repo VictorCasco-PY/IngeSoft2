@@ -15,7 +15,7 @@ import { useDashboard } from '../../context/DashboardContext';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { getCurrentMonthName, getCurrentYear, invertDateString } from '../../utils/DateStatics';
 import ReporteStorage from '../../utils/ReportesStorage';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import InfoIcon from '@mui/icons-material/Info';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
@@ -123,6 +123,7 @@ const MainDashboard = () => {
     const [lastRefresh, setLastRefresh] = useState('')
     const { refreshData, checkExpirationTime, isLoadingNewClients } = useDashboard();
 
+    //Borrar luego de implementacion
     const filterIngresos = () => {
         if (filterTestBoolIngresos) {
             setIngresosDisplayingData(lineDataOne)
@@ -133,9 +134,8 @@ const MainDashboard = () => {
         }
     }
 
-
     const handleBlurClick = () => {
-        //TODO: esta solucion es fea por el momento, si es del tipo elemento
+        //TODO: esta solucion es fea por el momento, si currentMaximized es del tipo html elemento (que en realidad es un objeto)
         if (!currentMaximized) return;
         if (typeof (currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) {
             currentMaximized.classList.remove("maximizedSeccion")
@@ -150,7 +150,8 @@ const MainDashboard = () => {
     }
 
     useEffect(() => {
-        if (checkExpirationTime()) {
+        //si los datos expiraron refrescar
+        if (checkExpirationTime()) { 
             refreshData(true);
         }
         setLastRefresh(ReporteStorage.getLastRefresh())
@@ -160,7 +161,7 @@ const MainDashboard = () => {
         <>
             {lastRefresh && (
                 <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
-                    <b className='d-flex align-items-center'><PriorityHighIcon /> Ultima actualización: </b>
+                    <b className='d-flex align-items-center'><InfoIcon /> Ultima actualización: </b>
                     <p className='m-0 p-0'> {invertDateString(lastRefresh)}</p>
                 </div>
             )}
