@@ -10,32 +10,15 @@ import LineIngresoChartDashboard from '../../components/dashboard/LineIngresoCha
 import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DashCarta from '../../components/dashboard/DashCarta';
-import useReporteClientes from '../../hooks/useReporteClientes';
 import NewClientsSection from '../../components/dashboard/NewClientsSection';
 import { useDashboard } from '../../context/DashboardContext';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { getCurrentMonthName, getCurrentYear } from '../../utils/DateStatics';
+import { getCurrentMonthName, getCurrentYear, invertDateString } from '../../utils/DateStatics';
+import ReporteStorage from '../../utils/ReportesStorage';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
-const actividadDataOne = [
-    {
-        "mes": "Junio",
-        "Powerlifting": 167,
-        "PowerliftingColor": "hsl(224, 70%, 50%)",
-        "Pilates": 160,
-        "PilatesColor": "hsl(56, 70%, 50%)",
-        "Yoga": 142,
-        "YogaColor": "hsl(104, 70%, 50%)",
-    },
-]
-
-const actividadesLabel = [
-    'Powerlifting',
-    'Pilates',
-    'Yoga'
-]
-
 const lineDataOne = [
     {
         "id": "Ingresos",
@@ -130,65 +113,15 @@ const lineDataTwo = [
     }
 ]
 
-const productDataOne = [
-    {
-        "mes": "Junio",
-        "Bebida Energetica": 167,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 160,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 142,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 140,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 40,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 12,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-]
-
-const productDataTwo = [
-    {
-        "mes": "Junio",
-        "Bebida Energetica": 167,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 160,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 142,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 140,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 40,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 12,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-    {
-        "mes": "Julio",
-        "Bebida Energetica": 122,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 54,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 92,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 167,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 23,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 19,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-]
-
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
-    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
 
+    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne) //borrar despues
     //Estos estados son solo para test, se deben borrar en la implementacion
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
 
-    const { refreshData, isLoadingNewClients } = useDashboard();
+    const [lastRefresh, setLastRefresh] = useState('')
+    const { refreshData, checkExpirationTime, isLoadingNewClients } = useDashboard();
 
     const filterIngresos = () => {
         if (filterTestBoolIngresos) {
@@ -211,14 +144,35 @@ const MainDashboard = () => {
         }
     }
 
+    const refreshDashboard = () => {
+        refreshData();
+        setLastRefresh(ReporteStorage.getLastRefresh())
+    }
+
+    useEffect(() => {
+        if (checkExpirationTime()) {
+            refreshData(true);
+        }
+        setLastRefresh(ReporteStorage.getLastRefresh())
+    }, [])
+
     return (
         <>
+            {lastRefresh && (
+                <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
+                    <b className='d-flex align-items-center'><PriorityHighIcon /> Ultima actualización: </b>
+                    <p className='m-0 p-0'> {invertDateString(lastRefresh)}</p>
+                </div>
+            )}
+
             <div id="blur-screen-dashboard" className={currentMaximized ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
                 <div className='DashboardHeader mb-2'>
                     <h1>Dashboard</h1>
                     <h2>{getCurrentMonthName() + ' ' + getCurrentYear()}</h2>
-                    <Btn type="primary" onClick={refreshData} icon={<RefreshIcon />} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Refrescar</Btn>
+                    <div>
+                        <Btn type="primary" onClick={refreshDashboard} icon={<RefreshIcon />} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Actualizar</Btn>
+                    </div>
                 </div>
                 <div className='MDGrid position-relative'>
 

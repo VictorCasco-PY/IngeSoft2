@@ -4,6 +4,7 @@ import { useDashboard } from '../../context/DashboardContext';
 import ReporteStorage from '../../utils/ReportesStorage';
 import { CircularProgress } from '@mui/material';
 import { getCurrentMonthName } from '../../utils/DateStatics';
+import { useNavigate } from 'react-router-dom';
 
 /*
 FORMATO para los datos:
@@ -26,6 +27,8 @@ const PieChartDashboard = () => {
 
     const [data, setData] = useState([])
 
+    const navigate = useNavigate();
+
     const { getEstadoClientes, isLoadingNewClients } = useDashboard();
 
     const ordenarDatos = async () => {
@@ -42,13 +45,13 @@ const PieChartDashboard = () => {
             {
                 "id": "Pagados",
                 "label": "Pagados",
-                "value": 22,
+                "value": pagados,
                 "color": "hsl(331, 70%, 50%)"
             },
             {
                 "id": "Pendientes",
                 "label": "Pendientes",
-                "value": 9,
+                "value": pendientes,
                 "color": "hsl(331, 70%, 50%)"
             }
         ])
@@ -97,7 +100,7 @@ const PieChartDashboard = () => {
                         }}
                         onClick={(data) => {
                             if (data.id === 'Pendientes') {
-                                alert('Mostrar lista clientes en mora')
+                                navigate('/clientes?estado=pendientes') //TODO: implementar este filtro en clientes
                             }
                         }}
                         defs={[

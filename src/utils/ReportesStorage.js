@@ -1,9 +1,31 @@
+const LAST_REFRESH = 'rep_last_refresh';
+const EXPIRATION_DATE = 'rep_expiration_date';
+
 const NEW_CLIENTS_LABEL = 'rep_new_clients';
 const PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_mas_vendidos';
 const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_fecha';
 const CANTIDAD_MOROSOS = 'rep_cantidad_morosos';
 
 class ReporteStorage {
+
+    static setLastRefresh(date) {
+        localStorage.setItem(LAST_REFRESH, date);
+        return date;
+    }
+
+    static getLastRefresh() {
+        return localStorage.getItem(LAST_REFRESH);
+    }
+
+    static setExpirationDate(date) {
+        localStorage.setItem(EXPIRATION_DATE, date);
+        return date;
+    }
+
+    static getExpirationDate() {
+        return localStorage.getItem(EXPIRATION_DATE);
+    }
+
     /// Nuevos Clientes start
     static setNewClientsData(data) {
         if (!data) {
@@ -53,7 +75,7 @@ class ReporteStorage {
         return data;
     }
 
-    
+
     static getProductosMasVendidosData() {
         const data = localStorage.getItem(PRODUCTOS_MAS_VENDIDOS_LABEL);
         return data ? JSON.parse(data) : null;

@@ -2,10 +2,19 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import ReporteStorage from "../utils/ReportesStorage";
 import useReporteClientes from "../hooks/useReporteClientes";
 import toast from "react-hot-toast";
-import { formatDate, getCurrentDate } from "../utils/DateStatics";
+import { dateIsLaterOrEqualThan, formatDate, getCurrentDate } from "../utils/DateStatics";
 import useReporteProductos from "../hooks/useReporteProductos";
 
 const DashboardContext = createContext();
+
+/*
+    Funcionamiento:
+    - ReporteStorage tiene un valor que se llama expiration date, cuando
+    esta fecha vence, se deben actualizar los datos del dashboard, cada vez que
+    se va a la página dashboard se checkea si ya venció esta fecha con la función checkExpirationTime()
+*/
+
+const DIAS_EXPIRACION = 7; //dias de expiracion de los datos
 
 export const DashboardProvider = ({ children }) => {
 
@@ -21,14 +30,21 @@ export const DashboardProvider = ({ children }) => {
     const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, isLoading: isLoadingNewClients } = useReporteClientes();
     const { getProductosMasVendidosPorFecha, isLoading: isLoadingProductosMasVendidos } = useReporteProductos();
 
-    const refreshData = async () => {
-        console.log("Refrescando datos del dashboard...")
+    const refreshData = async (resetExpirationDate = false) => {
+        console.log("DEBUG: Refrescando datos del dashboard... Esto hace fetch")
         fetchNuevosClientes();
         if (ReporteStorage.getFechaProductosMasVendidosData()) {
             const fechas = ReporteStorage.getFechaProductosMasVendidosData();
             fetchProductosMasVendidosData(fechas.fechaInicio, fechas.fechaFin);
         }
         fetchEstadoClientes();
+        if (resetExpirationDate) { //si se quiere resetear la fecha de expiracion, parametro de esta función, default = false
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + DIAS_EXPIRACION);
+            ReporteStorage.setExpirationDate(formatDate(expirationDate));
+        }
+
+        ReporteStorage.setLastRefresh(getCurrentDate());
     }
 
     /*
@@ -124,6 +140,21 @@ export const DashboardProvider = ({ children }) => {
     }
     //end Getters de reportes
 
+    /*Devuelve true si ya expiró, false si aun no expiró*/
+    const checkExpirationTime = () => {
+        if (ReporteStorage.getExpirationDate()) console.log("DEBUG: La fecha de expiración es " + ReporteStorage.getExpirationDate());
+        if (!ReporteStorage.getExpirationDate()) {
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + DIAS_EXPIRACION);
+            ReporteStorage.setExpirationDate(formatDate(expirationDate));
+            return false
+        } else if (dateIsLaterOrEqualThan(getCurrentDate(), ReporteStorage.getExpirationDate())) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     //TODO: por el momento los estados no funcionan bien, utilizan valor anterior
     const setLocalStorage = () => {
         const newClientsData = ReporteStorage.getNewClientsData();
@@ -155,7 +186,7 @@ export const DashboardProvider = ({ children }) => {
             estadoClientes, nuevosClientesData, productosMasVendidosData, //states guardados
             fechaProductosMasVendidos, //filtros
             getEstadoClientes, getNewClients, getProductosMasVendidos, //getters datos
-            refreshData, //refrescar todos los datos (fetch)
+            refreshData, checkExpirationTime, //refrescar todos los datos (fetch)
             isLoadingNewClients, isLoadingProductosMasVendidos //estados de cargando
         }}>
             {children}
