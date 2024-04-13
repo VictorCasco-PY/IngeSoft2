@@ -7,7 +7,6 @@ import { Btn } from '../bottons/Button';
 import { formatDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
 import ReactDatePicker from 'react-datepicker';
-import CajaStorage from '../../utils/CajaStorage';
 
 /*
 FORMATO para los datos:
@@ -111,7 +110,7 @@ const LineChartDashboard = () => {
                     groupMode="grouped"
                     valueScale={{ type: 'linear' }}
                     indexScale={{ type: 'band', round: true }}
-                    colors={{ scheme: 'nivo' }}
+                    colors={{ scheme: 'category10' }}
                     defs={[
                         {
                             id: 'dots',

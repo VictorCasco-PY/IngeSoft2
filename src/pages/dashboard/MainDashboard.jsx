@@ -14,6 +14,7 @@ import useReporteClientes from '../../hooks/useReporteClientes';
 import NewClientsSection from '../../components/dashboard/NewClientsSection';
 import { useDashboard } from '../../context/DashboardContext';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { getCurrentMonthName, getCurrentYear } from '../../utils/DateStatics';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
@@ -214,23 +215,15 @@ const MainDashboard = () => {
         <>
             <div id="blur-screen-dashboard" className={currentMaximized ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
-                <div className='DashboardHeader'>
+                <div className='DashboardHeader mb-2'>
                     <h1>Dashboard</h1>
-                    <h2>Septiembre 2024</h2>
+                    <h2>{getCurrentMonthName() + ' ' + getCurrentYear()}</h2>
                     <Btn type="primary" onClick={refreshData} icon={<RefreshIcon />} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Refrescar</Btn>
                 </div>
                 <div className='MDGrid position-relative'>
+
                     <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
-                        <div className='d-flex align-items-center justify-content-end gap-3' >
-                            <p className='m-0'>
-                                Julio 2024
-                            </p>
-                        </div>
-                        <div className='graphSection'>
-                            <PieChartDashboard />
-                        </div>
-                        <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
+                        <PieChartDashboard />
                     </SeccionDashboard>
 
                     <div className='d-flex flex-column gap-4'>
