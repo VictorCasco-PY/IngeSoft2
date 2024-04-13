@@ -26,7 +26,7 @@ const InfoCajas = () => {
     //se utiliza para borrar caja, TODO: deberia utilizar la misma variable que selectedCaja, pero para asegurar la demo y enforcarme en otras tareas usare ese State
     const [deleteSelected, setDeleteSelected] = useState(null);
 
-    const { getAllCajas, searchCajaByName, deleteCaja, data: req_cajas, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
+    const { getAllCajas, searchCajaByName, deleteCaja, isLoading: cargandoCajas, error: errorCajas, noCajasError } = useCaja();
     const [currentPage, setCurrentPage] = useState(1);
     const [cajas, setCajas] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -34,35 +34,48 @@ const InfoCajas = () => {
     const [deletePopupOpen, setDeletePopupOpen] = useState(false)
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [lastSearchQuery, setLastSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false); 
 
-    const fetchCajas = async () => {
+    //esta funcion cambia el query de busqueda
+    //la funcion tiene un timeout si el query ingresado esta vacio para volver a hacer fetch sin query
+    const handleChangeQuery = (e) => {
+        setSearchQuery(e.target.value);
+        if (e.target.value === '') {
+            setTimeout(() => {
+                fetchCajas(e, true);
+            }, 500);
+        }
+    }
+
+    //parametro e es necesario 
+    const fetchCajas = async (e, forceNoQuery = false) => {
         if (currentPage > totalPages) { //si la pagina actual es mayor a la ultima pagina, resetear a 1
             setTotalPages(1);
         }
-        if (searchQuery) { //si hay query de busqueda
-            const res = await searchCajaByName(searchQuery, currentPage);
+        if (searchQuery && !forceNoQuery) { //si hay query de busqueda
+            setCurrentPage(1); //resetear a la pagina 1, porque se ha buscado algo
+            const res = await searchCajaByName(searchQuery, 1);
             setTotalPages(res.totalPages);
             setCajas(res.items);
+            setLastSearchQuery(searchQuery);
+            setIsSearching(true);
         } else { //si no hay query de busqueda
             const res = await getAllCajas(currentPage);
             setTotalPages(res.totalPages);
             setCajas(res.items);
+            setIsSearching(false);
         }
     }
 
     useEffect(() => {
-        //si ya se abrio una caja, ir a administración
-        if (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) { //si no hay caja abierta
-            if (UserStorage.getUser()) {
-                fetchCajas()
-                if (errorCajas) {
-                    toast.error("Error al cargar cajas. Revise la conexión.");
-                }
-            } else {
-                toast.error("No has iniciado sesión...")
+        if (UserStorage.getUser()) {
+            fetchCajas()
+            if (errorCajas) {
+                toast.error("Error al cargar cajas. Revise la conexión.");
             }
         } else {
-            toast.error("Ya tienes una caja abierta, no deberías de estar viendo esto...")
+            toast.error("No has iniciado sesión...")
         }
     }, [currentPage])
 
@@ -179,14 +192,16 @@ const InfoCajas = () => {
                 <div className="p-2">
                     <div className="d-flex gap-4 flex-wrap w-100">
                         <span className="d-flex w-50 gap-3">
-                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => handleChangeQuery(e)} maxLength={20}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter")
                                         fetchCajas()
                                 }} />
                             <Btn outline onClick={fetchCajas}>Buscar</Btn>
                         </span>
+                        
                     </div>
+                    <div style={{height:'24px'}}>{isSearching && <i className='m-0 p-0 flex-1 align-self-center'>Buscando: {lastSearchQuery}</i>}</div>
                 </div>
                 {switchRender()}
             </CartaPrincipal>
