@@ -83,8 +83,8 @@ const LineChartDashboard = () => {
             fechaFin = fechas.fechaFin
         } else { //si no hay fechas guardadas, se traen los producots desde hace un mes hasta hoy
             fechaFin = new Date();
-            fechaInicio = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
-            fechaFin = formatDate(today); fechaInicio = formatDate(monthAgo);
+            fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 1, fechaFin.getDate())
+            fechaFin = formatDate(fechaFin); fechaInicio = formatDate(fechaInicio);
         }
         ordenarDatos(fechaInicio, fechaFin)
         //popular date picker

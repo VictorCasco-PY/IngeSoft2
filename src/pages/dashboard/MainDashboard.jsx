@@ -180,25 +180,9 @@ const productDataTwo = [
     },
 ]
 
-const pieDataOne = [
-    {
-        "id": "Pagados",
-        "label": "Pagados",
-        "value": 1,
-        "color": "hsl(225, 70%, 50%)"
-    },
-    {
-        "id": "Pendientes",
-        "label": "Pendientes",
-        "value": 0,
-        "color": "hsl(297, 70%, 50%)"
-    }
-]
-
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
     const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
-    const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
     //Estos estados son solo para test, se deben borrar en la implementacion
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
@@ -244,7 +228,7 @@ const MainDashboard = () => {
                             </p>
                         </div>
                         <div className='graphSection'>
-                            <PieChartDashboard data={morososDisplayingData} />
+                            <PieChartDashboard />
                         </div>
                         <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
                     </SeccionDashboard>

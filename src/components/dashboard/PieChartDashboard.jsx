@@ -1,7 +1,59 @@
 import { ResponsivePie } from '@nivo/pie';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDashboard } from '../../context/DashboardContext';
+import ReporteStorage from '../../utils/ReportesStorage';
 
-const PieChartDashboard = ({ data }) => {
+/*
+FORMATO para los datos:
+[
+    {
+        "id": "Pagados",
+        "label": "Pagados",
+        "value": 1,
+        (opcional)"color": "hsl(225, 70%, 50%)"
+    },
+    {
+        "id": "Pendientes",
+        "label": "Pendientes",
+        "value": 0,
+        (opcional)"color": "hsl(297, 70%, 50%)"
+    }
+*/
+
+const PieChartDashboard = () => {
+
+    const [data, setData] = useState([])
+
+    const { getEstadoClientes, isLoadingNewClients } = useDashboard();
+
+    const ordenarDatos = async () => {
+        let data;
+        if (!ReporteStorage.getEstadosClientesData()) {
+            data = await getEstadoClientes()
+        } else {
+            data = ReporteStorage.getEstadosClientesData();
+        }
+        console.log(data)
+        const pagados = data.cantidadClientesEnRegla
+        const pendientes = data.cantidadClientesMorosos
+        setData([
+            {
+                "id": "Pagados",
+                "label": "Pagados",
+                "value": pagados,
+            },
+            {
+                "id": "Pendientes",
+                "label": "Pendientes",
+                "value": pendientes
+            }
+        ])
+    }
+
+    useEffect(() => {
+        ordenarDatos();
+    }, [])
+
     return (
         <ResponsivePie
             data={data}

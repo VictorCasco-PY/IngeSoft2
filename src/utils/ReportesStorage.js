@@ -1,8 +1,10 @@
-const NEW_CLIENTS_LABEL = 'ls_new_clients';
-const PRODUCTOS_MAS_VENDIDOS_LABEL = 'ls_productos_mas_vendidos';
-const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'ls_productos_fecha';
+const NEW_CLIENTS_LABEL = 'rep_new_clients';
+const PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_mas_vendidos';
+const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_fecha';
+const CANTIDAD_MOROSOS = 'rep_cantidad_morosos';
 
 class ReporteStorage {
+    /// Nuevos Clientes start
     static setNewClientsData(data) {
         if (!data) {
             return null;
@@ -26,7 +28,9 @@ class ReporteStorage {
         const data = localStorage.getItem(NEW_CLIENTS_LABEL);
         return data ? JSON.parse(data) : null;
     }
+    /// Nuevos Clientes end
 
+    /// Mas Vendidos start
     static setProductosMasVendidosData(data) {
         if (!data) {
             return null;
@@ -49,6 +53,7 @@ class ReporteStorage {
         return data;
     }
 
+    
     static getProductosMasVendidosData() {
         const data = localStorage.getItem(PRODUCTOS_MAS_VENDIDOS_LABEL);
         return data ? JSON.parse(data) : null;
@@ -71,6 +76,33 @@ class ReporteStorage {
         const data = localStorage.getItem(FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL);
         return data ? JSON.parse(data) : null;
     }
+    /// Mas Vendidos end
+
+
+    ///Morosos start
+    static setEstadosClientesData(data) {
+        if (!data) {
+            return null;
+        }
+        //formato
+        // ls_cantidad_morosos = {cantidadClientesEnRegla: cantidad , cantidadClientesMorosos: cantidad} 
+
+        //transformar a string
+        let savedData = {
+            cantidadClientesEnRegla: data.cantidadClientesEnRegla,
+            cantidadClientesMorosos: data.cantidadClientesMorosos
+        }
+        const dataStringified = JSON.stringify(savedData);
+        localStorage.setItem(CANTIDAD_MOROSOS, dataStringified);
+        return savedData;
+    }
+
+    static getEstadosClientesData() {
+        const data = localStorage.getItem(CANTIDAD_MOROSOS);
+        return data ? JSON.parse(data) : null;
+    }
+    ///Morosos end
+
 
 }
 

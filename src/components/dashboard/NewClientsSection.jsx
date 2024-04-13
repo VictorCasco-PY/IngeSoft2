@@ -12,15 +12,16 @@ const NewClientsSection = () => {
     const [nuevosClientesNumber, setNuevosClientesNumber] = useState(0)
     const [nuevosClientesLastMonth, setNuevosClientesLastMonth] = useState(0)
     const [nuevosClientesDisplaying, setNuevosClientesDisplaying] = useState(NewClientsENUM.NUEVOS)
-    const { isDataStored, getNewClients, isLoadingNewClients } = useDashboard();
+    const { getNewClients, isLoadingNewClients } = useDashboard();
 
     const ordenarDatos = async () => {
         let data;
-        if (!isDataStored) {
+        if (!ReporteStorage.getNewClientsData()) {
             data = await getNewClients()
         } else {
-            data = ReporteStorage.getNewClientsData();;
+            data = ReporteStorage.getNewClientsData();
         }
+        
         const presentClients = data.nuevosToday
         const lastMonthClients = data.nuevosLastMonth
         setNuevosClientesNumber(presentClients)

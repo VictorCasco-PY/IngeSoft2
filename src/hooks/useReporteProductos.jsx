@@ -12,7 +12,7 @@ const useReporteProductos = () => {
     const handleRequest = async (FuncionBackend) => {
         setError(null)
         setIsLoading(true)
-        console.log("SE HA EJECUTADO UN FETCH, NO DEBERIAS VER ESTO SI USAS CACHE")
+        console.log("SE HA EJECUTADO UN FETCH, NO DEBERIAS VER ESTO SI USAS CACHE" + FuncionBackend)
         try {
             const res = await FuncionBackend() // que funcion se ejecutara en el back
             setData(res.data) //guarda los datos traidos del back
