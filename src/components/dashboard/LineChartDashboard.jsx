@@ -1,5 +1,5 @@
 import { ResponsiveBar } from '@nivo/bar';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import ReporteStorage from '../../utils/ReportesStorage';
 import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -7,6 +7,7 @@ import { Btn } from '../bottons/Button';
 import { formatDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
 import ReactDatePicker from 'react-datepicker';
+import BasicDatePicker from '../DatePicker.jsx/BasicDatePicker';
 
 /*
 FORMATO para los datos:
@@ -93,12 +94,14 @@ const LineChartDashboard = () => {
 
     return (
         <>
-            <div className='align-self-end d-flex align-items-center justify-content-center gap-3'>
+            <div className='d-flex align-items-center justify-content-center gap-3'>
                 <p className='m-0 p-0'>De: </p>
-                <ReactDatePicker selected={startDate} onChange={(date) => setStartDate(formatDate(date))} />
+                <BasicDatePicker selected={startDate} onChange={(date) => setStartDate(formatDate(date))} />
                 <p className='m-0 p-0'>Hasta: </p>
-                <ReactDatePicker selected={endDate} onChange={(date) => setEndDate(formatDate(date))} />
-                <Btn icon={<FilterAltIcon />} onClick={() => ordenarDatos(startDate, endDate)} />
+                <BasicDatePicker selected={endDate} onChange={(date) => setEndDate(formatDate(date))} />
+                <Btn outline onClick={() => ordenarDatos(startDate, endDate)} >
+                    <FilterAltIcon />
+                </Btn>
             </div>
             <div className='graphSection'>
                 {isLoadingProductosMasVendidos ? (<CircularProgress />) : (<ResponsiveBar
