@@ -20,7 +20,6 @@ export const MovimientosLista = ({ movimientos }) => {
         <Table headers={["Nombre", "Fecha", "Nº Factura", "Nombre de Caja", "Total"]}>
         {movimientos.map(movimiento => {
 
-                const tipoMovimiento = getTipoMovimiento(movimiento.movimiento);
 
                 console.log(movimiento.movimiento)
                 return (
