@@ -34,6 +34,8 @@ const InfoCajas = () => {
     const [deletePopupOpen, setDeletePopupOpen] = useState(false)
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [lastSearchQuery, setLastSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false); 
 
     //esta funcion cambia el query de busqueda
     //la funcion tiene un timeout si el query ingresado esta vacio para volver a hacer fetch sin query
@@ -56,10 +58,13 @@ const InfoCajas = () => {
             const res = await searchCajaByName(searchQuery, 1);
             setTotalPages(res.totalPages);
             setCajas(res.items);
+            setLastSearchQuery(searchQuery);
+            setIsSearching(true);
         } else { //si no hay query de busqueda
             const res = await getAllCajas(currentPage);
             setTotalPages(res.totalPages);
             setCajas(res.items);
+            setIsSearching(false);
         }
     }
 
@@ -187,14 +192,16 @@ const InfoCajas = () => {
                 <div className="p-2">
                     <div className="d-flex gap-4 flex-wrap w-100">
                         <span className="d-flex w-50 gap-3">
-                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => handleChangeQuery(e)}
+                            <Input id="input-search" placeholder="Buscar caja..." value={searchQuery} onChange={(e) => handleChangeQuery(e)} maxLength={20}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter")
                                         fetchCajas()
                                 }} />
                             <Btn outline onClick={fetchCajas}>Buscar</Btn>
                         </span>
+                        
                     </div>
+                    <div style={{height:'24px'}}>{isSearching && <i className='m-0 p-0 flex-1 align-self-center'>Buscando: {lastSearchQuery}</i>}</div>
                 </div>
                 {switchRender()}
             </CartaPrincipal>
@@ -203,3 +210,11 @@ const InfoCajas = () => {
 };
 
 export default InfoCajas;
+
+/*
+Bugs Solucionados
+
+1- Solucionado, ahora al borrar hay un retraso de medio segundo en el cual se resetea la búsqueda en la página actual.
+
+*- Solucionado bug al buscar una caja cuando se está en una página distinta a 1, el resultado de la búsqueda usará la página actual, mostrando resultados no correctos.
+*/
