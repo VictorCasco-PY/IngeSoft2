@@ -26,6 +26,10 @@ export const useMovimientos = () => {
         }
     }
     
+    const crearMovimiento = async (movimiento) => {
+        return handleRequest(async () => await api.post(`${DIR}`, movimiento))
+    }
+
     const getMovimientos = async (page=1) => {
         setIsLoadingList(true)
         const res= handleRequest(async () => await api.get(`${DIR}/page/${page}`))
@@ -40,10 +44,14 @@ export const useMovimientos = () => {
         return res;
     }
 
-    const crearMovimiento = async (movimiento) => {
-        return handleRequest(async () => await api.post(`${DIR}`, movimiento))
+    const searchMovimientosByNombre = async (nombre,page=1) => {
+        setIsLoadingList(true)
+        const res = handleRequest(async () => await api.get(`${DIR}/search/nombre/${nombre}/page/${page}`))
+        setIsLoadingList(false)
+        return res;
     }
 
-    return { crearMovimiento, getMovimientos, getMovimientoPorId, error, notFound, isLoadingList, isLoading }
+
+    return { crearMovimiento, getMovimientos, getMovimientoPorId, searchMovimientosByNombre, error, notFound, isLoadingList, isLoading }
 
 }

@@ -13,14 +13,24 @@ import { MovimientoModal } from "./MovimientoModal";
 
 export const MovimientosVista = () => {
 
-    const { getMovimientos, getMovimientoPorId, isLoadingList, error, notFound } = useMovimientos();
+    const { getMovimientos, getMovimientoPorId, searchMovimientosByNombre, isLoadingList, error, notFound } = useMovimientos();
     const [movimientos, setMovimientos] = useState([]);
+    const [isSearch, setIsSearch] = useState(false);
     const [movimientoSeleccionado, setMovimientoSeleccionado] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
 
     const getData = async (page = 1) => {
-        const data = await getMovimientos(page);
+        let data;
+        
+        if(isSearch) {
+            data = await searchMovimientosByNombre(search, page);
+            setMovimientos(data);
+            console.log(data);
+            return;
+        }
+
+        data = await getMovimientos(page);
         setMovimientos(data);
     }
 
@@ -29,12 +39,12 @@ export const MovimientosVista = () => {
     }
 
     const handleSearch = async () => {
-        if (search === "") {
-            getData();
+        if (!isSearch) {
+            getData(1);
             return;
         }
-        // const res = await getSearchFacturaPendienteByNombre(search);
-        // setData(res);
+        const res = await searchMovimientosByNombre(search);
+        setMovimientos(res);
     }
 
     const handleSelectMovimiento = async (movimientoId) => {
@@ -52,6 +62,13 @@ export const MovimientosVista = () => {
         getData();
     }, []);
 
+    useEffect(()=>{
+        if(search === ""){
+            setIsSearch(false);
+        } else {
+            setIsSearch(true);
+        }
+    }, [search])
 
     const switchRender = () => {
         if (isLoadingList) return <Loader />
@@ -73,11 +90,11 @@ export const MovimientosVista = () => {
             <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
                 <h1>Historial de Movimientos</h1>
             </div>
-            <div className="d-flex align-items-center justify-content-center gap-3">
+            {/* <div className="d-flex align-items-center justify-content-center gap-3">
                 <Btn id="btn-caja-actual">
                     Ver historial de caja actual
                 </Btn>
-            </div>
+            </div> */}
         </div>
         <div className="p-2">
             <form className="d-flex gap-4 flex-wrap w-100">
