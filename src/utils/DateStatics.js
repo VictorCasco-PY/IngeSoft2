@@ -3,9 +3,19 @@ const MESES = [
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
+//formatear date al formato del back end
+//yyyy-mm-dd
 export const formatDate = (date) => {
     const fecha = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "-" + (date.getDate() < 10 ? '0' : '') + date.getDate(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
     return fecha
+}
+
+//de formateado a date real
+export const formattedToDate = (date) => {
+    if (!date) return null;
+    const dateArray = date.split("-");
+    if (dateArray.length !== 3) return null;
+    return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 }
 
 export const getCurrentDate = () => {

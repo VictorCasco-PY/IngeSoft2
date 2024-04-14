@@ -2,8 +2,6 @@ import { ResponsivePie } from '@nivo/pie';
 import React, { useEffect, useState } from 'react';
 import { useDashboard } from '../../context/DashboardContext';
 import ReporteStorage from '../../utils/ReportesStorage';
-import { CircularProgress } from '@mui/material';
-import { getCurrentMonthName } from '../../utils/DateStatics';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'

@@ -1,12 +1,11 @@
 import { ResponsiveBar } from '@nivo/bar';
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReporteStorage from '../../utils/ReportesStorage';
 import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
-import { dateIsLaterOrEqualThan, dateIsLaterThan, formatDate, getCurrentDate, getLastWeekDate } from '../../utils/DateStatics';
-import { CircularProgress } from '@mui/material';
-import BasicDatePicker from '../DatePicker.jsx/BasicDatePicker';
+import { dateIsLaterThan, formatDate, formattedToDate, getCurrentDate, getLastWeekDate } from '../../utils/DateStatics';
+import BasicDatePicker from '../DatePicker/BasicDatePicker';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
@@ -103,10 +102,10 @@ const LineChartDashboard = () => {
         <>
             <div className='d-flex align-items-center justify-content-center gap-3'>
                 <p className='m-0 p-0'>De: </p>
-                <BasicDatePicker selected={startDate} onChange={(date) => setStartDate(formatDate(date))} />
+                <BasicDatePicker selected={formattedToDate(startDate)} onChange={(date) => setStartDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-from" />
                 <p className='m-0 p-0'>Hasta: </p>
-                <BasicDatePicker selected={endDate} onChange={(date) => setEndDate(formatDate(date))} />
-                <Btn outline onClick={() => ordenarDatos(startDate, endDate)} >
+                <BasicDatePicker selected={formattedToDate(endDate)} onChange={(date) => setEndDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-to" />
+                <Btn outline onClick={() => ordenarDatos(startDate, endDate)} id="btn-filtrar-productos-mas-vendidos" >
                     <FilterAltIcon />
                 </Btn>
             </div>
