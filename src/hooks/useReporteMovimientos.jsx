@@ -26,7 +26,7 @@ const useReporteMovimientos = () => {
     }
 
     //Funciones del endpoint
-    const getIngresoTotalPorFecha = async (params, fechaInicio, fechaFin) => {
+    const getIngresoTotalPorFecha = async (fechaInicio, fechaFin ,params) => {
         return handleRequest(() => api.get(`${RC_URL}/ingresos/${fechaInicio}/${fechaFin}`, params))
     }
     return { getIngresoTotalPorFecha, data, error, isLoading }
