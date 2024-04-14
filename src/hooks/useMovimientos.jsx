@@ -6,13 +6,13 @@ export const useMovimientos = () => {
     const DIR = "/movimientos"
 
     const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoadingList, setIsLoadingList] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [notFound, setNotFound] = useState(false)
 
 
 
     const handleRequest = async (FuncionBackend) => {
-        setIsLoading(true)
         try {
             const res = await FuncionBackend()
             return res.data
@@ -23,23 +23,27 @@ export const useMovimientos = () => {
             else {
                 setError(error)
             }
-        } finally {
-            setIsLoading(false)
         }
     }
-
+    
     const getMovimientos = async (page=1) => {
-        return handleRequest(async () => await api.get(`${DIR}/page/${page}`))
+        setIsLoadingList(true)
+        const res= handleRequest(async () => await api.get(`${DIR}/page/${page}`))
+        setIsLoadingList(false)
+        return res;
     }
 
     const getMovimientoPorId = async (id) => {
-        return handleRequest(async () => await api.get(`${DIR}/${id}`))
+        setIsLoading(true)
+        const res = handleRequest(async () => await api.get(`${DIR}/${id}`))
+        setIsLoading(false)
+        return res;
     }
 
     const crearMovimiento = async (movimiento) => {
         return handleRequest(async () => await api.post(`${DIR}`, movimiento))
     }
 
-    return { crearMovimiento, getMovimientos, getMovimientoPorId, error, notFound, isLoading }
+    return { crearMovimiento, getMovimientos, getMovimientoPorId, error, notFound, isLoadingList, isLoading }
 
 }

@@ -1,30 +1,23 @@
 import { Table } from "../../../components/table/Table";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { HiOutlineMinusSm } from "react-icons/hi";
+import { precioHandler } from '../../../utils/precioHandler';
 
-export const MovimientosLista = ({ movimientos }) => {
+export const MovimientosLista = ({ movimientos, select }) => {
     
-    const getTipoMovimiento = (movimiento) => {
-        if(movimiento.facturaId) return ("Factura");
-        if(movimiento.ticketId) return ("Ticket");
-        if(movimiento.facturaProveedorId) return ("Pago");
-    }
-
     const getMonto = (movimiento) => {
-        if(movimiento.entrada===true) return <span className="text-success fw-bold"><HiOutlinePlusSm /> {movimiento.total}</span>;
-        return <span className="text-danger fw-bold"><HiOutlineMinusSm /> {movimiento.total}</span>;
+        const total = precioHandler(movimiento.total)
+        if(movimiento.entrada===true) return <span className="text-success fw-bold"><HiOutlinePlusSm /> {total}</span>;
+        return <span className="text-danger fw-bold"><HiOutlineMinusSm /> {total}</span>;
     }
 
     return <>
-        {console.log(movimientos)}
 
         <Table headers={["Nombre", "Fecha", "Nº Factura", "Nombre de Caja", "Total"]}>
-        {movimientos.map(movimiento => {
+        {movimientos?.map(movimiento => {
 
-
-                console.log(movimiento.movimiento)
                 return (
-                    <tr key={movimiento.movimiento.id} className={movimiento.movimiento.entrada===true ? "bg-danger" : ""}>
+                    <tr key={movimiento.movimiento.id} onClick={()=>select(movimiento.movimiento.id)} className={movimiento.movimiento.entrada===true ? "bg-danger" : ""}>
                         <th className="py-3" scope="row">{movimiento.movimiento.comprobanteNombre}</th>
                         <td className="py-3">{movimiento.movimiento.fecha}</td>
                         <td className="py-3">{movimiento.movimiento.comprobanteNumero}</td>
