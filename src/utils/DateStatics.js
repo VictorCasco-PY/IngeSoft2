@@ -53,3 +53,10 @@ export const dateIsLaterOrEqualThan = (date1, date2) => {
     }
     return false;
 }
+
+// obtiene la fecha de hace una semana
+export const getLastWeekDate = () => {
+    const today = new Date();
+    const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    return formatDate(lastWeek);
+}

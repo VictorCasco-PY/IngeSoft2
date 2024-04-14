@@ -4,10 +4,12 @@ import ReporteStorage from '../../utils/ReportesStorage';
 import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
-import { formatDate } from '../../utils/DateStatics';
+import { formatDate, getCurrentDate, getLastWeekDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
-import ReactDatePicker from 'react-datepicker';
 import BasicDatePicker from '../DatePicker.jsx/BasicDatePicker';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
 
 /*
 FORMATO para los datos:
@@ -32,7 +34,7 @@ FORMATO para los datos:
 
 const LineChartDashboard = () => {
 
-    const { isDataStored, getProductosMasVendidos, isLoadingProductosMasVendidos } = useDashboard();
+    const { getProductosMasVendidos, isLoadingProductosMasVendidos } = useDashboard();
     const [productosMasVendidos, setProductosMasVendidos] = useState(null);
     const [producotsLabels, setProductosLabels] = useState(null); //nombres en string de los productos como un arreglo
 
@@ -81,16 +83,15 @@ const LineChartDashboard = () => {
             const fechas = ReporteStorage.getFechaProductosMasVendidosData();
             fechaInicio = fechas.fechaInicio
             fechaFin = fechas.fechaFin
-        } else { //si no hay fechas guardadas, se traen los producots desde hace un mes hasta hoy
-            fechaFin = new Date();
-            fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 1, fechaFin.getDate())
-            fechaFin = formatDate(fechaFin); fechaInicio = formatDate(fechaInicio);
+        } else { //si no hay fechas guardadas, se traen los producots desde hace una semana
+            fechaFin = getCurrentDate();
+            fechaInicio = getLastWeekDate();
         }
         ordenarDatos(fechaInicio, fechaFin)
         //popular date picker
         setStartDate(fechaInicio)
         setEndDate(fechaFin)
-    }, [])
+    }, [isLoadingProductosMasVendidos])
 
     return (
         <>
@@ -104,7 +105,7 @@ const LineChartDashboard = () => {
                 </Btn>
             </div>
             <div className='graphSection'>
-                {isLoadingProductosMasVendidos ? (<CircularProgress />) : (<ResponsiveBar
+                {isLoadingProductosMasVendidos ? (<SkeletonWrapper width={475}><Skeleton style={{ height: 280 }} /></SkeletonWrapper>) : (<ResponsiveBar
                     data={productosMasVendidos}
                     keys={producotsLabels}
                     indexBy="mes"
@@ -204,7 +205,10 @@ const LineChartDashboard = () => {
                     barAriaLabel={e => e.id + ": " + e.formattedValue + " in mes: " + e.indexValue}
                 />)}
             </div>
-            {productoMasVendido && (<i className='p-0 m-0'>Producto mas vendido: {productoMasVendido}.</i>)}
+            {isLoadingProductosMasVendidos ? (<Skeleton style={{ width: 280 }} />)
+                :
+                (productoMasVendido && (<i className='p-0 m-0'>Producto mas vendido: {productoMasVendido}.</i>))
+            }
         </>
     );
 };

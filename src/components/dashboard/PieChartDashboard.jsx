@@ -5,6 +5,9 @@ import ReporteStorage from '../../utils/ReportesStorage';
 import { CircularProgress } from '@mui/material';
 import { getCurrentMonthName } from '../../utils/DateStatics';
 import { useNavigate } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
 
 /*
 FORMATO para los datos:
@@ -59,13 +62,12 @@ const PieChartDashboard = () => {
 
     useEffect(() => {
         ordenarDatos();
-    }, [])
+    }, [isLoadingNewClients])
 
     return (
         <>
-            
             <div className='graphSection'>
-                {isLoadingNewClients ? (<CircularProgress />) : (
+                {isLoadingNewClients? (<SkeletonWrapper width={250}><Skeleton style={{height:250}} circle={true}/></SkeletonWrapper>) : (
                     <ResponsivePie
                         data={data}
                         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}

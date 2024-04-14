@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import ReporteStorage from "../utils/ReportesStorage";
 import useReporteClientes from "../hooks/useReporteClientes";
 import toast from "react-hot-toast";
-import { dateIsLaterOrEqualThan, formatDate, getCurrentDate } from "../utils/DateStatics";
+import { dateIsLaterOrEqualThan, formatDate, getCurrentDate, getLastWeekDate } from "../utils/DateStatics";
 import useReporteProductos from "../hooks/useReporteProductos";
 
 const DashboardContext = createContext();
@@ -33,17 +33,14 @@ export const DashboardProvider = ({ children }) => {
     const refreshData = async (resetExpirationDate = false) => {
         console.log("DEBUG: Refrescando datos del dashboard... Esto hace fetch")
         fetchNuevosClientes();
-        if (ReporteStorage.getFechaProductosMasVendidosData()) {
-            const fechas = ReporteStorage.getFechaProductosMasVendidosData();
-            fetchProductosMasVendidosData(fechas.fechaInicio, fechas.fechaFin);
-        }
+        fetchProductosMasVendidosData(getLastWeekDate(), getCurrentDate()); //fetch de la semana pasada a hoy
         fetchEstadoClientes();
+
         if (resetExpirationDate) { //si se quiere resetear la fecha de expiracion, parametro de esta función, default = false
             const expirationDate = new Date();
             expirationDate.setDate(expirationDate.getDate() + DIAS_EXPIRACION);
             ReporteStorage.setExpirationDate(formatDate(expirationDate));
         }
-
         ReporteStorage.setLastRefresh(getCurrentDate());
     }
 
