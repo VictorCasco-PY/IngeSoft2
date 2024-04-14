@@ -95,15 +95,9 @@ const MainDashboard = () => {
                         <SeccionDashboard header="Nuevos clientes este mes:">
                             <NewClientsSection />
                         </SeccionDashboard>
-                        <SeccionDashboard header="Enlaces">
-                            <div>
-                                <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Cajas
-                                </Btn>
-                                <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Movimientos
-                                </Btn>
-                            </div>
+
+                        <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                            <LineIngresoChartDashboard />
                         </SeccionDashboard>
                     </div>
 
@@ -115,8 +109,15 @@ const MainDashboard = () => {
                         <ActividadesChart />
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        <LineIngresoChartDashboard />
+                    <SeccionDashboard header="Enlaces">
+                        <div>
+                            <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Cajas
+                            </Btn>
+                            <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Movimientos
+                            </Btn>
+                        </div>
                     </SeccionDashboard>
 
                 </div>
