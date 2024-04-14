@@ -56,45 +56,31 @@ const LineIngresoChartDashboard = () => {
         } else if (errorNoIngresos) {
             return <h4>No hay ingresos en el rango seleccionado</h4>
         } else {
-            return(
-            <h4 className='m-0 p-0'>
-                {ingresoTotal < 0 ? '' : '+'}
-                {precioHandler(ingresoTotal)} Gs.
-            </h4>
+            return (
+                <h4 className='m-0 p-0'>
+                    {ingresoTotal < 0 ? '' : '+'}
+                    {precioHandler(ingresoTotal)} Gs.
+                </h4>
             )
         }
     }
 
     return (
         <>
-            <div>
-                <div className='d-flex align-items-center justify-content-center gap-3'>
-                    {/*<Btn outline onClick={() => { fetchIngresos('1 Mes') }} disabled={rangeSelected === '1 Mes'} id='btn-filtrar-ingresos-1mes'>
-                        1 Mes
-                    </Btn>
-                    <Btn outline onClick={() => { fetchIngresos('3 Meses') }} disabled={rangeSelected === '3 Meses'} id='btn-filtrar-ingresos-3meses' >
-                        3 Meses
-                    </Btn>
-                    <Btn outline onClick={() => { fetchIngresos('6 Meses') }} disabled={rangeSelected === '6 Meses'} id='btn-filtrar-ingresos-6meses' >
-                        6 Meses
-                    </Btn>
-                    <Btn outline onClick={() => { fetchIngresos('1 Año') }} disabled={rangeSelected === '1 Año'} id='btn-filtrar-ingresos-1anho'>
-                        1 Año
-                    </Btn>*/}
-
-                    <p className='m-0 p-0'>De: </p>
-                    <BasicDatePicker portalId="my-popper" selected={formattedToDate(startDate)} onChange={(date) => setStartDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-from" />
-                    <p className='m-0 p-0'>Hasta: </p>
-                    <BasicDatePicker portalId="my-popper" selected={formattedToDate(endDate)} onChange={(date) => setEndDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-to" />
-                    <Btn outline onClick={() => fetchIngresos()} id="btn-filtrar-ingresos" >
-                        <FilterAltIcon />
-                    </Btn>
-                </div>
+            <div className='d-flex align-items-center justify-content-center gap-3'>
+                <p className='m-0 p-0'>De: </p>
+                <BasicDatePicker portalId="my-popper" selected={formattedToDate(startDate)} onChange={(date) => setStartDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-from" />
+                <p className='m-0 p-0'>Hasta: </p>
+                <BasicDatePicker portalId="my-popper" selected={formattedToDate(endDate)} onChange={(date) => setEndDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-to" />
+                <Btn outline onClick={() => fetchIngresos()} id="btn-filtrar-ingresos" >
+                    <FilterAltIcon />
+                </Btn>
             </div>
             {/*No mostrar grafico por el momento, solo un div con el ingreso total*/}
             <div className='p-3 text-center gananciasDiv' id='ganancias-color-div'>
                 {switchRenderer()}
             </div>
+
             {/*<div>
                 <Btn type="primary" className='mt-3 align-self-start' >
                     Filtrar

@@ -48,7 +48,7 @@
 }
 
 .maximizedSeccion {
-    z-index: 99999;
+    z-index: 9999;
     position: fixed;
     transform: scale(1.5);
     top: 50%;
@@ -95,7 +95,8 @@
 }
 
 #my-popper {
-    z-index: 100 !important;
+    z-index: 9999;
+    position:relative;
 }
 
 .gananciasDiv {
