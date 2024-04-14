@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ResponsiveLine } from '@nivo/line'
+import useReporteMovimientos from '../../hooks/useReporteMovimientos';
 
 const LineIngresoChartDashboard = ({data}) => {
+
+    const { getIngresoTotalPorFecha, isLoading: isLoadingIngresos } = useReporteMovimientos();
+
+    useEffect(() => {
+        const fetchIngresos = async () => {
+            await getIngresoTotalPorFecha();
+        }
+        fetchIngresos();
+    },[])
+
     return (
         <ResponsiveLine
             data={data}
