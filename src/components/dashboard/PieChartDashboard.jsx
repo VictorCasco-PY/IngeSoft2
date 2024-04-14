@@ -67,7 +67,7 @@ const PieChartDashboard = () => {
     return (
         <>
             <div className='graphSection'>
-                {isLoadingNewClients? (<SkeletonWrapper width={250}><Skeleton style={{height:250}} circle={true}/></SkeletonWrapper>) : (
+                {isLoadingNewClients? (<SkeletonWrapper width={220}><Skeleton style={{height:220}} circle={true}/></SkeletonWrapper>) : (
                     <ResponsivePie
                         data={data}
                         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
