@@ -5,6 +5,17 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
 import { useDashboard } from '../../context/DashboardContext';
 
+//FORMATO para los datos:
+// [
+//     {
+//         "actividad": "Actividad1",
+//         "cantidad": 10,
+//     },
+//     {
+//         "actividad": "Actividad2",
+//         "cantidad": 20,
+//     }
+
 const ActividadesChart = () => {
 
     const { getActividadesMasRegistradas, isLoadingActividades } = useDashboard();
@@ -15,14 +26,18 @@ const ActividadesChart = () => {
     const [actividadMasRegistrada, setActividadMasRegistrada] = useState(null); //un producto singular el cual es el mas vendido
 
     const setDataFromKeys = (data) => {
+        const months = ['Clientes'] 
         let newData = [];
-        let newActividad = {};
-        data.forEach(actividad => {
-            const actividadName = actividad.actividad
-            const cantidad = actividad.cantidad
-            newActividad[actividadName] = cantidad
+
+        //por cada mes se hace el bucle, añadiendo los productos y su cantidad
+        months.forEach(month => {
+            let newActividad = {}
+            newActividad['actividad'] = month
+            data.forEach(actividad => {
+                newActividad[actividad.actividad] = actividad.cantidad
+            })
+            newData.push(newActividad)
         })
-        newData.push(newActividad)
         return newData
     }
 
@@ -63,7 +78,7 @@ const ActividadesChart = () => {
                             valueScale={{ type: 'linear' }}
                             indexScale={{ type: 'band', round: true }}
                             colors={{ scheme: 'category10' }}
-                            defs={[
+                            /*defs={[
                                 {
                                     id: 'dots',
                                     type: 'patternDots',
@@ -81,8 +96,8 @@ const ActividadesChart = () => {
                                     rotation: -45,
                                     lineWidth: 6,
                                     spacing: 10
-                                }
-                            ]}
+                                 }
+                            ]}*/
                             fill={[]}
                             borderColor={{
                                 from: 'color',
@@ -99,7 +114,6 @@ const ActividadesChart = () => {
                                 tickSize: 5,
                                 tickPadding: 5,
                                 tickRotation: 0,
-                                legend: `Actividades mas registradas`,
                                 legendPosition: 'middle',
                                 legendOffset: 38,
                                 truncateTickAt: 0
@@ -112,7 +126,6 @@ const ActividadesChart = () => {
                                 legendPosition: 'middle',
                                 legendOffset: -40,
                                 truncateTickAt: 0,
-                                //remove float point
                                 format: value => {
                                     if (value % 1 === 0) {
                                         return value
@@ -157,7 +170,7 @@ const ActividadesChart = () => {
                                 }
                             ]}
                             role="application"
-                            ariaLabel="Nivo bar chart demo"
+                            ariaLabel="Grafico de Clientes por Actividad"
                             barAriaLabel={e => e.id + ": " + e.formattedValue + " in mes: " + e.indexValue}
                         />)}
             </div>
