@@ -133,18 +133,10 @@ class ReporteStorage {
             return null;
         }
         //formato
-        // ls_clientes_actividad = [{nombreActividad: cantidad}, {nombreActividad: cantidad}]
+        // ls_clientes_actividad = [{nombre: nombre, cantidad: cantidad}, {nombre: nombre, cantidad: cantidad}]
 
         //transformar a string
-        let dataStringified = [];
-        data.forEach(actividad => {
-            dataStringified.push({
-                actividad: actividad['actividad'],
-                cantidad: actividad['cantidad']
-            })
-        })
-        //transformar a string
-        dataStringified = JSON.stringify(dataStringified);
+        const dataStringified = JSON.stringify(data);
         localStorage.setItem(CLIENTES_ACTIVIDAD_LABEL, dataStringified);
         return data;
     }
@@ -153,6 +145,7 @@ class ReporteStorage {
         const data = localStorage.getItem(CLIENTES_ACTIVIDAD_LABEL);
         return data ? JSON.parse(data) : null;
     }
+    //Clientes por actividad End
 
 
 }
