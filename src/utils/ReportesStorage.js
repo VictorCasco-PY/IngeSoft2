@@ -5,6 +5,7 @@ const NEW_CLIENTS_LABEL = 'rep_new_clients';
 const PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_mas_vendidos';
 const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_fecha';
 const CANTIDAD_MOROSOS = 'rep_cantidad_morosos';
+const CLIENTES_ACTIVIDAD_LABEL = 'rep_clientes_actividad';
 
 class ReporteStorage {
 
@@ -124,6 +125,34 @@ class ReporteStorage {
         return data ? JSON.parse(data) : null;
     }
     ///Morosos end
+
+
+    //Clientes por actividad Start
+    static setClientesActividadData(data) {
+        if (!data) {
+            return null;
+        }
+        //formato
+        // ls_clientes_actividad = [{nombreActividad: cantidad}, {nombreActividad: cantidad}]
+
+        //transformar a string
+        let dataStringified = [];
+        data.forEach(actividad => {
+            dataStringified.push({
+                actividad: actividad['actividad'],
+                cantidad: actividad['cantidad']
+            })
+        })
+        //transformar a string
+        dataStringified = JSON.stringify(dataStringified);
+        localStorage.setItem(CLIENTES_ACTIVIDAD_LABEL, dataStringified);
+        return data;
+    }
+
+    static getClientesActividadData() {
+        const data = localStorage.getItem(CLIENTES_ACTIVIDAD_LABEL);
+        return data ? JSON.parse(data) : null;
+    }
 
 
 }
