@@ -4,12 +4,13 @@ import ReporteStorage from '../../utils/ReportesStorage';
 import { useDashboard } from '../../context/DashboardContext';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Btn } from '../bottons/Button';
-import { formatDate, getCurrentDate, getLastWeekDate } from '../../utils/DateStatics';
+import { dateIsLaterOrEqualThan, dateIsLaterThan, formatDate, getCurrentDate, getLastWeekDate } from '../../utils/DateStatics';
 import { CircularProgress } from '@mui/material';
 import BasicDatePicker from '../DatePicker.jsx/BasicDatePicker';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
+import toast from 'react-hot-toast';
 
 /*
 FORMATO para los datos:
@@ -58,6 +59,11 @@ const LineChartDashboard = () => {
 
     //llamar a esta funcion cuando se quieran cambiar los datos en el grafico
     const ordenarDatos = async (fechaInicio, fechaFin) => {
+        if (fechaInicio === '' || fechaFin === '') return;
+        if (dateIsLaterThan(fechaInicio, fechaFin)) {
+            toast.error('La fecha de inicio no puede ser mayor a la fecha de fin')
+            return
+        }
         //asumiendo que las fechas de los states ya estan formateados, importante, formato: yyyy-mm-dd
         let data = await getProductosMasVendidos(fechaInicio, fechaFin)
 
@@ -105,7 +111,9 @@ const LineChartDashboard = () => {
                 </Btn>
             </div>
             <div className='graphSection'>
-                {isLoadingProductosMasVendidos ? (<SkeletonWrapper width={475}><Skeleton style={{ height: 280 }} /></SkeletonWrapper>) : (<ResponsiveBar
+                {isLoadingProductosMasVendidos ? (<SkeletonWrapper width={475}><Skeleton style={{ height: 280 }} /></SkeletonWrapper>) 
+                : (
+                <ResponsiveBar
                     data={productosMasVendidos}
                     keys={producotsLabels}
                     indexBy="mes"
@@ -151,7 +159,7 @@ const LineChartDashboard = () => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: `${startDate ? `${startDate} hasta ${endDate}` : 'Productos mas vendidos'}`,
+                        legend: `${startDate ? (`${startDate} hasta ${endDate}`) : ('Productos mas vendidos')}`,
                         legendPosition: 'middle',
                         legendOffset: 38,
                         truncateTickAt: 0

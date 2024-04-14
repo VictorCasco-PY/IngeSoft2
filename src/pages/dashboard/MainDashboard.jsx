@@ -16,6 +16,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { getCurrentMonthName, getCurrentYear, invertDateString } from '../../utils/DateStatics';
 import ReporteStorage from '../../utils/ReportesStorage';
 import InfoIcon from '@mui/icons-material/Info';
+import { Toaster } from 'react-hot-toast';
+import ActividadesChart from '../../components/dashboard/ActividadesChart';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
@@ -151,7 +153,7 @@ const MainDashboard = () => {
 
     useEffect(() => {
         //si los datos expiraron refrescar
-        if (checkExpirationTime()) { 
+        if (checkExpirationTime()) {
             refreshData(true);
         }
         setLastRefresh(ReporteStorage.getLastRefresh())
@@ -159,6 +161,25 @@ const MainDashboard = () => {
 
     return (
         <>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: "#75B798",
+                            color: "#0A3622",
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: "#FFDBD9",
+                            color: "#D92D20",
+                        },
+                    },
+                }}
+            />
+
             {lastRefresh && (
                 <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
                     <b className='d-flex align-items-center'><InfoIcon /> Ultima actualización: </b>
@@ -197,12 +218,12 @@ const MainDashboard = () => {
                         </SeccionDashboard>
                     </div>
 
-                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                    <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         <LineChartDashboard />
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        <LineChartDashboard />
+                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                        <ActividadesChart />
                     </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
