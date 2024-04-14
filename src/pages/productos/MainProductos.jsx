@@ -466,7 +466,7 @@ const MainProductos = () => {
             </div>
             <div className="mb-2 block">
               <div className="label-container">
-                <LabelBase label="Descripcin:" htmlFor="descripcion" />
+                <LabelBase label="Descripción:" htmlFor="descripcion" />
                 {/* No se requiere asterisco para campos opcionales */}
               </div>
               <input
