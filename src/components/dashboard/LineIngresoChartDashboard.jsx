@@ -61,7 +61,7 @@ const LineIngresoChartDashboard = ({data}) => {
             enablePoints={true}
             enablePointLabel={true}
             pointLabel={(d) => d.y}
-            colors={{ scheme: 'category10' }}
+            colors={({id, color}) => {return color}}
             enableArea={false}
             areaOpacity={0.1}
             areaBlendMode='normal'

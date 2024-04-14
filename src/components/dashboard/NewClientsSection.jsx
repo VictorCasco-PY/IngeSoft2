@@ -7,6 +7,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useDashboard } from '../../context/DashboardContext';
 import ReporteStorage from '../../utils/ReportesStorage';
 
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 const NewClientsSection = () => {
     //SECCION NUEVOS CLIENTES
     const [nuevosClientesNumber, setNuevosClientesNumber] = useState(0)
@@ -59,14 +62,14 @@ const NewClientsSection = () => {
                 {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleUpIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleDownIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<CircularProgress />) : (nuevosClientesNumber)}</nav>
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<Skeleton style={{width:'40px'}} />) : (nuevosClientesNumber)}</nav>
             </div>
             <h3 className='m-0 p-0'>Mes pasado:</h3>
             <div className='d-flex gap-3'>
                 {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleDownIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleUpIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
                 {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<CircularProgress />) : (nuevosClientesLastMonth)}</nav>
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<Skeleton style={{width:'40px'}} />) : (nuevosClientesLastMonth)}</nav>
             </div>
         </div>
     );
