@@ -1,38 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { ResponsiveLine } from '@nivo/line'
 import useReporteMovimientos from '../../hooks/useReporteMovimientos';
-import { getCurrentDate, getDateMinusMonths, getLastWeekDate } from '../../utils/DateStatics';
+import { dateIsLaterThan, formatDate, formattedToDate, getCurrentDate, getDateMinusMonths, getLastWeekDate } from '../../utils/DateStatics';
 import { Btn } from '../bottons/Button';
 import { precioHandler } from '../../utils/precioHandler';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
 import './dashboardComps.css'
-
-const DATE_RANGE = {
-    '1 Mes': { fechaInicio: getLastWeekDate(), fechaFin: getCurrentDate() },
-    '3 Meses': { fechaInicio: getDateMinusMonths(3), fechaFin: getCurrentDate() },
-    '6 Meses': { fechaInicio: getDateMinusMonths(6), fechaFin: getCurrentDate() },
-    '1 Año': { fechaInicio: getDateMinusMonths(12), fechaFin: getCurrentDate() }
-}
-
+import BasicDatePicker from '../DatePicker/BasicDatePicker';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import toast from 'react-hot-toast';
 
 const LineIngresoChartDashboard = () => {
 
-    const { getIngresoTotalPorFecha, isLoading: isLoadingIngresos } = useReporteMovimientos();
+    const { getIngresoTotalPorFecha, isLoading: isLoadingIngresos, error404: errorNoIngresos } = useReporteMovimientos();
 
     //UNUSED ATM, TODO: USAR GRAFICO
     //const [data, setData] = useState([])
     //const [dateRange, setDateRange] = useState({ fechaInicio: getDateMinusMonths(3), fechaFin: getCurrentDate() })
 
     const [ingresoTotal, setIngresoTotal] = useState(0)
-    const [rangeSelected, setRangeSelected] = useState('1 Mes')
 
-    const fetchIngresos = async (rangeObj) => {
-        const { fechaInicio, fechaFin } = DATE_RANGE[rangeObj]
-        //setDateRange({ fechaInicio, fechaFin })
-        const res = await getIngresoTotalPorFecha(fechaInicio, fechaFin)
-        setRangeSelected(rangeObj)
+    const [startDate, setStartDate] = useState(getDateMinusMonths(2))
+    const [endDate, setEndDate] = useState(getCurrentDate())
+
+    const fetchIngresos = async () => {
+        if (startDate === '' || endDate === '') return;
+        if (dateIsLaterThan(startDate, endDate)) {
+            toast.error('La fecha de inicio no puede ser mayor a la fecha de fin')
+            return
+        }
+        const res = await getIngresoTotalPorFecha(startDate, endDate)
         setIngresoTotal(res.ingresoTotal)
         if (res.ingresoTotal < 0) {
             document.getElementById('ganancias-color-div').classList.add('aRed')
@@ -49,14 +47,29 @@ const LineIngresoChartDashboard = () => {
     */
 
     useEffect(() => {
-        fetchIngresos('1 Mes')
+        fetchIngresos()
     }, [])
+
+    const switchRenderer = () => {
+        if (isLoadingIngresos) {
+            return <Skeleton style={{ width: 150, height: 28 }} />
+        } else if (errorNoIngresos) {
+            return <h4>No hay ingresos en el rango seleccionado</h4>
+        } else {
+            return(
+            <h4 className='m-0 p-0'>
+                {ingresoTotal < 0 ? '' : '+'}
+                {precioHandler(ingresoTotal)} Gs.
+            </h4>
+            )
+        }
+    }
 
     return (
         <>
             <div>
-                <div className='d-flex justify-content-center pt-2 gap-1'>
-                    <Btn outline onClick={() => { fetchIngresos('1 Mes') }} disabled={rangeSelected === '1 Mes'} id='btn-filtrar-ingresos-1mes'>
+                <div className='d-flex align-items-center justify-content-center gap-3'>
+                    {/*<Btn outline onClick={() => { fetchIngresos('1 Mes') }} disabled={rangeSelected === '1 Mes'} id='btn-filtrar-ingresos-1mes'>
                         1 Mes
                     </Btn>
                     <Btn outline onClick={() => { fetchIngresos('3 Meses') }} disabled={rangeSelected === '3 Meses'} id='btn-filtrar-ingresos-3meses' >
@@ -67,20 +80,20 @@ const LineIngresoChartDashboard = () => {
                     </Btn>
                     <Btn outline onClick={() => { fetchIngresos('1 Año') }} disabled={rangeSelected === '1 Año'} id='btn-filtrar-ingresos-1anho'>
                         1 Año
+                    </Btn>*/}
+
+                    <p className='m-0 p-0'>De: </p>
+                    <BasicDatePicker portalId="my-popper" selected={formattedToDate(startDate)} onChange={(date) => setStartDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-from" />
+                    <p className='m-0 p-0'>Hasta: </p>
+                    <BasicDatePicker portalId="my-popper" selected={formattedToDate(endDate)} onChange={(date) => setEndDate(formatDate(date))} maxDate={new Date()} id="input-datepicker-ingresos-to" />
+                    <Btn outline onClick={() => fetchIngresos()} id="btn-filtrar-ingresos" >
+                        <FilterAltIcon />
                     </Btn>
                 </div>
             </div>
             {/*No mostrar grafico por el momento, solo un div con el ingreso total*/}
             <div className='p-3 text-center gananciasDiv' id='ganancias-color-div'>
-                {isLoadingIngresos ?
-                    <Skeleton style={{ width: 150, height: 28 }} />
-                    :
-                    ingresoTotal &&
-                    <h4 className='m-0 p-0'>
-                        {ingresoTotal < 0 ? '' : '+'}
-                        {precioHandler(ingresoTotal)} Gs.
-                    </h4>
-                }
+                {switchRenderer()}
             </div>
             {/*<div>
                 <Btn type="primary" className='mt-3 align-self-start' >
