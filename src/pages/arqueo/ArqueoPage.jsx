@@ -4,13 +4,16 @@ import { Btn } from "../../components/bottons/Button";
 import useCaja from "../../hooks/useCaja";
 import CajaStorage from "../../utils/CajaStorage";
 import useArqueo from "../../hooks/useArqueo";
+import { format } from "date-fns";
+import { precioHandler } from "../../utils/precioHandler";
+import { useArqueoContext } from "../../context/ArqueoContext";
 
 const ArqueoPage = () => {
   const { getCajaById } = useCaja();
   const { getArqueoBySesionId, data, isLoading } = useArqueo();
   const [caja, setCaja] = useState({});
-  const date = new Date();
-  const formattedDate = date.toISOString().substr(0, 10);
+  const fechaActual = format(new Date(), "dd-MM-yyyy");
+  const { arqueoData } = useArqueoContext();
 
   useEffect(() => {
     const fetchCaja = async () => {
@@ -21,6 +24,7 @@ const ArqueoPage = () => {
 
     fetchCaja();
   }, []);
+
   return (
     <>
       <div className="d-flex align-items-center align-content-center">
@@ -38,7 +42,7 @@ const ArqueoPage = () => {
               class="form-control"
               aria-label="Fecha"
               aria-describedby="basic-addon1"
-              value={formattedDate}
+              value={fechaActual}
               readOnly
               style={{ backgroundColor: "white" }}
             />
@@ -55,7 +59,7 @@ const ArqueoPage = () => {
               aria-label="Saldo_de_apertura"
               aria-describedby="basic-addon1"
               readOnly
-              value={caja.monto}
+              value={precioHandler(caja.monto)}
               style={{ backgroundColor: "white" }}
             />
           </div>
