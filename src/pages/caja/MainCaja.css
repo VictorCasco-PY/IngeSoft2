@@ -3,3 +3,7 @@
 .formaFont {
     color: var(--text-color);
 }
+
+.hCursor {
+    cursor: pointer;
+}

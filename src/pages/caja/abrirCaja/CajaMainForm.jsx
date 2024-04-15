@@ -25,6 +25,7 @@ import Pagination from "../../../components/pagination/PaginationContainer";
 import { useCurrentUser } from "../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ListIcon from '@mui/icons-material/List';
+import RolEnum from "../../../utils/RolEnum";
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
@@ -82,11 +83,8 @@ const CajaMainForm = ({ setSesionAbierta }) => {
         const postData = {
             idCaja: values['id_caja'],
             idUsuario: UserStorage.getEmpleadoId(),
-            montoInicial: values['montoInicial'],
-            montoFinal: null,
             fecha: fecha,
             horaApertura: hora,
-            horaCierre: null
         }
 
         const success = await fetchAbrirSesion(postData);
@@ -113,12 +111,12 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                 )}*/}
                 {/**/}
 
-                {rol === "ADMIN" && <div className="d-flex justify-content-between">
-                    <Btn type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<ListIcon />}
+                {((rol === "ADMIN") || (rol === RolEnum.ADMIN)) && <div className="d-flex justify-content-between">
+                    <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<ListIcon />}
                         onClick={() => { navigate("/caja/lista") }}>
-                        Ver Cajas (ADMIN)
+                        Ver Cajas
                     </Btn>
-                    <Btn type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
+                    <Btn id="btn-registrar-caja" type="primary" className='mt-3 align-self-end' loading={cargandoSesion} disabled={(cargandoSesion)} icon={<IoAdd />}
                         onClick={() => { setOpenRegistrarModal(true) }}>
                         Registrar Nueva Caja
                     </Btn>
@@ -134,11 +132,6 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                             validationSchema={Yup.object({
                                 id_caja: Yup.string()
                                     .required('Requerido'),
-                                montoInicial: Yup.number()
-                                    .typeError('El monto debe ser un numero')
-                                    .required('Requerido')
-                                    .positive('Debe ser un número positivo')
-                                ,
                             })}
                             onSubmit={async (values) => {
                                 handleAbrirCaja(values)
@@ -158,6 +151,7 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 label="Caja"
                                                 name="id_caja"
                                                 required={true}
+                                                id="input-select-cajas"
                                             >
                                                 <option value="">Selecciona una Caja</option>
                                                 {req_cajas.items.map(caja => (
@@ -165,29 +159,16 @@ const CajaMainForm = ({ setSesionAbierta }) => {
                                                 ))}
                                             </FormSelect>
                                             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage}></Pagination>
-
-                                            <FormTextInput
-                                                label="Monto Inicial en Efectivo"
-                                                name="montoInicial"
-                                                type="number"
-                                                placeholder="2000000"
-                                                required={true}
-                                                
-                                            />
                                         </>
                                     ) : (
                                         <p className="pt-2">No se encontraron cajas, registra una nueva caja.</p>
                                     )
                                 )}
 
-                                <Btn type="primary" className='mt-3 align-self-end mt-auto' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
+                                <Btn id="btn-abrir-caja" type="primary" className='mt-3 align-self-end mt-auto' loading={cargandoSesion} disabled={((cargandoSesion || cargandoCajas || abrirDisabled))}
                                     submit >
                                     Abrir Caja
                                 </Btn>
-
-                                {/*<nav>
-                                        {errorSesion && <p className="text-danger">Error al abrir caja. Revise la conexión.</p>}
-                                    </nav>*/}
                             </Form>
                         </Formik>
                     </div>

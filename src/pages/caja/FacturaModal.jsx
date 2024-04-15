@@ -27,7 +27,6 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
 
 
     return <ModalBase title={`Factura Nº ${factura?.factura?.nroFactura}`} open={open} closeModal={closeModal}>
-        {console.log(factura)}
         <div>
             <p className='py-2'>
                 <b>Fecha de emision:</b> {factura?.factura?.fecha}<br />

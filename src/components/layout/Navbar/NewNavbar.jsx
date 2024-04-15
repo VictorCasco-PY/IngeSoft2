@@ -25,7 +25,7 @@ export const NewNavbar = () => {
     <NavbarStyled position="static">
       <div className="nav-container">
         <ToolbarStyled>
-          
+
           {/* Aca va el el burguer */}
           <div
             onMouseOver={() => setShowMenu(true)}
@@ -49,12 +49,14 @@ export const NewNavbar = () => {
               <img src={Logo} alt="Logo de la aplicación" />
             </NavBtn>
 
-          {/* Aca va el menu*/}
+            {/* Aca va el menu*/}
             <BoxStyled
-              className={`${
-                !showMenu && "d-none" || "d-block"
-              } d-lg-inline-block position-absolute position-lg-relative bg-white`}
+              className={`${!showMenu && "d-none" || "d-block"
+                } d-lg-inline-block position-absolute position-lg-relative bg-white`}
             >
+              <NavBtn id="nav-dashboard" href="/dashboard" roles={[RolEnum.ADMIN]}>
+                Dashboard
+              </NavBtn>
               <NavBtn id="nav-clientes" href="/clientes">
                 Clientes
               </NavBtn>
@@ -68,7 +70,7 @@ export const NewNavbar = () => {
               <NavBtn id="nav-caja" href="/caja">
                 Caja
               </NavBtn>
-              <NavBtn id="nav-reportes" href="/reportes"  roles={[RolEnum.ADMIN]}>
+              <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
                 Reportes
               </NavBtn>
             </BoxStyled>

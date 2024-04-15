@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { NavBtn } from "../NavBtn";
+import { useCurrentUser } from "../../../../context/UserContext";
+import RolEnum from "../../../../utils/RolEnum";
 
-export const NavDropdown = ({ title, children, showArrow, className, left, ...props }) => {
+export const NavDropdown = ({ title, children, showArrow, className, left, roles, ...props }) => {
   const [open, setOpen] = useState(false);
+
+  const { rol: validRol } = useCurrentUser();
+  if (roles && (!roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
 
   return (
     <div

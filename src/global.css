@@ -2,23 +2,58 @@
 importar este modulo @import 'global.css';*/
 
 :root {
-    --background-maincolor: #F4F4F4;
-    --background-components: #fff;
+  --background-maincolor: #F4F4F4;
+  --background-components: #fff;
 
-    --primary: #6941C6;
-    --secondary: #E5D0FF;
+  --primary: #6941C6;
+  --secondary: #E5D0FF;
+  /*debe ser primary-light*/
 
-    --text-color:#667085;
+  /*colores sacados de la pantalla productos*/
+  --success: rgb(2, 122, 72);
+  --success-light: rgb(6, 213, 127);
 
+  --warning: rgb(122, 108, 2);
+  --warning-light: rgb(240, 224, 168);
 
-    --card-height: 50rem; /*tamaño minimo de la carta principal*/
-    --card-max-width: 1438px; /*anchura maxima de la carta principal*/
-  }
-  
-  body {
-    background-color: var(--background-maincolor);
-  }
-  
-  #root {
-    height: 100vh;
-  }
+  --danger: rgb(217, 45, 32);
+  --danger-light: rgb(255, 219, 217);
+
+  --text-color: #667085;
+
+  --card-height: 50rem;
+  /*tamaño minimo de la carta principal*/
+  --card-max-width: 1438px;
+  /*anchura maxima de la carta principal*/
+  --card-nocard-max-width: 1538px;
+  /*anchura maxima de la carta sin el blanco*/
+
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --shadow-m: 0 1rem 1.5rem rgba(0, 0, 0, 0.175);
+}
+
+body {
+  background-color: var(--background-maincolor);
+}
+
+#root {
+  height: 100vh;
+}
+
+/****************************************/
+.clickableIcon {
+  cursor: pointer;
+}
+
+.clickableIcon:hover {
+  color: var(--primary);
+}
+
+.clickableIcon:active {
+  /*border: 1px solid var(--primary);*/
+  transform: scale(1.2);
+}
+
+.text-c {
+  color: var(--text-color) !important;
+}
