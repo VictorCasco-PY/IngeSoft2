@@ -3,9 +3,11 @@ import FlechaAtras from "../../components/flechaAtras/FlechaAtras";
 import { Btn } from "../../components/bottons/Button";
 import useCaja from "../../hooks/useCaja";
 import CajaStorage from "../../utils/CajaStorage";
+import useArqueo from "../../hooks/useArqueo";
 
 const ArqueoPage = () => {
   const { getCajaById } = useCaja();
+  const { getArqueoBySesionId, data, isLoading } = useArqueo();
   const [caja, setCaja] = useState({});
   const date = new Date();
   const formattedDate = date.toISOString().substr(0, 10);
@@ -53,7 +55,7 @@ const ArqueoPage = () => {
               aria-label="Saldo_de_apertura"
               aria-describedby="basic-addon1"
               readOnly
-              value={caja.monto.toLocaleString("es-ES") + " Gs."}
+              value={caja.monto}
               style={{ backgroundColor: "white" }}
             />
           </div>
@@ -84,7 +86,7 @@ const ArqueoPage = () => {
         <hr />
       </div>
 
-      {/**Cards */}
+      {/**Arqueo */}
       <div className="row align-items-center align-content-center ms-5 mt-5 justify-content-between d-flex">
         <div className="col-4">
           <div className="card text-dark bg-light mb-3">
@@ -121,7 +123,7 @@ const ArqueoPage = () => {
           </div>
         </div>
         <div className="col-4">
-          <div className="card text-dark bg-light mb-3">
+          <div className="card text-dark bg-light mb-3 ">
             <div className="card-header">
               <h4>Salida</h4>
             </div>
