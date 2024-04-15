@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Btn } from "../../../components/bottons/Button";
 import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineClock } from "react-icons/hi";
 
 import './AdministrarCaja.css'
 
@@ -153,6 +154,9 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                     </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
+                        <Btn id="btn-actualizar" onClick={fetchData} icon={<HiOutlineClock />} onClick={()=>navigate("/caja/historial")}>
+                            Ver historial de movimientos
+                        </Btn>
                         {sesionCaja.horaCierre ? <p className="p-0 m-0 cajaMiscFont">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>}
                         <Btn id="btn-cerrar-caja" outline onClick={cerrarCajaActual} disabled={disabledCerrarCaja}>
                             Cerrar Caja

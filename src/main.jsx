@@ -26,8 +26,8 @@ import InformacionClientes from "./pages/clients/InfoClientes/InformacionCliente
 import { InfoClientsProvider } from "./context/InfoClientesContext";
 import MainDashboard from "./pages/dashboard/MainDashboard";
 import RolEnum from "./utils/RolEnum";
+import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
-
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -188,6 +188,18 @@ createRoot(document.getElementById("root")).render(
           />
 
           <Route path="/miUsuario" element={<Layout><MainMiUsuario /></Layout>} />
+
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+            <Route
+              exact
+              path="/caja/historial"
+              element={
+                <Layout>
+                  <MovimientosVista />
+                </Layout>
+              }
+            />
+          </Route>
 
           <Route
             path="*"
