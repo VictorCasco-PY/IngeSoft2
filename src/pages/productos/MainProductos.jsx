@@ -41,6 +41,7 @@ const MainProductos = () => {
     codigo: "",
     costo: "",
     cantidad: "",
+    cantidadLimite: "",
     precio: "",
     iva: "",
   });
@@ -145,6 +146,7 @@ const MainProductos = () => {
       codigo: "",
       costo: "",
       cantidad: "",
+      cantidadLimite: "",
       precio: "",
     });
     setShowModal(true);
@@ -167,7 +169,7 @@ const MainProductos = () => {
     const { name, value } = event.target;
 
     // Verificar si el campo es cantidad, costo, precio o código
-    if (name === "cantidad" || name === "costo" || name === "precio") {
+    if (name === "cantidad" ||name === "cantidadLimite" || name === "costo" || name === "precio") {
       let formattedValue = value.replace(/\D/g, ""); // Eliminar todos los caracteres que no sean dígitos
       formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Agregar puntos para separar los miles
       // Verificar si el valor es negativo y no permitirlo
@@ -231,6 +233,9 @@ const MainProductos = () => {
         cantidad: parseFloat(
           productosData.cantidad.toString().replace(/\./g, "")
         ),
+        cantidadLimite: parseFloat(
+          productosData.cantidadLimite.toString().replace(/\./g, "")
+        ),
         costo: parseFloat(productosData.costo.toString().replace(/\./g, "")),
         precio: parseFloat(productosData.precio.toString().replace(/\./g, "")),
       };
@@ -279,6 +284,7 @@ const MainProductos = () => {
           editedProducto.codigo === productosData.codigo &&
           editedProducto.costo === dataToSend.costo &&
           editedProducto.cantidad === dataToSend.cantidad &&
+          editedProducto.cantidadLimite === dataToSend.cantidadLimite &&
           editedProducto.precio === dataToSend.precio &&
           editedProducto.iva === dataToSend.iva
         ) {
@@ -460,7 +466,7 @@ const MainProductos = () => {
             </div>
             <div className="mb-2 block">
               <div className="label-container">
-                <LabelBase label="Descripcion:" htmlFor="descripcion" />
+                <LabelBase label="Descripción:" htmlFor="descripcion" />
                 {/* No se requiere asterisco para campos opcionales */}
               </div>
               <input
@@ -479,7 +485,7 @@ const MainProductos = () => {
                   {" "}
                   {/* Incrementé el margen inferior */}
                   <div className="label-container">
-                    <LabelBase label="Codigo:" htmlFor="codigo" />
+                    <LabelBase label="Código:" htmlFor="codigo" />
                     <span className="required">*</span>
                   </div>
                   <input
@@ -509,6 +515,22 @@ const MainProductos = () => {
                     required
                   />
                 </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="Precio:" htmlFor="precio" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="precio"
+                    name="precio"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.precio}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
               </div>
               <div className="d-flex flex-column">
                 <div className="mb-3 block">
@@ -529,41 +551,40 @@ const MainProductos = () => {
                 </div>
                 <div className="mb-3 block">
                   <div className="label-container">
-                    <LabelBase label="Precio:" htmlFor="precio" />
+                    <LabelBase label="Cantidad límite:" htmlFor="cantidadLimite" />
                     <span className="required">*</span>
                   </div>
                   <input
                     type="number"
-                    id="precio"
-                    name="precio"
+                    id="cantidadLimite"
+                    name="cantidadLimite"
                     className="form-control custom-input"
                     style={{ width: "100%" }}
-                    value={productosData.precio}
+                    value={productosData.cantidadLimite}
                     onChange={handleCampoChange}
                     required
                   />
                 </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="IVA:" htmlFor="iva" />
+                    <span className="required">*</span>
+                  </div>
+                  <select
+                    id="iva"
+                    name="iva"
+                    className="form-control form-select"
+                    value={productosData.iva}
+                    onChange={handleCampoChange}
+                  >
+                    {tipo_iva.map((opcion) => (
+                      <option key={opcion.value} value={opcion.value}>
+                        {opcion.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="Iva:" htmlFor="iva" />
-                <span className="required">*</span>
-              </div>
-              <select
-                id="iva"
-                name="iva"
-                className="form-control form-select"
-                value={productosData.iva}
-                onChange={handleCampoChange}
-              >
-                {tipo_iva.map((opcion) => (
-                  <option key={opcion.value} value={opcion.value}>
-                    {opcion.label}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="campo-obligatorio">
               <span className="required">*</span>
@@ -599,11 +620,9 @@ const MainProductos = () => {
         <div class="table-container">
           {error && <ErrorPagina mensaje="No hay pruductos cargados aún " />}
           {/* Muestra el componente de error si hay un error */}
-          {!error &&
-            filteredProductos.length === 0 &&
-            !searchResultsFound && (
-              <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
-            )}
+          {!error && filteredProductos.length === 0 && !searchResultsFound && (
+            <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
+          )}
           {!error && filteredProductos.length === 0 && searchResultsFound && (
             <ElementoNoEncontrado mensaje="Todavia no hay productos cargados" />
           )}
@@ -628,7 +647,7 @@ const MainProductos = () => {
                   <tr key={producto.id}>
                     <td>{producto.nombre}</td>
                     <td>
-                      <StockIndicator stock={producto.cantidad} />
+                      <StockIndicator stock={producto.cantidad} cantidadLimite={producto.cantidadLimite} />
                     </td>
                     <td>{producto.codigo}</td>
                     <td>{producto.descripcion}</td>

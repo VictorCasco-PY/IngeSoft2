@@ -35,6 +35,10 @@ const useCaja = () => {
         return handleRequest(() => api.post(CAJA_URL, params ))
     }
 
+    const modificarCaja = async (id, params) => {
+        return handleRequest(() => api.put(`${CAJA_URL}/${id}`, params ))
+    }
+
     const getCajaById = async (id, params) => {
         return handleRequest(() => api.get(`${CAJA_URL}/${id}`, params ))
     }
@@ -47,7 +51,11 @@ const useCaja = () => {
         return handleRequest(() => api.get(`${CAJA_URL}/page/${page}`, params ))
     }
 
-    return { createCaja, getCajaById, searchCajaByName, getAllCajas, data, error, noCajasError, isLoading }
+    const deleteCaja = async (id, params) => {
+        return handleRequest(() => api.delete(`${CAJA_URL}/${id}`, params ))
+    }
+
+    return { createCaja, modificarCaja, getCajaById, searchCajaByName, getAllCajas, deleteCaja, data, error, noCajasError, isLoading }
 }
 
 export default useCaja

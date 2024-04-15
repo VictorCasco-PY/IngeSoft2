@@ -5,12 +5,14 @@ import { ButtonPrimary } from "./styles/ButtonPrimary";
 import { ButtonDefaultOutline } from "./styles/ButtonDefaultOutline";
 import { ButtonSecondary } from "./styles/ButtonSecondary";
 import { ButtonSecondaryOutline } from "./styles/ButtonSecondaryOutline";
+import { ButtonDanger } from "./styles/ButtonDanger";
 
 const BtnDefault = styled(Button)(() => ButtonDefault);
 const BtnDefaultOutline = styled(Button)(() => ButtonDefaultOutline);
 const BtnSecondary = styled(Button)(() => ButtonSecondary);
 const BtnSecondaryOutline = styled(Button)(() => ButtonSecondaryOutline);
 const BtnPrimary = styled(Button)(() => ButtonPrimary);
+const BtnDanger = styled(Button)(() => ButtonDanger);
 
 const BtnContent = ({ loading, icon, children }) => {
   if (icon) {
@@ -65,6 +67,14 @@ export const Btn = ({
             {children}
           </BtnContent>
         </BtnSecondary>
+      );
+    case "danger":
+      return (
+        <BtnDanger {...props} type={submit ? "submit" : "button"}>
+          <BtnContent loading={loading} icon={icon}>
+            {children}
+          </BtnContent>
+        </BtnDanger>
       );
     default:
       if (outline) {

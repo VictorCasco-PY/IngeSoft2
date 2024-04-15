@@ -8,15 +8,24 @@ import api from '../../utils/api';
 import ErrorPagina from '../errores/ErrorPagina';
 import { ListaVacía } from '../errores/ListaVacía';
 import { Table } from '../table/Table';
+import Pagination from '../pagination/PaginationContainer';
+/*
+    USO: se usa el prop clienteId para obtener las actividades de un cliente en específico.
+    Se usa el prop toast para mostrar mensajes de error.
+    Se usa el prop setParentTotalPages para setear el total de páginas en el componente padre. (En el componente padre, implementarlo como una funcion)
+        esta función se llama cada vez que se obtienen las actividades.
+    Se usa el prop page para setear la página actual.
+*/
 
-const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
+const TablaActividadesCliente = ({ toast, clienteId, setParentTotalPages, page = 1 }) => {
 
-    // no borrar
+    // TODO: no borrar
     //const { getSuscripcionesByCliente, data: req_suscripciones, isLoading: cargandoSuscripciones, error: errorSuscripciones } = useSuscripcion();
     const [actividades, setActividades] = useState([]);
     const [loadTable, setLoadTable] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null)
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
     const getSuscripciones = async () => {
@@ -28,6 +37,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                 setActividades([])
             }
             setActividades(res.data)
+            if (setParentTotalPages) setParentTotalPages(res.data.totalPages) // se usa para setear el total de paginas en el componente padre
         } catch (error) {
             if (toast) {
                 if (error.response.status === 404) {
@@ -47,7 +57,7 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
     useEffect(() => {
 
-        // no borrar esto, no tomar en cuenta en  code review, lo usare en el sig sprint.
+        //TODO: no borrar esto, no tomar en cuenta en  code review, lo usare en el sig sprint.
 
         /*const fetchData = async () => {
             setLoadTable(true);
@@ -71,9 +81,12 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
 
         fetchData();*/
 
-        getSuscripciones();
-    }, [page]);
+        getSuscripciones(currentPage);
+    }, [currentPage]);
 
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    }
     const switchRender = () => {
 
         if (loadTable) return <Table headers={["Nombre", "Modalidad", "Estado", "Fecha de Inscripcion", "Fecha de Vencimiento"]} striped>
@@ -108,6 +121,13 @@ const TablaActividadesCliente = ({ toast, clienteId, page = 1 }) => {
                             )
                         })}
                     </Table>
+                    <div className="d-flex justify-content-center mt-4">
+                    <Pagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
                 </>
             );
         }

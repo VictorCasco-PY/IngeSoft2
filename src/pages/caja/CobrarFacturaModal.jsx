@@ -55,12 +55,13 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
         const fechaHoraActual = new Date();
 
         // Obtener la hora, los minutos y los segundos
-        const horas = fechaHoraActual.getHours();
-        const minutos = fechaHoraActual.getMinutes();
-        const segundos = fechaHoraActual.getSeconds();
+        const horas = fechaHoraActual.getHours().toString().padStart(2, '0');
+        const minutos = fechaHoraActual.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaHoraActual.getSeconds().toString().padStart(2, '0');
 
         // Formatear la salida para que tenga un aspecto amigable
-        const horaActualFormateada = horas + ":" + minutos + ":" + segundos;
+        const horaActualFormateada = `${horas}:${minutos}:${segundos}`;
+
 
         const cobro = {
             "movimiento": {

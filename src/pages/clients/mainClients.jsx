@@ -936,7 +936,8 @@ const MainClients = () => {
                   </td>
                   <td>{cliente.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <EstadoPago estado={cliente.estado} />{" "}
+                  <EstadoPago estado={cliente.estado ? cliente.estado.toLowerCase() : ''} />
+
                   </td>
                   <td>{cliente.email}</td>
                   <td>{cliente.telefono}</td>

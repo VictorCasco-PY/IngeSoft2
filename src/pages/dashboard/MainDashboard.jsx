@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MainDashboard.css'
 import TablaDashboard from '../../components/dashboard/TablaDashboard'; //may be used
 import LineChartDashboard from '../../components/dashboard/LineChartDashboard';
@@ -10,30 +10,15 @@ import LineIngresoChartDashboard from '../../components/dashboard/LineIngresoCha
 import SeccionDashboard from '../../components/dashboard/SeccionDashboard';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DashCarta from '../../components/dashboard/DashCarta';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-
+import NewClientsSection from '../../components/dashboard/NewClientsSection';
+import { useDashboard } from '../../context/DashboardContext';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { getCurrentMonthName, getCurrentYear, invertDateString } from '../../utils/DateStatics';
+import ReporteStorage from '../../utils/ReportesStorage';
+import InfoIcon from '@mui/icons-material/Info';
 
 //estos son los datos de prueba para este ticket, se deben borrar en la implementacion
 //todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
-const actividadDataOne = [
-    {
-        "mes": "Junio",
-        "Powerlifting": 167,
-        "PowerliftingColor": "hsl(224, 70%, 50%)",
-        "Pilates": 160,
-        "PilatesColor": "hsl(56, 70%, 50%)",
-        "Yoga": 142,
-        "YogaColor": "hsl(104, 70%, 50%)",
-    },
-]
-
-const actividadesLabel = [
-    'Powerlifting',
-    'Pilates',
-    'Yoga'
-]
-
 const lineDataOne = [
     {
         "id": "Ingresos",
@@ -128,120 +113,17 @@ const lineDataTwo = [
     }
 ]
 
-const pieDataOne =
-    [
-        {
-            "id": "Pagados",
-            "label": "En Regla",
-            "value": 400,
-            "color": "hsl(48, 70%, 50%)"
-        },
-        {
-            "id": "Pendientes",
-            "label": "Morosos",
-            "value": 200,
-            "color": "hsl(273, 70%, 50%)"
-        }
-    ]
-
-const pieDataTwo =
-    [
-        {
-            "id": "Pagados",
-            "label": "En Regla",
-            "value": 489,
-            "color": "hsl(48, 70%, 50%)"
-        },
-        {
-            "id": "Pendientes",
-            "label": "Morosos",
-            "value": 56,
-            "color": "hsl(273, 70%, 50%)"
-        }
-    ]
-
-const productDataOne = [
-    {
-        "mes": "Junio",
-        "Bebida Energetica": 167,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 160,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 142,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 140,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 40,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 12,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-]
-
-const productDataTwo = [
-    {
-        "mes": "Junio",
-        "Bebida Energetica": 167,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 160,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 142,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 140,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 40,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 12,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-    {
-        "mes": "Julio",
-        "Bebida Energetica": 122,
-        "Bebida EnergeticaColor": "hsl(224, 70%, 50%)",
-        "Agua": 54,
-        "AguaColor": "hsl(56, 70%, 50%)",
-        "Barra Energetica": 92,
-        "Barra EnergeticaColor": "hsl(104, 70%, 50%)",
-        "sandwich": 167,
-        "sandwichColor": "hsl(261, 70%, 50%)",
-        "kebab": 23,
-        "kebabColor": "hsl(296, 70%, 50%)",
-        "Food": 19,
-        "FoodColor": "hsl(314, 70%, 50%)",
-    },
-]
-
-const productosLabels = [
-    'Bebida Energetica',
-    'Agua',
-    'Barra Energetica',
-    'sandwich',
-    'kebab',
-    'Food'
-]
-
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
-    const [productDisplayingData, setProductDisplayingData] = useState(productDataOne)
-    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne)
-    const [morososDisplayingData, setMorososDisplayingData] = useState(pieDataOne)
 
+    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne) //borrar despues
     //Estos estados son solo para test, se deben borrar en la implementacion
-    const [filterTestBool, setFilterTestBool] = useState(false)
     const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
-    const [filterTestBoolMorosos, setFilterTestBoolMorosos] = useState(false)
 
-    //Estas funciones se borraran en la implementacion, solo de prueba
-    const filterProducts = () => {
-        if (filterTestBool) {
-            setProductDisplayingData(productDataOne)
-            setFilterTestBool(false)
-        } else {
-            setProductDisplayingData(productDataTwo)
-            setFilterTestBool(true)
-        }
-    }
+    const [lastRefresh, setLastRefresh] = useState('')
+    const { refreshData, checkExpirationTime, isLoadingNewClients } = useDashboard();
 
+    //Borrar luego de implementacion
     const filterIngresos = () => {
         if (filterTestBoolIngresos) {
             setIngresosDisplayingData(lineDataOne)
@@ -252,65 +134,56 @@ const MainDashboard = () => {
         }
     }
 
-    const filterMorosos = () => {
-        if (filterTestBoolMorosos) {
-            setMorososDisplayingData(pieDataOne)
-            setFilterTestBoolMorosos(false)
-        } else {
-            setMorososDisplayingData(pieDataTwo)
-            setFilterTestBoolMorosos(true)
-        }
-    } 
-    /**/
-
     const handleBlurClick = () => {
-        //TODO: esta solucion es fea por el momento, si es del tipo elemento
+        //TODO: esta solucion es fea por el momento, si currentMaximized es del tipo html elemento (que en realidad es un objeto)
         if (!currentMaximized) return;
-        if (typeof(currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) { 
+        if (typeof (currentMaximized) === "object" && currentMaximized.classList.contains("maximizedSeccion")) {
             currentMaximized.classList.remove("maximizedSeccion")
             currentMaximized.classList.add("seccionDashHover")
             setCurrentMaximized(null)
         }
     }
 
+    const refreshDashboard = () => {
+        refreshData();
+        setLastRefresh(ReporteStorage.getLastRefresh())
+    }
+
+    useEffect(() => {
+        //si los datos expiraron refrescar
+        if (checkExpirationTime()) { 
+            refreshData(true);
+        }
+        setLastRefresh(ReporteStorage.getLastRefresh())
+    }, [])
+
     return (
         <>
+            {lastRefresh && (
+                <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
+                    <b className='d-flex align-items-center'><InfoIcon /> Ultima actualización: </b>
+                    <p className='m-0 p-0'> {invertDateString(lastRefresh)}</p>
+                </div>
+            )}
+
             <div id="blur-screen-dashboard" className={currentMaximized ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
-                <div className='DashboardHeader'>
+                <div className='DashboardHeader mb-2'>
                     <h1>Dashboard</h1>
-                    <h2>Septiembre 2024</h2>
+                    <h2>{getCurrentMonthName() + ' ' + getCurrentYear()}</h2>
+                    <div>
+                        <Btn type="primary" onClick={refreshDashboard} icon={<RefreshIcon />} disabled={isLoadingNewClients} loading={isLoadingNewClients}>Actualizar</Btn>
+                    </div>
                 </div>
                 <div className='MDGrid position-relative'>
+
                     <SeccionDashboard id="seccion-clientes" header="Porcentaje de Clientes en Mora" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un select con los meses o un slider o algo por el estilo*/}
-                        <div className='d-flex align-items-center justify-content-end gap-3' >
-                            <p className='m-0'>
-                                {filterTestBoolMorosos ? "Junio 2024" : "Julio 2024"}
-                            </p>
-                            <Btn id="btn-filtrar-morosos" type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterMorosos() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <PieChartDashboard data={morososDisplayingData} />
-                        </div>
-                        <i className='p-0 m-0'>Click en un segmento para ver los clientes.</i>
+                        <PieChartDashboard />
                     </SeccionDashboard>
 
                     <div className='d-flex flex-column gap-4'>
                         <SeccionDashboard header="Nuevos clientes este mes:">
-                            <div className='d-flex flex-column gap-3'>
-                                <div className='d-flex gap-3'>
-                                    <ArrowCircleUpIcon className='arrowIndicator aGreen' />
-                                    <nav style={{ fontSize: '2rem' }} className='notSelect'>+12</nav>
-                                </div>
-                                <h3 className='m-0 p-0'>Mes pasado:</h3>
-                                <div className='d-flex gap-3'>
-                                    <ArrowCircleDownIcon className='arrowIndicator aRed' />
-                                    <nav style={{ fontSize: '2rem' }} className='notSelect'>-6</nav>
-                                </div>
-                            </div>
+                            <NewClientsSection />
                         </SeccionDashboard>
                         <SeccionDashboard header="Enlaces">
                             <div>
@@ -325,29 +198,11 @@ const MainDashboard = () => {
                     </div>
 
                     <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => {  }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={actividadDataOne} keys={actividadesLabel} />
-                        </div>
-                        <i className='p-0 m-0'>Actividad con mas inscritos: Powerlifting.</i>
+                        <LineChartDashboard />
                     </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterProducts() }}>
-                                Filtrar
-                            </Btn>
-                        </div>
-                        <div className='graphSection'>
-                            <LineChartDashboard data={productDisplayingData} keys={productosLabels} />
-                        </div>
-                        <i className='p-0 m-0'>Producto mas vendido: Bebida Energetica.</i>
+                        <LineChartDashboard />
                     </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
