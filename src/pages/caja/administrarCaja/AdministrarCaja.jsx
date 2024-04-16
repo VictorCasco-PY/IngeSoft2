@@ -18,7 +18,7 @@ import UserStorage from "../../../utils/UserStorage";
 import { useCurrentUser } from "../../../context/UserContext";
 import RolEnum from "../../../utils/RolEnum";
 import api from "../../../utils/api";
-import { ArqueoProvider } from "../../../context/ArqueoContext";
+import { useArqueoContext } from "../../../context/ArqueoContext";
 
 const AdministrarCaja = ({ setSesionAbierta }) => {
   const navigate = useNavigate();
@@ -34,6 +34,8 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
   const { nombre: userNombre, userId, rol: userRol } = useCurrentUser();
 
   const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
+
+  const { saveArqueoData } = useArqueoContext();
 
   const fetchData = async () => {
     const data1 = await getCajaById(CajaStorage.getCajaId());
@@ -143,149 +145,153 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
   };
 
   const postArqueo = async () => {
-    const response = await api.post(`/arqueo/${CajaStorage.getSesionCajaId()}`);
-    saveArqueoData(response.data);
-    console.log(response.data);
+    try {
+      const response = await api.post(
+        `/arqueo/${CajaStorage.getSesionCajaId()}`
+      );
+      saveArqueoData(response.data);
+      navigate("/arqueo");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
-      <ArqueoProvider>
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            success: {
-              style: {
-                background: "#75B798",
-                color: "#0A3622",
-              },
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
             },
-            error: {
-              style: {
-                background: "#FFDBD9",
-                color: "#D92D20",
-              },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
             },
-          }}
-        />
+          },
+        }}
+      />
 
-        <CartaPrincipal>
-          <div className="d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
-              {cargandoCaja && cargandoSesion && caja ? (
-                <CircularProgress />
-              ) : (
-                <h1>{caja.nombre}</h1>
-              )}
-            </div>
-
-            <div className="d-flex align-items-center justify-content-center gap-3">
-              <Btn
-                id="btn-actualizar"
-                onClick={fetchData}
-                icon={<HiOutlineClock />}
-                onClick={() => navigate("/caja/historial")}
-              >
-                Ver historial de movimientos
-              </Btn>
-              {sesionCaja.horaCierre ? (
-                <p className="p-0 m-0 cajaMiscFont">
-                  Caja cerrada a las {sesionCaja.horaCierre}
-                </p>
-              ) : (
-                <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>
-              )}
-              <Btn
-                id="btn-cerrar-caja"
-                outline
-                onClick={cerrarCajaActual}
-                disabled={disabledCerrarCaja}
-              >
-                Cerrar Caja
-              </Btn>
-              <Btn id="btn-arqueo" onClick={postArqueo}>
-                Arqueo
-              </Btn>
-            </div>
-          </div>
-
-          <div>
-            {userNombre && (
-              <>
-                <p className="p-0 m-0 cajaMiscFont">Cajero: {userNombre}</p>
-                {sesionCaja && sesionCaja.horaApertura && sesionCaja.fecha && (
-                  <>
-                    <p className="p-0 m-0 cajaMiscFont">
-                      Hora de Apertura: {sesionCaja.horaApertura}
-                    </p>
-                    <p className="p-0 m-0 cajaMiscFont">
-                      Fecha: {formatFecha(sesionCaja.fecha)}
-                    </p>
-                  </>
-                )}
-              </>
+      <CartaPrincipal>
+        <div className="d-flex align-items-center justify-content-between">
+          <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
+            {cargandoCaja && cargandoSesion && caja ? (
+              <CircularProgress />
+            ) : (
+              <h1>{caja.nombre}</h1>
             )}
           </div>
 
-          <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center cajasContainer">
-            <div className="card cajaCard">
-              <p className="cajaFont">Ventas</p>
-
-              <Btn
-                id="btn-nueva-venta"
-                type="primary"
-                onClick={goToNuevaVenta}
-                disabled={disabledCerrarCaja}
-              >
-                Nueva Venta
-              </Btn>
-
-              <Btn
-                id="btn-listar-ventas"
-                outline
-                onClick={goToListarVentas}
-                disabled={disabledCerrarCaja}
-              >
-                Listar Ventas
-              </Btn>
-            </div>
-            <div className="card cajaCard">
-              <p className="cajaFont">Compras</p>
-
-              <Btn
-                id="btn-nueva-compra"
-                type="primary"
-                onClick={goToNuevaCompra}
-                disabled={disabledCerrarCaja}
-              >
-                Nueva Compra
-              </Btn>
-
-              <Btn
-                id="btn-listar-compras"
-                outline
-                onClick={goToListarCompras}
-                disabled={disabledCerrarCaja}
-              >
-                Listar Compras
-              </Btn>
-            </div>
-            <div className="card cajaCard">
-              <p className="cajaFont">Cobros Pendientes</p>
-
-              <Btn
-                id="btn-listar-cobros"
-                outline
-                onClick={goToListarCobros}
-                disabled={disabledCerrarCaja}
-              >
-                Listar Cobros Pendientes
-              </Btn>
-            </div>
+          <div className="d-flex align-items-center justify-content-center gap-3">
+            <Btn
+              id="btn-actualizar"
+              onClick={fetchData}
+              icon={<HiOutlineClock />}
+              onClick={() => navigate("/caja/historial")}
+            >
+              Ver historial de movimientos
+            </Btn>
+            {sesionCaja.horaCierre ? (
+              <p className="p-0 m-0 cajaMiscFont">
+                Caja cerrada a las {sesionCaja.horaCierre}
+              </p>
+            ) : (
+              <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>
+            )}
+            <Btn
+              id="btn-cerrar-caja"
+              outline
+              onClick={cerrarCajaActual}
+              disabled={disabledCerrarCaja}
+            >
+              Cerrar Caja
+            </Btn>
+            <Btn id="btn-arqueo" onClick={postArqueo}>
+              Arqueo
+            </Btn>
           </div>
-        </CartaPrincipal>
-      </ArqueoProvider>
+        </div>
+
+        <div>
+          {userNombre && (
+            <>
+              <p className="p-0 m-0 cajaMiscFont">Cajero: {userNombre}</p>
+              {sesionCaja && sesionCaja.horaApertura && sesionCaja.fecha && (
+                <>
+                  <p className="p-0 m-0 cajaMiscFont">
+                    Hora de Apertura: {sesionCaja.horaApertura}
+                  </p>
+                  <p className="p-0 m-0 cajaMiscFont">
+                    Fecha: {formatFecha(sesionCaja.fecha)}
+                  </p>
+                </>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center cajasContainer">
+          <div className="card cajaCard">
+            <p className="cajaFont">Ventas</p>
+
+            <Btn
+              id="btn-nueva-venta"
+              type="primary"
+              onClick={goToNuevaVenta}
+              disabled={disabledCerrarCaja}
+            >
+              Nueva Venta
+            </Btn>
+
+            <Btn
+              id="btn-listar-ventas"
+              outline
+              onClick={goToListarVentas}
+              disabled={disabledCerrarCaja}
+            >
+              Listar Ventas
+            </Btn>
+          </div>
+          <div className="card cajaCard">
+            <p className="cajaFont">Compras</p>
+
+            <Btn
+              id="btn-nueva-compra"
+              type="primary"
+              onClick={goToNuevaCompra}
+              disabled={disabledCerrarCaja}
+            >
+              Nueva Compra
+            </Btn>
+
+            <Btn
+              id="btn-listar-compras"
+              outline
+              onClick={goToListarCompras}
+              disabled={disabledCerrarCaja}
+            >
+              Listar Compras
+            </Btn>
+          </div>
+          <div className="card cajaCard">
+            <p className="cajaFont">Cobros Pendientes</p>
+
+            <Btn
+              id="btn-listar-cobros"
+              outline
+              onClick={goToListarCobros}
+              disabled={disabledCerrarCaja}
+            >
+              Listar Cobros Pendientes
+            </Btn>
+          </div>
+        </div>
+      </CartaPrincipal>
     </>
   );
 };

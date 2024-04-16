@@ -29,6 +29,7 @@ import RolEnum from "./utils/RolEnum";
 import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
+import { ArqueoProvider } from "./context/ArqueoContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -115,7 +116,9 @@ createRoot(document.getElementById("root")).render(
             path="/caja"
             element={
               <Layout>
-                <MainCaja />
+                <ArqueoProvider>
+                  <MainCaja />
+                </ArqueoProvider>
               </Layout>
             }
           />
@@ -229,7 +232,9 @@ createRoot(document.getElementById("root")).render(
             path="/arqueo"
             element={
               <Layout>
-                <MainArqueo />
+                <ArqueoProvider>
+                  <MainArqueo />
+                </ArqueoProvider>
               </Layout>
             }
           />

@@ -15,11 +15,24 @@ const ArqueoPage = () => {
   const fechaActual = format(new Date(), "dd-MM-yyyy");
   const { arqueoData } = useArqueoContext();
 
+  console.log("Arqueo data: ", arqueoData);
+  const {
+    totalEntradaEfectivo,
+    totalEntradaTarjeta,
+    totalEntradaTransferencia,
+    totalSalidaEfectivo,
+    totalSalidaTarjeta,
+    totalSalidaTransferencia,
+  } = arqueoData;
+
+  const totalEntrada =
+    totalEntradaEfectivo + totalEntradaTarjeta + totalEntradaTransferencia;
+  const totalSalida =
+    totalSalidaEfectivo + totalSalidaTarjeta + totalSalidaTransferencia;
   useEffect(() => {
     const fetchCaja = async () => {
       const response = await getCajaById(CajaStorage.getCajaId());
       setCaja(response);
-      console.log(response);
     };
 
     fetchCaja();
@@ -115,14 +128,26 @@ const ArqueoPage = () => {
               <h4>Entrada</h4>
             </div>
             <div className="card-body text-end">
-              <h5 className="card-title">1.000.000</h5>
+              <h5 className="card-title">
+                {totalEntradaEfectivo == 0
+                  ? 0
+                  : precioHandler(totalEntradaEfectivo)}
+              </h5>
               <hr />
-              <h5 className="card-title">0</h5>
+              <h5 className="card-title">
+                {totalEntradaTarjeta == 0
+                  ? 0
+                  : precioHandler(totalEntradaTarjeta)}
+              </h5>
               <hr />
-              <h5 className="card-title">0</h5>
+              <h5 className="card-title">
+                {totalEntradaTransferencia == 0
+                  ? 0
+                  : precioHandler(totalEntradaTransferencia)}
+              </h5>
             </div>
             <div className="card-footer text-end">
-              <h5>1.000.000</h5>
+              <h5>{totalEntrada == 0 ? 0 : precioHandler(totalEntrada)}Gs.</h5>
             </div>
           </div>
         </div>
@@ -132,14 +157,26 @@ const ArqueoPage = () => {
               <h4>Salida</h4>
             </div>
             <div className="card-body text-end">
-              <h5 className="card-title">200.000</h5>
+              <h5 className="card-title">
+                {totalSalidaEfectivo == 0
+                  ? 0
+                  : precioHandler(totalSalidaEfectivo)}
+              </h5>
               <hr />
-              <h5 className="card-title">0</h5>
+              <h5 className="card-title">
+                {totalSalidaTarjeta == 0
+                  ? 0
+                  : precioHandler(totalSalidaTarjeta)}
+              </h5>
               <hr />
-              <h5 className="card-title">0</h5>
+              <h5 className="card-title">
+                {totalSalidaTransferencia == 0
+                  ? 0
+                  : precioHandler(totalSalidaTransferencia)}
+              </h5>
             </div>
             <div className="card-footer text-end">
-              <h5>200.000</h5>
+              <h5>{totalSalida == 0 ? 0 : precioHandler(totalSalida)}Gs.</h5>
             </div>
           </div>
         </div>
