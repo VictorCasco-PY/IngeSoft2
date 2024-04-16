@@ -41,7 +41,7 @@ const LineChartDashboard = () => {
     const [productoMasVendido, setProductoMasVendido] = useState(null); //un producto singular el cual es el mas vendido
 
     const setDataFromKeys = (data) => {
-        const months = ['Productos'] //hardcoded, TODO: filtrar por fechas
+        const months = ['Cantidad'] //hardcoded, TODO: filtrar por fechas
         let newData = [];
 
         //por cada mes se hace el bucle, añadiendo los productos y su cantidad
