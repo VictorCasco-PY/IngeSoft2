@@ -17,6 +17,7 @@ import { CircularProgress } from "@mui/material";
 import UserStorage from "../../../utils/UserStorage";
 import { useCurrentUser } from "../../../context/UserContext";
 import RolEnum from "../../../utils/RolEnum";
+import { getCurrentHour } from "../../../utils/DateStatics";
 
 const AdministrarCaja = ({ setSesionAbierta }) => {
 
@@ -93,11 +94,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
     const cerrarCajaActual = async () => {
         setDisabledCerrarCaja(true);
 
-        const date = new Date();
-        //hora-min-seg
-        //agregar un cero si es menor a 10
-        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
-
+        const hora = getCurrentHour();
         const putData = {
             horaCierre: hora
         }
