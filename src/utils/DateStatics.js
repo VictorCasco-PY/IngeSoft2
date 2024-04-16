@@ -3,6 +3,19 @@ const MESES = [
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
+/*
+    Funciones para manejar fechas de acuerdo al formato en backend
+    getCurrentDate: obtener la fecha actual en formato yyyy-mm-dd
+    getCurrentHour: obtener la hora actual en formato hh:mm:ss
+    formatDate: formatear una fecha de Date a yyyy-mm-dd
+    formatHour: formatear una hora de Date a hh:mm:ss
+    formattedToDate: convertir una fecha en formato yyyy-mm-dd a Date
+    getMonthName: obtener el nombre de un mes a partir de su índice
+    getCurrentMonthName: obtener el nombre del mes actual
+    getCurrentYear: obtener el año actual
+    invertDateString: invertir el formato de una fecha de yyyy-mm-dd a dd-mm-yyyy
+*/
+
 //formatear date al formato del back end
 //yyyy-mm-dd
 export const formatDate = (date) => {
@@ -20,8 +33,11 @@ export const formattedToDate = (date) => {
 
 export const formatHour = (date) => {
     //hh:mm:ss
-    const dateArray = date.split("T");
-    return dateArray[1].substring(0, 5);
+    //agregar un cero si es menor a 10
+    const hora = (date.getHours() < 10 ? '0' : '') + date.getHours();
+    const minuto = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+    const segundo = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds(); 
+    return hora + ":" + minuto + ":" + segundo;
 }
 
 export const getCurrentDate = () => {
