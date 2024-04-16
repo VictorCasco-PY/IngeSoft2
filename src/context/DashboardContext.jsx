@@ -2,8 +2,9 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import ReporteStorage from "../utils/ReportesStorage";
 import useReporteClientes from "../hooks/useReporteClientes";
 import toast from "react-hot-toast";
-import { dateIsLaterOrEqualThan, formatDate, getCurrentDate } from "../utils/DateStatics";
+import { dateIsLaterOrEqualThan, formatDate, getCurrentDate, getLastWeekDate } from "../utils/DateStatics";
 import useReporteProductos from "../hooks/useReporteProductos";
+import useReporteActividades from "../hooks/useReporteActividades";
 
 const DashboardContext = createContext();
 
@@ -27,23 +28,24 @@ export const DashboardProvider = ({ children }) => {
 
     const [estadoClientes, setEstadoClientes] = useState(null); //guardar el estado de los clientes morosos-enregla
 
+    const [clientesPorActividad, setClientesPorActividad] = useState(null); //guardar los clientes por actividad [actividad, cantidadClientes]
+
     const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, isLoading: isLoadingNewClients } = useReporteClientes();
     const { getProductosMasVendidosPorFecha, isLoading: isLoadingProductosMasVendidos } = useReporteProductos();
+    const { getActividadesConMasClientes, isLoading: isLoadingActividades } = useReporteActividades();
 
     const refreshData = async (resetExpirationDate = false) => {
         console.log("DEBUG: Refrescando datos del dashboard... Esto hace fetch")
         fetchNuevosClientes();
-        if (ReporteStorage.getFechaProductosMasVendidosData()) {
-            const fechas = ReporteStorage.getFechaProductosMasVendidosData();
-            fetchProductosMasVendidosData(fechas.fechaInicio, fechas.fechaFin);
-        }
+        fetchProductosMasVendidosData(getLastWeekDate(), getCurrentDate()); //fetch de la semana pasada a hoy
         fetchEstadoClientes();
+        fetchActividadesConMasClientes();
+
         if (resetExpirationDate) { //si se quiere resetear la fecha de expiracion, parametro de esta función, default = false
             const expirationDate = new Date();
             expirationDate.setDate(expirationDate.getDate() + DIAS_EXPIRACION);
             ReporteStorage.setExpirationDate(formatDate(expirationDate));
         }
-
         ReporteStorage.setLastRefresh(getCurrentDate());
     }
 
@@ -104,6 +106,21 @@ export const DashboardProvider = ({ children }) => {
             return null
         }
     }
+
+    //fetch data del api
+    const fetchActividadesConMasClientes = async () => {
+        const res = await getActividadesConMasClientes()
+        if (res) {
+            setClientesPorActividad(res);
+            ReporteStorage.setClientesActividadData(res);
+            setIsDataStored(true);
+            return res
+        } else {
+            toast.error("Error al cargar los datos de actividades mas registradas. Revise la conexión.");
+            setIsDataStored(false)
+            return null
+        }
+    }
     ///////// FIN FETCHES /////////
 
     //start Getters de reportes
@@ -142,6 +159,17 @@ export const DashboardProvider = ({ children }) => {
             return ReporteStorage.getProductosMasVendidosData()
         }
     }
+
+    const getActividadesMasRegistradas = async () => {
+        //si no hay datos en el local storage o si las fechas son diferentes, se hace el fetch
+        if (!ReporteStorage.getClientesActividadData()) {
+            const res = await fetchActividadesConMasClientes();
+            return res
+        } else { //si los datons ya estan cargados en local ejecutar esta seccion
+            setIsDataStored(true);
+            return ReporteStorage.getClientesActividadData()
+        }
+    }
     //end Getters de reportes
 
     /*Devuelve true si ya expiró, false si aun no expiró*/
@@ -165,6 +193,7 @@ export const DashboardProvider = ({ children }) => {
         const productosMasVendidosData = ReporteStorage.getProductosMasVendidosData();
         const fechaProductosMasVendidos = ReporteStorage.getFechaProductosMasVendidosData();
         const estadoClientesData = ReporteStorage.getEstadosClientesData();
+        const clientesActividadData = ReporteStorage.getClientesActividadData();
         if (productosMasVendidosData) {
             setNuevosClientesData(newClientsData);
         }
@@ -176,6 +205,9 @@ export const DashboardProvider = ({ children }) => {
         }
         if (estadoClientesData) {
             setEstadoClientes(estadoClientesData);
+        }
+        if (clientesActividadData) {
+            setClientesPorActividad(clientesActividadData);
         }
         setIsDataStored(true);
     }
@@ -189,9 +221,9 @@ export const DashboardProvider = ({ children }) => {
             isDataStored, //boolean check
             estadoClientes, nuevosClientesData, productosMasVendidosData, //states guardados
             fechaProductosMasVendidos, //filtros
-            getEstadoClientes, getNewClients, getProductosMasVendidos, //getters datos
+            getEstadoClientes, getNewClients, getProductosMasVendidos, getActividadesMasRegistradas, //getters datos
             refreshData, checkExpirationTime, //refrescar todos los datos (fetch)
-            isLoadingNewClients, isLoadingProductosMasVendidos //estados de cargando
+            isLoadingNewClients, isLoadingProductosMasVendidos, isLoadingActividades //estados de cargando
         }}>
             {children}
         </DashboardContext.Provider>

@@ -16,123 +16,14 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { getCurrentMonthName, getCurrentYear, invertDateString } from '../../utils/DateStatics';
 import ReporteStorage from '../../utils/ReportesStorage';
 import InfoIcon from '@mui/icons-material/Info';
-
-//estos son los datos de prueba para este ticket, se deben borrar en la implementacion
-//todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
-const lineDataOne = [
-    {
-        "id": "Ingresos",
-        "color": "hsl(297, 70%, 50%)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 138
-            },
-            {
-                "x": "Febrero",
-                "y": 132
-            },
-            {
-                "x": "Marzo",
-                "y": 207
-            },
-        ]
-    },
-    {
-        "id": "Egresos",
-        "color": "hsl(225, 70%, 50%)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 119
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 233
-            },
-        ]
-    }
-]
-
-const lineDataTwo = [
-    {
-        "id": "Ingresos",
-        "color": "hsl(297, 70%, 50%)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 138
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 300
-            },
-            {
-                "x": "Abril",
-                "y": 289
-            },
-            {
-                "x": "Mayo",
-                "y": 289
-            },
-        ]
-    },
-    {
-        "id": "Egresos",
-        "color": "hsl(225, 70%, 50%)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 119
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 233
-            },
-            {
-                "x": "Abril",
-                "y": 300
-            },
-            {
-                "x": "Mayo",
-                "y": 189
-            },
-        ]
-    }
-]
+import { Toaster } from 'react-hot-toast';
+import ActividadesChart from '../../components/dashboard/ActividadesChart';
 
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
 
-    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne) //borrar despues
-    //Estos estados son solo para test, se deben borrar en la implementacion
-    const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
-
     const [lastRefresh, setLastRefresh] = useState('')
     const { refreshData, checkExpirationTime, isLoadingNewClients } = useDashboard();
-
-    //Borrar luego de implementacion
-    const filterIngresos = () => {
-        if (filterTestBoolIngresos) {
-            setIngresosDisplayingData(lineDataOne)
-            setFilterTestBoolIngresos(false)
-        } else {
-            setIngresosDisplayingData(lineDataTwo)
-            setFilterTestBoolIngresos(true)
-        }
-    }
 
     const handleBlurClick = () => {
         //TODO: esta solucion es fea por el momento, si currentMaximized es del tipo html elemento (que en realidad es un objeto)
@@ -151,7 +42,7 @@ const MainDashboard = () => {
 
     useEffect(() => {
         //si los datos expiraron refrescar
-        if (checkExpirationTime()) { 
+        if (checkExpirationTime()) {
             refreshData(true);
         }
         setLastRefresh(ReporteStorage.getLastRefresh())
@@ -159,6 +50,25 @@ const MainDashboard = () => {
 
     return (
         <>
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: "#75B798",
+                            color: "#0A3622",
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: "#FFDBD9",
+                            color: "#D92D20",
+                        },
+                    },
+                }}
+            />
+
             {lastRefresh && (
                 <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
                     <b className='d-flex align-items-center'><InfoIcon /> Ultima actualización: </b>
@@ -185,35 +95,28 @@ const MainDashboard = () => {
                         <SeccionDashboard header="Nuevos clientes este mes:">
                             <NewClientsSection />
                         </SeccionDashboard>
-                        <SeccionDashboard header="Enlaces">
-                            <div>
-                                <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Cajas
-                                </Btn>
-                                <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Movimientos
-                                </Btn>
-                            </div>
+
+                        <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                            <LineIngresoChartDashboard />
                         </SeccionDashboard>
                     </div>
-
-                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        <LineChartDashboard />
-                    </SeccionDashboard>
 
                     <SeccionDashboard id="seccion-productos" header="Productos mas Vendidos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
                         <LineChartDashboard />
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
-                                Filtrar
+                    <SeccionDashboard id="seccion-actividades" header="Actividades mas Suscritas" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                        <ActividadesChart />
+                    </SeccionDashboard>
+
+                    <SeccionDashboard header="Enlaces">
+                        <div>
+                            <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Cajas
                             </Btn>
-                        </div>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='graphSection'>
-                            <LineIngresoChartDashboard data={ingresosDisplayingData} />
+                            <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Movimientos
+                            </Btn>
                         </div>
                     </SeccionDashboard>
 

@@ -409,7 +409,7 @@ const InfoServicios = () => {
                     </Link>
                   </td>
                   <td>
-                    <EstadoPago estado={suscripcion.suscripcionDto.estado} />
+                    <EstadoPago estado={suscripcion.suscripcionDto.estado.toLowerCase()} />
                   </td>
                   <td>{suscripcion.suscripcionDto.modalidad}</td>
                   <td>{suscripcion.clienteDto.email}</td>

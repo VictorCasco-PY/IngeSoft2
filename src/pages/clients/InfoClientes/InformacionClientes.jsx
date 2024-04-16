@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { IoArrowBackSharp, IoAdd } from "react-icons/io5";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+
 import { IoPencilOutline } from "react-icons/io5";
 
 import ButtonBasic from "../../../components/bottons/ButtonBasic.jsx";
@@ -52,13 +53,14 @@ const InformacionClientes = () => {
   const [editingClient, setEditingClient] = useState(null);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [modalAction, setModalAction] = useState(null); // 'editClient' o 'nuevaMedicion'
-  const [editingMedicion, setEditingMedicion] = useState(null);
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [pagos, setPagos] = useState([]);
 
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [refreshKey, setRefreshKey] = useState(0);
   const [formValues, setFormValues] = useState({
     peso: "",
     altura: "",
@@ -70,17 +72,6 @@ const InformacionClientes = () => {
     clienteID: "",
   });
 
-  useEffect(() => {
-    fetchData(currentPage);
-
-    // Llamamos a la función fetchData para obtener los datos cuando el ID cambie o cuando shouldRefetch sea true
-    if (id || shouldRefetch) {
-      fetchData();
-      setShouldRefetch(false); // Restablecer shouldRefetch después de obtener los datos
-    }
-  }, [id, shouldRefetch, currentPage]);
-
-  // Lógica para obtener los datos del cliente y las mediciones
   const fetchData = async (page) => {
     try {
       const clienteResponse = await getClienteById(id, page); // Obtenemos los datos del cliente
@@ -98,6 +89,14 @@ const InformacionClientes = () => {
       console.error("Error al obtener datos del cliente y mediciones:", error);
     }
   };
+
+  useEffect(() => {
+    // Llamar a fetchData solo cuando shouldRefetch sea verdadero
+    if (shouldRefetch) {
+      fetchData(currentPage);
+      setShouldRefetch(false); // Restablecer shouldRefetch después de obtener los datos
+    }
+  }, [shouldRefetch, currentPage, id, mediciones]);
 
   const handleConfirmDelete = async (medicionId) => {
     try {
@@ -196,21 +195,19 @@ const InformacionClientes = () => {
     setModalOpen(false);
   };
 
-  const handleCrearMedicion = async (e) => {
-    e.preventDefault();
-    // Verificar si algún campo está vacío
+  const handleCrearMedicion = async () => {
     const isEmpty = Object.values(formValues).some((value) => value === "");
     if (isEmpty) {
       toast.error("Por favor completa todos los campos.");
       return;
     }
     try {
-      await crearMedicion(id, formValues);
-      // Actualizar la lista de mediciones después de crear una nueva
-      const medicionesResponse = await getMedicionClienteById(id, currentPage);
-      setMediciones(medicionesResponse.items);
+      await crearMedicion(id, formValues); // Crear la nueva medición
+      const medicionesResponse = await getMedicionClienteById(id, currentPage); // Obtener las mediciones actualizadas
+      setMediciones(medicionesResponse.items); // Actualizar el estado mediciones
+      setRefreshKey(refreshKey + 1);
+      setModalOpen(false);
       toast.success("Medición creada con éxito");
-      setModalOpen(false); // Cerrar el modal después de crear la medición
     } catch (error) {
       console.error("Error al crear medición:", error);
       toast.error("Error al crear la medición");
@@ -370,6 +367,7 @@ const InformacionClientes = () => {
           {/* Renderiza la tabla de mediciones si showMeasurements es true */}
           {showMeasurements && (
             <TablaMedicionesCliente
+              key={refreshKey}
               clienteId={id}
               toast={toast}
               page={currentPage}
