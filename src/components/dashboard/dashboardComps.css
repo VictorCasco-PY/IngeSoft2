@@ -87,6 +87,13 @@
     margin-right:auto;
 }
 
+.datePickerStyle {
+    background-color: var(--background-components);
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid var(--primary)
+}
+
 @media (max-width: 1200px) {
     .seccionDash {
         max-width: 480px;
