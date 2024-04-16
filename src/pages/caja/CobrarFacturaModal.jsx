@@ -78,7 +78,8 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
         if (normalizarPrecio(efectivo) > 0) {
             let efectivoFinal
 
-            efectivoFinal = normalizarPrecio(efectivo) - normalizarPrecio(cambio)
+            if (cambio) { efectivoFinal = normalizarPrecio(efectivo) - normalizarPrecio(cambio) }
+            else { efectivoFinal = normalizarPrecio(efectivo) }
 
             detalles.push({
                 "tipoDePagoId": 1,

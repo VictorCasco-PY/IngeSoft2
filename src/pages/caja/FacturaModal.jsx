@@ -58,7 +58,7 @@ export const FacturaModal = ({ open, closeModal, data, guardar }) => {
             <div className="d-flex justify-content-center align-items-center float-end mt-4 gap-3">
                 <Btn onClick={closeModal} type="secondary">Cerrar</Btn>
                 {guardar && <Btn type="secondary" onClick={() => guardar()} outline>Guardar Factura</Btn>}
-                <Btn type="primary" onClick={() => setCobroModal(true)}>Cobrar Factura</Btn>
+                {factura?.factura?.saldo ? <Btn type="primary" onClick={() => setCobroModal(true)}>Cobrar Factura</Btn> : "" }
             </div>
 
         </div>

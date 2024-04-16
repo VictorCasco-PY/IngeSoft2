@@ -26,6 +26,7 @@ import { useCurrentUser } from "../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ListIcon from '@mui/icons-material/List';
 import RolEnum from "../../../utils/RolEnum";
+import { getCurrentDate, getCurrentHour } from "../../../utils/DateStatics";
 
 const CajaMainForm = ({ setSesionAbierta }) => {
 
@@ -73,20 +74,15 @@ const CajaMainForm = ({ setSesionAbierta }) => {
     const handleAbrirCaja = async (values) => {
 
         if (cargandoSesion || cargandoCajas) return;
-        const date = new Date();
-        //anho-mes-fecha
-        const fecha = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "-" + (date.getDate() < 10 ? '0' : '') + date.getDate(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
-        //hora-min-seg
-        //agregar un cero si es menor a 10
-        const hora = date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + date.getSeconds(); //todo: la fecha ya se formatea en el back, no importa formatear exactamente
 
+        const fecha = getCurrentDate();
+        const hora = getCurrentHour();
         const postData = {
             idCaja: values['id_caja'],
             idUsuario: UserStorage.getEmpleadoId(),
             fecha: fecha,
             horaApertura: hora,
         }
-
         const success = await fetchAbrirSesion(postData);
 
         //todo: transformar a buena practica, que el error se chequee primero
