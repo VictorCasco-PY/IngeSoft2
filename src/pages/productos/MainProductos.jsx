@@ -357,7 +357,8 @@ const MainProductos = () => {
       }
     };
     fetchCantidadProductosSinStock();
-  }, []);
+  }, [productos]);
+  //fin badge de cantidad de productos sin stock
 
   return (
     <>
