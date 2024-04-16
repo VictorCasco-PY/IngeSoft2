@@ -18,9 +18,20 @@ export const formattedToDate = (date) => {
     return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 }
 
+export const formatHour = (date) => {
+    //hh:mm:ss
+    const dateArray = date.split("T");
+    return dateArray[1].substring(0, 5);
+}
+
 export const getCurrentDate = () => {
     const today = new Date();
     return formatDate(today);
+}
+
+export const getCurrentHour = () => {
+    const today = new Date();
+    return formatHour(today);
 }
 
 export const getMonthName = (monthIndex) => {
