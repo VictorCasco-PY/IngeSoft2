@@ -19,122 +19,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import { Toaster } from 'react-hot-toast';
 import ActividadesChart from '../../components/dashboard/ActividadesChart';
 
-//estos son los datos de prueba para este ticket, se deben borrar en la implementacion
-//todos estos datos seran guardados localmente en el componente, no se necesitara hacer llamadas a la api
-const lineDataOne = [
-    {
-        "id": "Ingresos",
-        "color": "rgb(44, 160, 44)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 138
-            },
-            {
-                "x": "Febrero",
-                "y": 132
-            },
-            {
-                "x": "Marzo",
-                "y": 207
-            },
-        ]
-    },
-    {
-        "id": "Egresos",
-        "color": "rgb(214, 39, 40)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 119
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 233
-            },
-        ]
-    }
-]
-
-const lineDataTwo = [
-    {
-        "id": "Ingresos",
-        "color": "rgb(44, 160, 44)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 138
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 300
-            },
-            {
-                "x": "Abril",
-                "y": 289
-            },
-            {
-                "x": "Mayo",
-                "y": 289
-            },
-        ]
-    },
-    {
-        "id": "Egresos",
-        "color": "rgb(214, 39, 40)",
-        "data": [
-            {
-                "x": "Enero",
-                "y": 119
-            },
-            {
-                "x": "Febrero",
-                "y": 120
-            },
-            {
-                "x": "Marzo",
-                "y": 233
-            },
-            {
-                "x": "Abril",
-                "y": 300
-            },
-            {
-                "x": "Mayo",
-                "y": 189
-            },
-        ]
-    }
-]
-
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
 
-    const [ingresosDisplayingData, setIngresosDisplayingData] = useState(lineDataOne) //borrar despues
-    //Estos estados son solo para test, se deben borrar en la implementacion
-    const [filterTestBoolIngresos, setFilterTestBoolIngresos] = useState(false)
-
     const [lastRefresh, setLastRefresh] = useState('')
     const { refreshData, checkExpirationTime, isLoadingNewClients } = useDashboard();
-
-    //Borrar luego de implementacion
-    const filterIngresos = () => {
-        if (filterTestBoolIngresos) {
-            setIngresosDisplayingData(lineDataOne)
-            setFilterTestBoolIngresos(false)
-        } else {
-            setIngresosDisplayingData(lineDataTwo)
-            setFilterTestBoolIngresos(true)
-        }
-    }
 
     const handleBlurClick = () => {
         //TODO: esta solucion es fea por el momento, si currentMaximized es del tipo html elemento (que en realidad es un objeto)
@@ -206,15 +95,9 @@ const MainDashboard = () => {
                         <SeccionDashboard header="Nuevos clientes este mes:">
                             <NewClientsSection />
                         </SeccionDashboard>
-                        <SeccionDashboard header="Enlaces">
-                            <div>
-                                <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Cajas
-                                </Btn>
-                                <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
-                                    Ver Movimientos
-                                </Btn>
-                            </div>
+
+                        <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
+                            <LineIngresoChartDashboard />
                         </SeccionDashboard>
                     </div>
 
@@ -226,15 +109,14 @@ const MainDashboard = () => {
                         <ActividadesChart />
                     </SeccionDashboard>
 
-                    <SeccionDashboard id="seccion-movimientos" header="Ingresos de Movimientos" maximizable={true} maximizedElement={currentMaximized} setMaximizedElement={setCurrentMaximized}>
-                        <div className='align-self-end'>
-                            <Btn type="primary" className='mt-3 align-self-start' icon={<FilterAltIcon />} onClick={() => { filterIngresos() }}>
-                                Filtrar
+                    <SeccionDashboard header="Enlaces">
+                        <div>
+                            <Btn id="btn-ver-cajas" type="primary" className='mt-3 align-self-start' icon={<ListIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Cajas
                             </Btn>
-                        </div>
-                        {/*Este filtrado debe ser un un slider con los meses*/}
-                        <div className='graphSection'>
-                            <LineIngresoChartDashboard data={ingresosDisplayingData} />
+                            <Btn id="btn-ver-movimientos" type="primary" className='mt-3 align-self-start' icon={<BarChartIcon />} onClick={() => { alert("En progreso") }}>
+                                Ver Movimientos
+                            </Btn>
                         </div>
                     </SeccionDashboard>
 

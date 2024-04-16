@@ -93,3 +93,10 @@ export const getFullDateString = (date) => {
     const dateArray = date.split("-");
     return dateArray[2] + " de " + MESES[parseInt(dateArray[1]) - 1] + ", " + dateArray[0];
 }
+
+export const getDateMinusMonths = (months) => {
+    if (months < 0) return null;
+    const dateArray = getCurrentDate().split("-");
+    const newDate = new Date(dateArray[0], dateArray[1] - months, dateArray[2]);
+    return formatDate(newDate);
+}
