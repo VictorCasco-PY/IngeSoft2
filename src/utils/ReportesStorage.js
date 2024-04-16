@@ -5,6 +5,7 @@ const NEW_CLIENTS_LABEL = 'rep_new_clients';
 const PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_mas_vendidos';
 const FECHA_PRODUCTOS_MAS_VENDIDOS_LABEL = 'rep_productos_fecha';
 const CANTIDAD_MOROSOS = 'rep_cantidad_morosos';
+const CANTIDAD_PRODUCTOS_SIN_STOCK = 'rep_cantidad_productos_sin_stock';
 
 class ReporteStorage {
 
@@ -125,6 +126,26 @@ class ReporteStorage {
     }
     ///Morosos end
 
+
+    ///Productos sin stock start UNUSED!
+    static setCantidadProductosSinStockData(data) {
+        if (!data) {
+            return null;
+        }
+        //formato
+        // ls_cantidad_productos_sin_stock = cantidad
+
+        //transformar a string
+        const dataStringified = JSON.stringify(data);
+        localStorage.setItem(CANTIDAD_PRODUCTOS_SIN_STOCK, dataStringified);
+        return data;
+    }
+
+    static getCantidadProductosSinStockData() {
+        const data = localStorage.getItem(CANTIDAD_PRODUCTOS_SIN_STOCK);
+        return data ? JSON.parse(data) : null;
+    }
+    ///Productos sin stock end
 
 }
 

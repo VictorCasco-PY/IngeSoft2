@@ -19,6 +19,8 @@ import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import useReporteProductos from "../../hooks/useReporteProductos";
+import CBadge from "../../components/labels/CBadge";
 
 const MainProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -169,7 +171,7 @@ const MainProductos = () => {
     const { name, value } = event.target;
 
     // Verificar si el campo es cantidad, costo, precio o código
-    if (name === "cantidad" ||name === "cantidadLimite" || name === "costo" || name === "precio") {
+    if (name === "cantidad" || name === "cantidadLimite" || name === "costo" || name === "precio") {
       let formattedValue = value.replace(/\D/g, ""); // Eliminar todos los caracteres que no sean dígitos
       formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Agregar puntos para separar los miles
       // Verificar si el valor es negativo y no permitirlo
@@ -341,6 +343,22 @@ const MainProductos = () => {
     setShowAlert(false); // Oculta la alerta
   };
 
+  //inicio badge de cantidad de productos sin stock
+  const [cantidadProductosSinStock, setCantidadProductosSinStock] = useState(0);
+  const { getCantidadProductosSinStock, isLoading: isLoadingProductosSinStock } = useReporteProductos();
+
+  useEffect(() => {
+    const fetchCantidadProductosSinStock = async () => {
+      try {
+        const response = await getCantidadProductosSinStock();
+        setCantidadProductosSinStock(response);
+      } catch (error) {
+        toast.error("Error al obtener la cantidad de productos sin stock");
+      }
+    };
+    fetchCantidadProductosSinStock();
+  }, []);
+
   return (
     <>
       <Toaster
@@ -364,7 +382,16 @@ const MainProductos = () => {
 
       <CartaPrincipal>
         <div>
-          <h1>Tienda</h1>
+
+          <div className="d-flex">
+            <h1>Tienda</h1>
+            {cantidadProductosSinStock > 0 && (
+              <CBadge type="warning" style={{ margin: 'auto' }} title="Aviso" >
+                Ya no hay stock de <b>{cantidadProductosSinStock} {cantidadProductosSinStock > 1 ? 'productos' : 'producto'}</b>
+              </CBadge>
+            )}
+          </div>
+
           <div className="card-body d-flex align-items-center ">
             <form className="d-flex flex-grow-1 align-items-center">
               <input
