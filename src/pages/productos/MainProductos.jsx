@@ -300,6 +300,8 @@ const MainProductos = () => {
         response = await api.put(`/productos/${productosData.id}`, dataToSend);
         console.log("Producto editado:", response.data);
         toast.success("Producto actualizado satisfactoriamente");
+
+        setStockReloadBool(!stockReloadBool); //recargar la cantidad de productos sin stock cada vez que se edita
       }
 
       setShowModal(false);
@@ -345,6 +347,7 @@ const MainProductos = () => {
 
   //inicio badge de cantidad de productos sin stock
   const [cantidadProductosSinStock, setCantidadProductosSinStock] = useState(0);
+  const [stockReloadBool, setStockReloadBool] = useState(false);
   const { getCantidadProductosSinStock, isLoading: isLoadingProductosSinStock } = useReporteProductos();
 
   useEffect(() => {
@@ -357,7 +360,7 @@ const MainProductos = () => {
       }
     };
     fetchCantidadProductosSinStock();
-  }, [productos]);
+  }, [stockReloadBool]);
   //fin badge de cantidad de productos sin stock
 
   return (
