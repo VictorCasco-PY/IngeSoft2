@@ -51,12 +51,6 @@
     position: absolute;
     right: 13%;
     top:15%;
-    padding: 0.5rem;
-    font-size: 0.8rem;
-    color: #666;
-    background-color: var(--success-light);
-    color: var(--success);
-    border-radius: 18px;
 }
 
 @media (min-width: 1910px) {

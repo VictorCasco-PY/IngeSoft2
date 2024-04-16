@@ -16,6 +16,9 @@ import { useDashboard } from '../../context/DashboardContext';
 //         "cantidad": 20,
 //     }
 
+
+const MAX_ACTIVIDADES_TO_SHOW = 10;
+
 const ActividadesChart = () => {
 
     const { getActividadesMasRegistradas, isLoadingActividades } = useDashboard();
@@ -45,7 +48,9 @@ const ActividadesChart = () => {
     const ordenarDatos = async () => {
         //asumiendo que las fechas de los states ya estan formateados, importante, formato: yyyy-mm-dd
         let data = await getActividadesMasRegistradas()
-
+        //si hay mas de 10 actividades, solo mostrar las primeros 10, cuando hay muchos datos, se volverá feo
+        data = data.slice(0, MAX_ACTIVIDADES_TO_SHOW);
+        
         setActividadesMasClientes(setDataFromKeys(data))
         const labels = data.map(actividad => actividad.actividad)
         setActividadesLabels(labels)

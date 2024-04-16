@@ -49,3 +49,9 @@
     background-color: var(--warning);
     color: var(--warning-light);
 }
+
+@media (max-width: 992px) {
+    .alertBody {
+        flex-direction: column;
+    }
+}
