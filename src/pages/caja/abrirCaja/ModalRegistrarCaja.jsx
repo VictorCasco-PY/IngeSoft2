@@ -96,7 +96,7 @@ const ModalRegistrarCaja = ({ toast, fetchFunction, editMode, selectedCaja, ...p
                             id="input-monto-caja"
                         />
                         <Btn type="primary" className='mt-3 align-self-end' loading={cargandoCaja} disabled={(cargandoCaja)}
-                            id="btn-registrar-caja"
+                            id="btn-registrar-caja-new"
                             submit
                         >
                             {editMode ? "Modificar Caja" : "Registrar Caja"}
