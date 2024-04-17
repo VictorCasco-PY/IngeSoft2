@@ -1,0 +1,57 @@
+@import url('../../global.css');
+
+.alertBody {
+    border-radius: 18px;
+    padding: 0.25rem;
+    padding-right: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.bodyDanger {
+    background-color: var(--danger-light);
+    color: var(--danger);
+}
+
+.bodySuccess {
+    background-color: var(--success-light);
+    color: var(--success);
+}
+
+.bodyWarning {
+    background-color: var(--warning-light);
+    color: var(--warning);
+}
+
+.alertTitle {
+    border-radius: 16px;
+    padding: 0.1rem 0.3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleDanger {
+    background-color: var(--danger);
+    color: var(--danger-light);
+}
+
+.titleSuccess {
+    background-color: var(--success);
+    color: var(--success-light);
+}
+
+.titleWarning {
+    background-color: var(--warning);
+    color: var(--warning-light);
+}
+
+@media (max-width: 992px) {
+    .alertBody {
+        flex-direction: column;
+    }
+}

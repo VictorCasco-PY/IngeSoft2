@@ -9,7 +9,9 @@ const useReporteProductos = () => {
     const [error, setError] = useState(null) //guarda error
     const [isLoading, setIsLoading] = useState(false) //guarda el estado de cargando
 
-    const handleRequest = async (FuncionBackend) => {
+    const [isLoadingSinStock, setIsLoadingSinStock] = useState(false) //guarda el estado de cargando
+
+    const handleRequest = async (FuncionBackend, loadingBool) => {
         setError(null)
         setIsLoading(true)
         //console.log("SE HA EJECUTADO UN FETCH, NO DEBERIAS VER ESTO SI USAS CACHE" + FuncionBackend)
@@ -30,7 +32,11 @@ const useReporteProductos = () => {
         return handleRequest(() => api.get(`${RC_URL}/productos-mas-vendidos/${fechaInicio}/${fechaFin}`, params))
     }
 
-    return { getProductosMasVendidosPorFecha, data, error, isLoading }
+    const getCantidadProductosSinStock = async (params) => {
+        return handleRequest(() => api.get(`${RC_URL}/cantidad-sin-stock`, params))
+    }
+
+    return { getProductosMasVendidosPorFecha, getCantidadProductosSinStock, data, error, isLoading }
 }
 
 export default useReporteProductos
