@@ -33,7 +33,7 @@ const EstadoPago = ({ estado }) => {
         borderRadius: "5px",
         fontWeight: "bold",
         textAlign: "center",
-        width: "65%",
+        width: "75%",
         marginLeft: "auto",
         marginRight: "auto"
       }}>

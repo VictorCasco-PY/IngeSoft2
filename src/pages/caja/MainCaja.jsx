@@ -7,7 +7,6 @@ import { Toaster } from "react-hot-toast";
 import AdministrarCaja from "./administrarCaja/AdministrarCaja";
 import CajaMainForm from "./abrirCaja/CajaMainForm";
 import CajaStorage from "../../utils/CajaStorage";
-import { useCurrentUser } from "../../context/UserContext";
 
 const MainCaja = () => {
 
@@ -44,7 +43,7 @@ const MainCaja = () => {
                 <AdministrarCaja setSesionAbierta={setSesionAbierta} />
             ) : (
                 /*como useEffect se ejecuta antes del renderizado, utilizo este workaround para evitar
-                    volver a renderizar, si se conoce una mejor solucion, decir a andy*/
+                    volver a renderizar y ademas mejor performance, si se conoce una mejor solucion, decir a andy*/
                 (!(CajaStorage.getCajaId() && CajaStorage.getSesionCajaId())) && (
                     <CajaMainForm setSesionAbierta={setSesionAbierta} />
                 )

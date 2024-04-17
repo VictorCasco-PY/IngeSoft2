@@ -1,6 +1,6 @@
 import React from "react";
 
-const StockIndicator = ({ stock }) => {
+const StockIndicator = ({ stock, cantidadLimite }) => {
   let displayStock;
   let color;
   let textColor;
@@ -12,7 +12,7 @@ const StockIndicator = ({ stock }) => {
     textColor = "#D92D20";
   } else {
     displayStock = stock;
-    if (stock < 11) {
+    if (stock < cantidadLimite) {
       color = "#F0E0A8"; // Amarillo si hay menos de 11 productos
       textColor = "#7A6C02";
     } else {

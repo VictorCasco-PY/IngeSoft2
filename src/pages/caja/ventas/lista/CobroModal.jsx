@@ -63,6 +63,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
       const response = await api.post("/movimientos", data);
       resetForm();
       toast.success("Factura cobrada correctamente");
+      console.log("movimiento ", data);
       closeModal();
     } catch (error) {
       toast.error("Error al cobrar la factura");

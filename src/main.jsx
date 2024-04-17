@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import InfoClients from "./pages/clients/InfoClients";
+
 import PageNotFound from "./pages/PageNotFound";
 import Layout from "./components/layout/Layout";
 import MainClients from "./pages/clients/mainClients";
@@ -11,29 +11,47 @@ import MainProductos from "./pages/productos/MainProductos";
 import Servicios from "./pages/servicios/MainServicios";
 import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from "./pages/proveedores/MainProveedores";
-import MainMiUsuario from './pages/mi_usuario/mainMiUsuario';
+import MainMiUsuario from "./pages/mi_usuario/mainMiUsuario";
 import MainCaja from "./pages/caja/MainCaja";
-import AdministrarCaja from "./pages/caja/administrarCaja/AdministrarCaja";
 import { CobrosPendientesVista } from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
-import RoleTestPage from "./pages/test/RoleTestPage";
 import CurrentUserProvider from "./context/UserContext";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import RoleExclusivePage from "./pages/test/RoleExclusivePage";
-import TablaActividadesCliente from "./components/tablas/TablaActividadesCliente";
 import MainLista from "./pages/caja/ventas/lista/MainLista";
 import MainVenta from "./pages/caja/ventas/factura/MainVenta";
 import InfoCajas from "./pages/caja/listaCajas/InfoCajas";
 import ComprasCaja from "./pages/caja/comprasProveedores/ComprasCaja";
 import ListaCompras from "./pages/caja/comprasProveedores/ListaCompras";
 import { ComprasCajaProvider } from "./context/ComprasCajaState";
-
+import InformacionClientes from "./pages/clients/InfoClientes/InformacionClientes";
+import { InfoClientsProvider } from "./context/InfoClientesContext";
+import MainDashboard from "./pages/dashboard/MainDashboard";
+import RolEnum from "./utils/RolEnum";
+import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
+import DashboardProvider from "./context/DashboardContext";
+import MainArqueo from "./pages/arqueo/MainArqueo";
+import { ArqueoProvider } from "./context/ArqueoContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CurrentUserProvider>
-      <Router>
+    <Router>
+      <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
+
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+            <Route
+              exact
+              path="/dashboard"
+              element={
+                <Layout>
+                  <DashboardProvider>
+                    <MainDashboard />
+                  </DashboardProvider>
+                </Layout>
+              }
+            />
+          </Route>
+
           <Route
             path="/clientes"
             element={
@@ -54,7 +72,9 @@ createRoot(document.getElementById("root")).render(
             path="/clientesinfo/:id"
             element={
               <Layout>
-                <InfoClients />
+                <InfoClientsProvider>
+                  <InformacionClientes />
+                </InfoClientsProvider>
               </Layout>
             }
           />
@@ -96,11 +116,16 @@ createRoot(document.getElementById("root")).render(
             path="/caja"
             element={
               <Layout>
-                <MainCaja />
+                <ArqueoProvider>
+                  <MainCaja />
+                </ArqueoProvider>
               </Layout>
             }
           />
-          <Route exact element={<ProtectedRoute roles={["ADMIN", "CAJERO"]} />}>
+          <Route
+            exact
+            element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}
+          >
             <Route
               exact
               path="/caja"
@@ -119,7 +144,7 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
             <Route
               exact
               path="/caja/lista"
@@ -173,80 +198,46 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/*seccion de roles, user context*/}
           <Route
-            path="/role-tutorial"
+            path="/miUsuario"
             element={
               <Layout>
-                <RoleTestPage />
+                <MainMiUsuario />
               </Layout>
             }
           />
-          {/*Asi por el momento es como se protege una ruta, roles es un array de strings de lo roles que pueden acceder*/}
+
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+            <Route
+              exact
+              path="/caja/historial"
+              element={
+                <Layout>
+                  <MovimientosVista />
+                </Layout>
+              }
+            />
+          </Route>
           <Route
-            exact
+            path="/miUsuario"
             element={
-              <ProtectedRoute
-                roles={["ADMIN", "CLIENTE", "ENTRENADOR", "CAJERO"]}
-              />
+              <Layout>
+                <MainMiUsuario />
+              </Layout>
             }
-          >
-            <Route
-              exact
-              path="/role-todos"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Todos los roles pueden ingresar a esta página" />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route exact element={<ProtectedRoute roles={["ADMIN"]} />}>
-            <Route
-              exact
-              path="/role-admin"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Solo el admin puede ingresar a esta página" />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route exact element={<ProtectedRoute roles={["CLIENTE"]} />}>
-            <Route
-              exact
-              path="/role-cliente"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Solo el cliente puede ingresar a esta página" />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route exact element={<ProtectedRoute roles={["ENTRENADOR"]} />}>
-            <Route
-              exact
-              path="/role-entrenador"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Solo el entrenador puede ingresar a esta página" />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route exact element={<ProtectedRoute roles={["CAJERO"]} />}>
-            <Route
-              exact
-              path="/role-cajero"
-              element={
-                <Layout>
-                  <RoleExclusivePage mensaje="Solo el cajero puede ingresar a esta página" />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route path="/miUsuario" element={<Layout><MainMiUsuario/></Layout>}/>
+          />
           {/*FIN, BORRAR LUEGO DE DEMO*/}
+
+          <Route
+            path="/arqueo"
+            element={
+              <Layout>
+                <ArqueoProvider>
+                  <MainArqueo />
+                </ArqueoProvider>
+              </Layout>
+            }
+          />
 
           <Route
             path="*"
@@ -257,7 +248,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
         </Routes>
-      </Router>
-    </CurrentUserProvider>
+      </CurrentUserProvider>
+    </Router>
   </React.StrictMode>
 );

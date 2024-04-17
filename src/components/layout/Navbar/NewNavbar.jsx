@@ -12,6 +12,7 @@ import { ProveedoresDropdown } from "./DropDown/ProveedoresDropdown";
 import { UserDropDown } from "./DropDown/UserDropDown";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import RolEnum from "../../../utils/RolEnum";
 
 const NavbarStyled = styled(AppBar)(AppBarStyle);
 const ToolbarStyled = styled(Toolbar)(ToolbarStyle);
@@ -24,7 +25,7 @@ export const NewNavbar = () => {
     <NavbarStyled position="static">
       <div className="nav-container">
         <ToolbarStyled>
-          
+
           {/* Aca va el el burguer */}
           <div
             onMouseOver={() => setShowMenu(true)}
@@ -48,17 +49,19 @@ export const NewNavbar = () => {
               <img src={Logo} alt="Logo de la aplicación" />
             </NavBtn>
 
-          {/* Aca va el menu*/}
+            {/* Aca va el menu*/}
             <BoxStyled
-              className={`${
-                !showMenu && "d-none" || "d-block"
-              } d-lg-inline-block position-absolute position-lg-relative bg-white`}
+              className={`${!showMenu && "d-none" || "d-block"
+                } d-lg-inline-block position-absolute position-lg-relative bg-white`}
             >
+              <NavBtn id="nav-dashboard" href="/dashboard" roles={[RolEnum.ADMIN]}>
+                Dashboard
+              </NavBtn>
               <NavBtn id="nav-clientes" href="/clientes">
                 Clientes
               </NavBtn>
               <ProveedoresDropdown />
-              <NavBtn id="nav-usuarios" href="/users">
+              <NavBtn id="nav-usuarios" href="/users" roles={[RolEnum.ADMIN]}>
                 Usuarios
               </NavBtn>
               <NavBtn id="nav-servicios" href="/servicios">
@@ -67,7 +70,7 @@ export const NewNavbar = () => {
               <NavBtn id="nav-caja" href="/caja">
                 Caja
               </NavBtn>
-              <NavBtn id="nav-reportes" href="/reportes">
+              <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
                 Reportes
               </NavBtn>
             </BoxStyled>

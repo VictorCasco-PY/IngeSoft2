@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import '../MainCaja.css'
-import { Formik, Form } from 'formik';
+import { Formik, Form, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
 import useCaja from "../../../hooks/useCaja";
@@ -10,9 +10,19 @@ import ModalFormik from "../../../components/modals/ModalFormik";
 import { Btn } from "../../../components/bottons/Button";
 import { FormTextInput } from "../../../components/forms/FormInputs";
 
-const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
+const ModalRegistrarCaja = ({ toast, fetchFunction, editMode, selectedCaja, ...props }) => {
 
-    const { createCaja, isLoading: cargandoCaja } = useCaja();
+    const { createCaja, modificarCaja, isLoading: cargandoCaja } = useCaja();
+
+    const [cajaNombre, setCajaNombre] = useState('')
+    const [cajaMonto, setCajaMonto] = useState('')
+
+    useEffect(() => {
+        if (editMode && selectedCaja) {
+            setCajaNombre(selectedCaja.nombre)
+            setCajaMonto(selectedCaja.monto)
+        }
+    }, [editMode, selectedCaja])
 
     const handleRegistrarCaja = async (values) => {
 
@@ -23,11 +33,11 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
             monto: values['monto'],
         }
 
-        const success = await createCaja(postData);
+        const success = !editMode ? await createCaja(postData) : await modificarCaja(selectedCaja.id, postData)
 
         if (success.id) {
             props.closeModal()
-            toast.success("Caja registrada correctamente")
+            toast.success(!editMode ? "Caja registrada exitosamente" : "Caja modificada exitosamente")
 
             //funcion ejecutada en el componente padre si existe
             if (fetchFunction) {
@@ -40,21 +50,22 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
                 toast.error("Ya existe una caja con ese nombre.")
                 document.getElementById("input-nombre-caja").focus()
             } else {
-                toast.error("Error al registrar caja. Revise la conexión.")
+                toast.error(!editMode ? "Error al registrar la caja" : "Error al modificar la caja")
             }
         }
     }
 
     return (
-        <ModalFormik title={"Registrar una Caja"} {...props}>
+        <ModalFormik title={(!editMode && selectedCaja) ? "Registrar una Caja" : `Modificar Caja`} {...props}>
             <Formik
                 initialValues={{
-                    nombre: '',
-                    monto: '',
+                    nombre: cajaNombre,
+                    monto: cajaMonto,
                 }}
+                enableReinitialize={true}
                 validationSchema={Yup.object({
                     nombre: Yup.string()
-                        .max(15, 'Debe tener 15 caracteres o menos')
+                        .max(20, 'Debe tener 20 caracteres o menos')
                         .min(5, 'Debe tener 5 caracteres o más')
                         .required('Requerido'),
                     monto: Yup.number()
@@ -77,18 +88,18 @@ const ModalRegistrarCaja = ({toast, fetchFunction, ...props }) => {
                             id="input-nombre-caja"
                         />
                         <FormTextInput
-                            label="Monto"
+                            label="Monto (Gs)"
                             name="monto"
                             type="text"
                             placeholder="2000000"
                             required={true}
                             id="input-monto-caja"
                         />
-                        <Btn type="primary" className='mt-3 align-self-end' loading={cargandoCaja} disabled={(cargandoCaja)} 
-                        id="btn-registrar-caja"
-                        submit
+                        <Btn type="primary" className='mt-3 align-self-end' loading={cargandoCaja} disabled={(cargandoCaja)}
+                            id="btn-registrar-caja-new"
+                            submit
                         >
-                            Registrar Caja
+                            {editMode ? "Modificar Caja" : "Registrar Caja"}
                         </Btn>
 
                     </div>

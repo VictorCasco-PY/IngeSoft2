@@ -21,6 +21,9 @@ import { IoCheckmark } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import ReporteStorage from "../../utils/ReportesStorage";
+import CBadge from "../../components/labels/CBadge";
+
 const MainClients = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -488,6 +491,17 @@ const MainClients = () => {
 
   //COLOR AZUL Y OUTLINE EN LINKS
 
+  //INICIO cambio de alerta de clientes morosos
+  const [cantidadClientesMorosos, setCantidadClientesMorosos] = useState(0);
+  useEffect(() => {
+    if (ReporteStorage.getEstadosClientesData()) {
+      setCantidadClientesMorosos(
+        ReporteStorage.getEstadosClientesData().cantidadClientesMorosos
+      );
+    }
+  }, []);
+  //FIN CAMBIO DE ALERTA DE CLIENTES MOROSOS
+
   return (
     <>
       <Toaster
@@ -511,7 +525,16 @@ const MainClients = () => {
 
       <CartaPrincipal>
         <div>
-          <h1>Clientes</h1>
+
+          <div className="d-flex">
+            <h1>Clientes</h1>
+            {cantidadClientesMorosos > 0 && (
+              <CBadge type="danger" style={{ margin: 'auto' }} title="Alerta" >
+                <b>{cantidadClientesMorosos}</b> {cantidadClientesMorosos > 1 ? (<><b>clientes</b> no han pagado su suscripción</>) : (<><b>cliente</b> no ha pagado su suscripción</>)}
+              </CBadge>
+            )}
+          </div>
+
           <div className="card-body d-flex align-items-center ">
             <form className="d-flex flex-grow-1 align-items-center">
               <input
@@ -936,7 +959,8 @@ const MainClients = () => {
                   </td>
                   <td>{cliente.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <EstadoPago estado={cliente.estado} />{" "}
+                    <EstadoPago estado={cliente.estado ? cliente.estado.toLowerCase() : ''} />
+
                   </td>
                   <td>{cliente.email}</td>
                   <td>{cliente.telefono}</td>

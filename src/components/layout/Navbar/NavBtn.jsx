@@ -5,6 +5,8 @@ import { NavButtonBase } from "./styles/NavButtonBase";
 import { NavBtnDropdownStyle } from "./styles/NavBtnDropdownStyle";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useCurrentUser } from "../../../context/UserContext";
+import RolEnum from "../../../utils/RolEnum";
 
 const BtnNavbar = styled(Button)(() => NavButton);
 const BtnNavbarBase = styled(Button)(() => NavButtonBase);
@@ -19,15 +21,23 @@ const BtnContent = ({ icon, children }) => {
   );
 };
 
-export const NavBtn = ({ children, icon, type, href, className, ...props }) => {
+export const NavBtn = ({ children, icon, type, href, className, roles, ...props }) => {
 
   const [selected, setSelected] = useState(false);
+  const { rol: validRol } = useCurrentUser();
 
   const location = useLocation();
 
+   
   useEffect(() => {
     setSelected(location.pathname.includes(href));
   }, [location]);
+
+
+  // Validamos que el rol del usuario actual sea el mismo que el rol requerido para mostrar el botón.
+  // Si el rol del usuario actual no es el mismo que el rol requerido, no se muestra el botón.
+  // El admin puede ver todos los botones, por lo que no se valida su rol.
+  if (roles && (!roles?.includes(RolEnum.ADMIN) || !roles?.includes(validRol))) return <></>;
 
   switch (type) {
     case "base":

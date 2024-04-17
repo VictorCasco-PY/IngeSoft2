@@ -19,6 +19,8 @@ import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import useReporteProductos from "../../hooks/useReporteProductos";
+import CBadge from "../../components/labels/CBadge";
 
 const MainProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -41,6 +43,7 @@ const MainProductos = () => {
     codigo: "",
     costo: "",
     cantidad: "",
+    cantidadLimite: "",
     precio: "",
     iva: "",
   });
@@ -145,6 +148,7 @@ const MainProductos = () => {
       codigo: "",
       costo: "",
       cantidad: "",
+      cantidadLimite: "",
       precio: "",
     });
     setShowModal(true);
@@ -167,7 +171,7 @@ const MainProductos = () => {
     const { name, value } = event.target;
 
     // Verificar si el campo es cantidad, costo, precio o código
-    if (name === "cantidad" || name === "costo" || name === "precio") {
+    if (name === "cantidad" || name === "cantidadLimite" || name === "costo" || name === "precio") {
       let formattedValue = value.replace(/\D/g, ""); // Eliminar todos los caracteres que no sean dígitos
       formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Agregar puntos para separar los miles
       // Verificar si el valor es negativo y no permitirlo
@@ -231,6 +235,9 @@ const MainProductos = () => {
         cantidad: parseFloat(
           productosData.cantidad.toString().replace(/\./g, "")
         ),
+        cantidadLimite: parseFloat(
+          productosData.cantidadLimite.toString().replace(/\./g, "")
+        ),
         costo: parseFloat(productosData.costo.toString().replace(/\./g, "")),
         precio: parseFloat(productosData.precio.toString().replace(/\./g, "")),
       };
@@ -279,6 +286,7 @@ const MainProductos = () => {
           editedProducto.codigo === productosData.codigo &&
           editedProducto.costo === dataToSend.costo &&
           editedProducto.cantidad === dataToSend.cantidad &&
+          editedProducto.cantidadLimite === dataToSend.cantidadLimite &&
           editedProducto.precio === dataToSend.precio &&
           editedProducto.iva === dataToSend.iva
         ) {
@@ -292,6 +300,8 @@ const MainProductos = () => {
         response = await api.put(`/productos/${productosData.id}`, dataToSend);
         console.log("Producto editado:", response.data);
         toast.success("Producto actualizado satisfactoriamente");
+
+        setStockReloadBool(!stockReloadBool); //recargar la cantidad de productos sin stock cada vez que se edita
       }
 
       setShowModal(false);
@@ -335,6 +345,24 @@ const MainProductos = () => {
     setShowAlert(false); // Oculta la alerta
   };
 
+  //inicio badge de cantidad de productos sin stock
+  const [cantidadProductosSinStock, setCantidadProductosSinStock] = useState(0);
+  const [stockReloadBool, setStockReloadBool] = useState(false);
+  const { getCantidadProductosSinStock, isLoading: isLoadingProductosSinStock } = useReporteProductos();
+
+  useEffect(() => {
+    const fetchCantidadProductosSinStock = async () => {
+      try {
+        const response = await getCantidadProductosSinStock();
+        setCantidadProductosSinStock(response);
+      } catch (error) {
+        toast.error("Error al obtener la cantidad de productos sin stock");
+      }
+    };
+    fetchCantidadProductosSinStock();
+  }, [stockReloadBool]);
+  //fin badge de cantidad de productos sin stock
+
   return (
     <>
       <Toaster
@@ -358,7 +386,16 @@ const MainProductos = () => {
 
       <CartaPrincipal>
         <div>
-          <h1>Tienda</h1>
+
+          <div className="d-flex">
+            <h1>Tienda</h1>
+            {cantidadProductosSinStock > 0 && (
+              <CBadge type="warning" style={{ margin: 'auto' }} title="Aviso" >
+                Ya no hay stock de <b>{cantidadProductosSinStock} {cantidadProductosSinStock > 1 ? 'productos' : 'producto'}</b>
+              </CBadge>
+            )}
+          </div>
+
           <div className="card-body d-flex align-items-center ">
             <form className="d-flex flex-grow-1 align-items-center">
               <input
@@ -460,7 +497,7 @@ const MainProductos = () => {
             </div>
             <div className="mb-2 block">
               <div className="label-container">
-                <LabelBase label="Descripcion:" htmlFor="descripcion" />
+                <LabelBase label="Descripción:" htmlFor="descripcion" />
                 {/* No se requiere asterisco para campos opcionales */}
               </div>
               <input
@@ -479,7 +516,7 @@ const MainProductos = () => {
                   {" "}
                   {/* Incrementé el margen inferior */}
                   <div className="label-container">
-                    <LabelBase label="Codigo:" htmlFor="codigo" />
+                    <LabelBase label="Código:" htmlFor="codigo" />
                     <span className="required">*</span>
                   </div>
                   <input
@@ -509,6 +546,22 @@ const MainProductos = () => {
                     required
                   />
                 </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="Precio:" htmlFor="precio" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="precio"
+                    name="precio"
+                    className="form-control custom-input"
+                    style={{ width: "100%" }}
+                    value={productosData.precio}
+                    onChange={handleCampoChange}
+                    required
+                  />
+                </div>
               </div>
               <div className="d-flex flex-column">
                 <div className="mb-3 block">
@@ -529,41 +582,40 @@ const MainProductos = () => {
                 </div>
                 <div className="mb-3 block">
                   <div className="label-container">
-                    <LabelBase label="Precio:" htmlFor="precio" />
+                    <LabelBase label="Cantidad límite:" htmlFor="cantidadLimite" />
                     <span className="required">*</span>
                   </div>
                   <input
                     type="number"
-                    id="precio"
-                    name="precio"
+                    id="cantidadLimite"
+                    name="cantidadLimite"
                     className="form-control custom-input"
                     style={{ width: "100%" }}
-                    value={productosData.precio}
+                    value={productosData.cantidadLimite}
                     onChange={handleCampoChange}
                     required
                   />
                 </div>
+                <div className="mb-3 block">
+                  <div className="label-container">
+                    <LabelBase label="IVA:" htmlFor="iva" />
+                    <span className="required">*</span>
+                  </div>
+                  <select
+                    id="iva"
+                    name="iva"
+                    className="form-control form-select"
+                    value={productosData.iva}
+                    onChange={handleCampoChange}
+                  >
+                    {tipo_iva.map((opcion) => (
+                      <option key={opcion.value} value={opcion.value}>
+                        {opcion.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="Iva:" htmlFor="iva" />
-                <span className="required">*</span>
-              </div>
-              <select
-                id="iva"
-                name="iva"
-                className="form-control form-select"
-                value={productosData.iva}
-                onChange={handleCampoChange}
-              >
-                {tipo_iva.map((opcion) => (
-                  <option key={opcion.value} value={opcion.value}>
-                    {opcion.label}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="campo-obligatorio">
               <span className="required">*</span>
@@ -599,11 +651,9 @@ const MainProductos = () => {
         <div class="table-container">
           {error && <ErrorPagina mensaje="No hay pruductos cargados aún " />}
           {/* Muestra el componente de error si hay un error */}
-          {!error &&
-            filteredProductos.length === 0 &&
-            !searchResultsFound && (
-              <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
-            )}
+          {!error && filteredProductos.length === 0 && !searchResultsFound && (
+            <ElementoNoEncontrado mensaje="¡Producto no encontrado!" />
+          )}
           {!error && filteredProductos.length === 0 && searchResultsFound && (
             <ElementoNoEncontrado mensaje="Todavia no hay productos cargados" />
           )}
@@ -628,7 +678,7 @@ const MainProductos = () => {
                   <tr key={producto.id}>
                     <td>{producto.nombre}</td>
                     <td>
-                      <StockIndicator stock={producto.cantidad} />
+                      <StockIndicator stock={producto.cantidad} cantidadLimite={producto.cantidadLimite} />
                     </td>
                     <td>{producto.codigo}</td>
                     <td>{producto.descripcion}</td>
