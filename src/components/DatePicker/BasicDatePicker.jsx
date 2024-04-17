@@ -1,6 +1,9 @@
 import React, { forwardRef } from 'react';
-import ReactDatePicker from 'react-datepicker';
+import ReactDatePicker, { registerLocale } from 'react-datepicker';
+import es from "date-fns/locale/es";
 import './DatePicker.css'
+
+registerLocale("es", es);
 
 const BasicDatePicker = ( {selected, onChange, ...props} ) => {
 
@@ -11,7 +14,7 @@ const BasicDatePicker = ( {selected, onChange, ...props} ) => {
     ));
 
     return (
-        <ReactDatePicker selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
+        <ReactDatePicker dateFormat="dd/MM/yyyy" locale="es" selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
     );
 };
 
