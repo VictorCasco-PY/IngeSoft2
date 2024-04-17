@@ -36,7 +36,7 @@ export const formatHour = (date) => {
     //agregar un cero si es menor a 10
     const hora = (date.getHours() < 10 ? '0' : '') + date.getHours();
     const minuto = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
-    const segundo = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds(); 
+    const segundo = (date.getSeconds() < 10 ? '0' : '') + date.getSeconds();
     return hora + ":" + minuto + ":" + segundo;
 }
 
@@ -126,4 +126,10 @@ export const getDateMinusMonths = (months) => {
     const dateArray = getCurrentDate().split("-");
     const newDate = new Date(dateArray[0], dateArray[1] - months, dateArray[2]);
     return formatDate(newDate);
+}
+
+//FORMATEAR A dd/mm/yyyy
+export const formatDateToDMY = (date) => {
+    const dateArray = date.split("-");
+    return dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
 }

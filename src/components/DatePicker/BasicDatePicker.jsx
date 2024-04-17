@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import './DatePicker.css'
 
-const BasicDatePicker = ( {selected, onChange, ...props} ) => {
+const BasicDatePicker = ( {selected, onChange, botonHoy = true, ...props} ) => {
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="datePickerStyle" onClick={onClick} ref={ref}>
@@ -11,7 +11,7 @@ const BasicDatePicker = ( {selected, onChange, ...props} ) => {
     ));
 
     return (
-        <ReactDatePicker selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
+        <ReactDatePicker todayButton={botonHoy ? "Hoy" : undefined} selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
     );
 };
 
