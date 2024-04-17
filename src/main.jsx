@@ -11,7 +11,7 @@ import MainProductos from "./pages/productos/MainProductos";
 import Servicios from "./pages/servicios/MainServicios";
 import InfoServicios from "./pages/servicios/InfoServicios";
 import MainProveedores from "./pages/proveedores/MainProveedores";
-import MainMiUsuario from './pages/mi_usuario/mainMiUsuario';
+import MainMiUsuario from "./pages/mi_usuario/mainMiUsuario";
 import MainCaja from "./pages/caja/MainCaja";
 import { CobrosPendientesVista } from "./pages/caja/cobrosPendientes/cobrosPendientesVista";
 import CurrentUserProvider from "./context/UserContext";
@@ -28,21 +28,28 @@ import MainDashboard from "./pages/dashboard/MainDashboard";
 import RolEnum from "./utils/RolEnum";
 import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
+import MainArqueo from "./pages/arqueo/MainArqueo";
+import { ArqueoProvider } from "./context/ArqueoContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-
     <Router>
       <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
 
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}><Route exact path="/dashboard" element={
-            <Layout>
-              <DashboardProvider>
-                <MainDashboard />
-              </DashboardProvider>
-            </Layout>} />
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+            <Route
+              exact
+              path="/dashboard"
+              element={
+                <Layout>
+                  <DashboardProvider>
+                    <MainDashboard />
+                  </DashboardProvider>
+                </Layout>
+              }
+            />
           </Route>
 
           <Route
@@ -68,7 +75,6 @@ createRoot(document.getElementById("root")).render(
                 <InfoClientsProvider>
                   <InformacionClientes />
                 </InfoClientsProvider>
-                
               </Layout>
             }
           />
@@ -110,11 +116,16 @@ createRoot(document.getElementById("root")).render(
             path="/caja"
             element={
               <Layout>
-                <MainCaja />
+                <ArqueoProvider>
+                  <MainCaja />
+                </ArqueoProvider>
               </Layout>
             }
           />
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}>
+          <Route
+            exact
+            element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}
+          >
             <Route
               exact
               path="/caja"
@@ -187,7 +198,14 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          <Route path="/miUsuario" element={<Layout><MainMiUsuario /></Layout>} />
+          <Route
+            path="/miUsuario"
+            element={
+              <Layout>
+                <MainMiUsuario />
+              </Layout>
+            }
+          />
 
           <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
             <Route
@@ -200,6 +218,26 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
+          <Route
+            path="/miUsuario"
+            element={
+              <Layout>
+                <MainMiUsuario />
+              </Layout>
+            }
+          />
+          {/*FIN, BORRAR LUEGO DE DEMO*/}
+
+          <Route
+            path="/arqueo"
+            element={
+              <Layout>
+                <ArqueoProvider>
+                  <MainArqueo />
+                </ArqueoProvider>
+              </Layout>
+            }
+          />
 
           <Route
             path="*"
@@ -212,6 +250,5 @@ createRoot(document.getElementById("root")).render(
         </Routes>
       </CurrentUserProvider>
     </Router>
-
   </React.StrictMode>
 );
