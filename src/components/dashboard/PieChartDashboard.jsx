@@ -30,7 +30,7 @@ const PieChartDashboard = () => {
 
     const navigate = useNavigate();
 
-    const { getEstadoClientes, isLoadingNewClients } = useDashboard();
+    const { getEstadoClientes, isLoadingMorosos } = useDashboard();
 
     const ordenarDatos = async () => {
         let data;
@@ -60,12 +60,12 @@ const PieChartDashboard = () => {
 
     useEffect(() => {
         ordenarDatos();
-    }, [isLoadingNewClients])
+    }, [isLoadingMorosos])
 
     return (
         <>
             <div className='graphSection'>
-                {isLoadingNewClients? (<SkeletonWrapper width={220}><Skeleton style={{height:220}} circle={true}/></SkeletonWrapper>) : (
+                {isLoadingMorosos? (<SkeletonWrapper width={220}><Skeleton style={{height:220}} circle={true}/></SkeletonWrapper>) : (
                     <ResponsivePie
                         data={data}
                         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
