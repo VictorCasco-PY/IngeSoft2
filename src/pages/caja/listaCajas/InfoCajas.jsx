@@ -197,7 +197,7 @@ const InfoCajas = () => {
                                     if (e.key === "Enter")
                                         fetchCajas()
                                 }} />
-                            <Btn outline onClick={fetchCajas}>Buscar</Btn>
+                            <Btn outline onClick={fetchCajas} id="btn-buscar" >Buscar</Btn>
                         </span>
                         
                     </div>
