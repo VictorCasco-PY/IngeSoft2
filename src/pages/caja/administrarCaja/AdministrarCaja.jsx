@@ -187,23 +187,23 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
             >
               Ver historial de movimientos
             </Btn>
-            {sesionCaja.horaCierre ? (
+            {/* {sesionCaja.horaCierre ? (
               <p className="p-0 m-0 cajaMiscFont">
                 Caja cerrada a las {sesionCaja.horaCierre}
               </p>
             ) : (
               <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>
             )}
-            <Btn
+            /* <Btn
               id="btn-cerrar-caja"
               outline
               onClick={cerrarCajaActual}
               disabled={disabledCerrarCaja}
             >
               Cerrar Caja
-            </Btn>
-            <Btn id="btn-arqueo" onClick={postArqueo}>
-              Arqueo
+          </Btn>*/}
+            <Btn id="btn-arqueo" outline onClick={postArqueo}>
+              Arqueo de caja
             </Btn>
           </div>
         </div>

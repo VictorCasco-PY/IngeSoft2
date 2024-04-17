@@ -7,15 +7,21 @@ import useArqueo from "../../hooks/useArqueo";
 import { format } from "date-fns";
 import { precioHandler } from "../../utils/precioHandler";
 import { useArqueoContext } from "../../context/ArqueoContext";
+import { getCurrentHour } from "../../utils/DateStatics";
+import useSesionCaja from "../../hooks/useSesionCaja";
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ArqueoPage = () => {
+  const navigate = useNavigate();
   const { getCajaById } = useCaja();
   const { getArqueoBySesionId, data, isLoading } = useArqueo();
   const [caja, setCaja] = useState({});
   const fechaActual = format(new Date(), "dd-MM-yyyy");
   const { arqueoData } = useArqueoContext();
+  const [sesionCaja, setSesionCaja] = useState({});
+  const { cerrarCajaById } = useSesionCaja();
 
-  console.log("Arqueo data: ", arqueoData);
   const {
     totalEntradaEfectivo,
     totalEntradaTarjeta,
@@ -29,6 +35,35 @@ const ArqueoPage = () => {
     totalEntradaEfectivo + totalEntradaTarjeta + totalEntradaTransferencia;
   const totalSalida =
     totalSalidaEfectivo + totalSalidaTarjeta + totalSalidaTransferencia;
+
+  const cerrarCajaActual = async () => {
+    const hora = getCurrentHour();
+    const putData = {
+      horaCierre: hora,
+    };
+
+    const response = await cerrarCajaById(
+      CajaStorage.getSesionCajaId(),
+      putData
+    );
+
+    if (!response) {
+      toast.error("Error al cerrar caja. Revise la conexión.");
+      return;
+    }
+    setSesionCaja(response);
+
+    CajaStorage.cerrarCaja();
+    toast.success(
+      `Caja cerrada con éxito a las ${hora}. Redirigiendo a la página principal..`
+    );
+    setTimeout(() => {
+      navigate("/caja");
+    }, 2500);
+  };
+
+  console.log("Arqueo data: ", arqueoData);
+
   useEffect(() => {
     const fetchCaja = async () => {
       const response = await getCajaById(CajaStorage.getCajaId());
@@ -40,8 +75,26 @@ const ArqueoPage = () => {
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
       <div className="d-flex align-items-center align-content-center">
-        <FlechaAtras />
+        <FlechaAtras ruta={"/caja"} />
         <h1 className="mx-4">Arqueo Caja</h1>
       </div>
       <div className="row align-items-center m-3 justify-content-between">
@@ -64,12 +117,12 @@ const ArqueoPage = () => {
         <div className="col-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon1">
-              Saldo de apertura
+              Saldo de cierre
             </span>
             <input
               type="text"
               className="form-control"
-              aria-label="Saldo_de_apertura"
+              aria-label="Saldo_de_cierre"
               aria-describedby="basic-addon1"
               readOnly
               value={precioHandler(caja.monto)}
@@ -94,11 +147,17 @@ const ArqueoPage = () => {
             />
           </div>
         </div>
-        <div className="col mb-3 ms-5">
-          <Btn type="secondary" outline>
-            Ver movimientos
+        <div className="col d-flex align-items-center justify-content-center gap-3">
+          {sesionCaja.horaCierre ? (
+            <p className="p-0 m-0 cajaMiscFont">
+              Caja cerrada a las {sesionCaja.horaCierre}
+            </p>
+          ) : (
+            <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>
+          )}
+          <Btn id="btn-cerrar-caja" outline onClick={cerrarCajaActual}>
+            Cerrar Caja
           </Btn>
-          <Btn type="primary">Cerrar caja</Btn>
         </div>
         <hr />
       </div>
