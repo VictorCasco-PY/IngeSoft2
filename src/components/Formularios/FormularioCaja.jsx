@@ -186,38 +186,50 @@ const FormularioCaja = () => {
       toast.error("No se pudo cargar la factura");
     }
   };
+  const isFormValid = () => {
+    return proveedorInfo.ruc && producto.id;
+  };
   const handleAgregarItem = () => {
-    const nuevoDetalleMostrar = {
-      cantidad: producto.cantidad,
-      producto: producto.nombre,
-      precioUnitario: producto.precio,
-      iva: producto.iva,
-      subtotal: producto.precio * producto.cantidad,
-    };
-    console.log(nuevoDetalleMostrar);
-
-    const nuevoDetalleEnviar = {
-      productoId: producto.id,
-      precioUnitario: producto.precio,
-      cantidad: producto.cantidad,
-      subtotal: producto.precio * producto.cantidad,
-      iva: producto.iva,
-      ivaTotal: producto.precio * producto.cantidad * producto.iva,
-    };
-    console.log(nuevoDetalleEnviar);
-    // Agregar nuevo detalle al estado detallesParaMostrar
-    setDetallesParaMostrar([...detallesParaMostrar, nuevoDetalleMostrar]);
-    setDetallesParaEnviar([...detallesParaEnviar, nuevoDetalleEnviar]);
-    // Limpiar los inputs de los items
-    setProducto({
-      id: "",
-      nombre: "",
-      descripcion: "",
-      cantidad: "",
-      precio: "",
-      iva: "",
-    });
-    setCodigo("");
+    if (!isFormValid()) {
+      toast.error(
+        "Por favor, ingrese un RUC y un producto válidos antes de agregar un nuevo item."
+      );
+      return;
+    }
+    // Verificar si la cantidad es mayor que 0 antes de agregar el ítem
+    if (producto.cantidad > 0) {
+      const nuevoDetalleMostrar = {
+        cantidad: producto.cantidad,
+        producto: producto.nombre,
+        precioUnitario: producto.precio,
+        iva: producto.iva,
+        subtotal: producto.precio * producto.cantidad,
+      };
+      const nuevoDetalleEnviar = {
+        productoId: producto.id,
+        precioUnitario: producto.precio,
+        cantidad: producto.cantidad,
+        subtotal: producto.precio * producto.cantidad,
+        iva: producto.iva,
+        ivaTotal: producto.precio * producto.cantidad * producto.iva,
+      };
+      // Agregar nuevo detalle al estado detallesParaMostrar
+      setDetallesParaMostrar([...detallesParaMostrar, nuevoDetalleMostrar]);
+      setDetallesParaEnviar([...detallesParaEnviar, nuevoDetalleEnviar]);
+      // Limpiar los inputs de los items
+      setProducto({
+        id: "",
+        nombre: "",
+        descripcion: "",
+        cantidad: "",
+        precio: "",
+        iva: "",
+      });
+      setCodigo("");
+    } else {
+      // Mostrar un mensaje de error si la cantidad es 0
+      toast.error("La cantidad debe ser mayor que 0");
+    }
   };
 
   const handleKeyDown = async (e) => {

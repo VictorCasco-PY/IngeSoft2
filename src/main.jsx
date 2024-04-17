@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import InfoClients from "./pages/clients/InfoClients";
+
 import PageNotFound from "./pages/PageNotFound";
 import Layout from "./components/layout/Layout";
 import MainClients from "./pages/clients/mainClients";

@@ -7,7 +7,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { IoArrowBackSharp, IoAdd } from "react-icons/io5";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
 import { IoPencilOutline } from "react-icons/io5";
 
 import ButtonBasic from "../../../components/bottons/ButtonBasic.jsx";
@@ -24,7 +23,7 @@ import FormularioCliente from "../../../components/Formularios/FormularioCliente
 import FormularioMedicion from "../../../components/Formularios/FormularioMedicion.jsx";
 
 import useClienteData from "../../../hooks/useClientesData";
-import { useInfoClients } from "../../../context/InfoClientesContext.jsx";
+
 
 const InformacionClientes = () => {
   const { id } = useParams();
