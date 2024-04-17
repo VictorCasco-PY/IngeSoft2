@@ -5,8 +5,7 @@ import './DatePicker.css'
 
 registerLocale("es", es);
 
-const BasicDatePicker = ( {selected, onChange, ...props} ) => {
-
+const BasicDatePicker = ({ selected, onChange, botonHoy = true, ...props }) => {
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="datePickerStyle" onClick={onClick} ref={ref}>
             {value}
@@ -14,7 +13,7 @@ const BasicDatePicker = ( {selected, onChange, ...props} ) => {
     ));
 
     return (
-        <ReactDatePicker dateFormat="dd/MM/yyyy" locale="es" selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
+        <ReactDatePicker dateFormat="dd/MM/yyyy" locale="es" todayButton={botonHoy ? "Hoy" : undefined} selected={selected} onChange={onChange} customInput={<ExampleCustomInput />} {...props} />
     );
 };
 
