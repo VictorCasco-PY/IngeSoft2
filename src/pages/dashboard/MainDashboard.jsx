@@ -18,6 +18,7 @@ import ReporteStorage from '../../utils/ReportesStorage';
 import InfoIcon from '@mui/icons-material/Info';
 import { Toaster } from 'react-hot-toast';
 import ActividadesChart from '../../components/dashboard/ActividadesChart';
+import CBadge from '../../components/labels/CBadge';
 
 const MainDashboard = () => {
     const [currentMaximized, setCurrentMaximized] = useState(null) //referencia al elemento maximizado
@@ -70,12 +71,12 @@ const MainDashboard = () => {
             />
 
             {lastRefresh && (
-                <div className='m-0 lastRefreshAbsolute d-flex align-items-center gap-1'>
-                    <b className='d-flex align-items-center'><InfoIcon /> Ultima actualización: </b>
-                    <p className='m-0 p-0'> {invertDateString(lastRefresh)}</p>
+                <div className='lastRefreshAbsolute'>
+                    <CBadge isStrongTitle={false} icon={<InfoIcon />} type="success" style={{ margin: 'auto' }} title="Ultima actualización:" >
+                        {invertDateString(lastRefresh)}
+                    </CBadge>
                 </div>
             )}
-
             <div id="blur-screen-dashboard" className={currentMaximized ? 'blurScreen actBlur' : 'blurScreen'} onClick={handleBlurClick}></div>
             <DashCarta>
                 <div className='DashboardHeader mb-2'>

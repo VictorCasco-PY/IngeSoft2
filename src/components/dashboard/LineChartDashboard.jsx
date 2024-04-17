@@ -32,6 +32,8 @@ FORMATO para los datos:
 ]
 */
 
+const MAX_PRODUCTS_TO_SHOW = 10;
+
 const LineChartDashboard = () => {
 
     const { getProductosMasVendidos, isLoadingProductosMasVendidos } = useDashboard();
@@ -65,6 +67,8 @@ const LineChartDashboard = () => {
         }
         //asumiendo que las fechas de los states ya estan formateados, importante, formato: yyyy-mm-dd
         let data = await getProductosMasVendidos(fechaInicio, fechaFin)
+        //si hay mas de 10 productos, solo mostrar los primeros 10, cuando hay muchos productos, se volverá feo
+        data = data.slice(0, MAX_PRODUCTS_TO_SHOW);
 
         setProductosMasVendidos(setDataFromKeys(data))
         const labels = data.map(producto => producto.nombreProducto)
