@@ -2,55 +2,63 @@ import React, { useState, useEffect } from "react";
 import ButtonBasic from "../bottons/ButtonBasic";
 import BotonCrear from "../bottons/ButtonCrear";
 import ErrorPagina from "../../components/errores/ErrorPagina";
+import { useComprasProveedores } from "../../hooks/useComprasProveedores";
 import Pagination from "../../components/pagination/PaginationContainer";
-const TablaCaja = ({ items, totalPages, currentPage, onPageChange  }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterByInvoice, setFilterByInvoice] = useState("");
-  const [filterByStatus, setFilterByStatus] = useState("");
-  // Calculamos el índice inicial y final de los elementos a mostrar en la página actual
-  const startIndex = (currentPage - 1) * 5;
-  const endIndex = Math.min(startIndex + 5, items.length);
+import { ListaVacía } from "../errores/ListaVacía";
 
-  // Extraemos los elementos a mostrar en la página actual
-  const currentPageItems = items.slice(startIndex, endIndex);
-  const filteredItems = items.filter((item) => {
-    const proveedorMatch = searchTerm
-      ? item.factura.nombreProveedor
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      : true;
-    const invoiceMatch = item.factura.nroFactura.includes(filterByInvoice);
-    const statusMatch = filterByStatus
-      ? item.factura.pagado === (filterByStatus === "Pagado")
-      : true;
-    return proveedorMatch && invoiceMatch && statusMatch;
-  });
-  useEffect(() => {
-    fetchData();
-  }, [currentPage, searchTerm]);
+const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
+  const [data, setData] = useState([]);
+  const { searchByNombreCliente, getFacturas } = useComprasProveedores();
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState(null);
 
-  const fetchData = async () => {
+  const getData = async (page = 1) => {
     try {
-      const response = await fetch(
-        `/facturas-proveedores/proveedor/${searchTerm}/page/${currentPage}`
-      );
-      const data = await response.json();
-      setItems(data.items);
-      setTotalPages(data.totalPages);
+      const response = await getFacturas(page);
+      if (response && response.items) {
+        setData(response.items);
+        setError(null); // Limpiar el estado de error si la solicitud es exitosa
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setError("Ha ocurrido un error cargando los datos."); // Manejar errores de solicitud
     }
   };
+
   const handlePageChange = (page) => {
     onPageChange(page);
   };
-  const handleSearch = () => {
-    if (searchTerm.trim() !== "") {
-      setCurrentPage(1);
-      fetchData();
+
+  const handleSearchInput = (e) => {
+    setSearch(e.target.value);
+    if (e.target.value === "") {
+      getData();
+      return;
     }
   };
-  
+
+  const handleSearch = async () => {
+    if (search === "") {
+      getData();
+      return;
+    }
+
+    try {
+      const res = await searchByNombreCliente(search);
+      if (res && res.items) {
+        setData(res.items);
+        setError(null); // Limpiar el estado de error si la solicitud es exitosa
+      } else {
+        setData([]);
+        setError("No se encontraron facturas con ese nombre."); // Mostrar mensaje si no se encuentran resultados
+      }
+    } catch (error) {
+      setError("Ha ocurrido un error al buscar las facturas."); // Manejar errores de solicitud
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div>
@@ -60,13 +68,12 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange  }) => {
             id="input-search"
             className="form-control custom-input"
             type="text"
-            placeholder="Buscar por proveedor"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar por proveedor..."
+            onChange={handleSearchInput}
+            value={search}
           />
           <ButtonBasic id="btn-buscar" text="Buscar" onClick={handleSearch} />
         </div>
-        
       </div>
 
       <table className="table">
@@ -80,17 +87,23 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange  }) => {
             <th scope="col">Total(Gs)</th>
           </tr>
         </thead>
-        {currentPageItems.map((item, index) => (
-          <tr key={index}>
-            <td style={{ color: "#6941C6" }}>{item.factura.nroFactura}</td>
-            <td>{item.factura.fecha}</td>
-            <td>{item.factura.nombreProveedor}</td>
-            <td>{item.factura.rucProveedor}</td>
-            <td>{item.factura.pagado ? "Pagado" : "Pendiente"}</td>
-            <td>{item.factura.subTotal}</td>
-          </tr>
-        ))}
+        <tbody>
+          {data.map((item, index) => {
+            const factura = item.factura || item; // Usar item si item.factura no está definido
+            return (
+              <tr key={index}>
+                <td style={{ color: "#6941C6" }}>{factura.nroFactura}</td>
+                <td>{factura.fecha}</td>
+                <td>{factura.nombreProveedor}</td>
+                <td>{factura.rucProveedor}</td>
+                <td>{factura.pagado ? "Pagado" : "Pendiente"}</td>
+                <td>{factura.subTotal}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
+      {error && <ListaVacía mensaje={error} />} {/* Mostrar mensaje de error si existe */}
       <div className="pagination-container">
         <Pagination
           totalPages={totalPages}

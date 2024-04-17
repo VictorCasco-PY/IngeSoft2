@@ -20,7 +20,7 @@ const TablaMedicionesCliente = ({ toast, clienteId }) => {
   const [medicionId, setMedicionId] = useState(null);
 
 
-  const getMediciones = async (page = 1) => {
+  const getMediciones = async (page ) => {
     try {
       const res = await getMedicionClienteById(clienteId, page);
       setMediciones(res.items);
