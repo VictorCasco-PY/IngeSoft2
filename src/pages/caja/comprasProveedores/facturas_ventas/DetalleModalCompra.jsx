@@ -121,7 +121,7 @@ const DetalleModalCompra = ({
                   ))}
                 </tbody>
               </table>
-              <p className="mt-4">
+              <p style={{marginLeft:"25rem"}}className="mt-5">
                 <b>
                   Total: {total.toLocaleString("es-ES")} Gs.
                   <br />

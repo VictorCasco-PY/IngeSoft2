@@ -102,7 +102,7 @@ const CobrarProveedores = ({ factura, closeModal, open, resetForm }) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Cobrar factura</h5>
+              <h5 className="modal-title">Pagar factura</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -155,7 +155,7 @@ const CobrarProveedores = ({ factura, closeModal, open, resetForm }) => {
                 Cerrar
               </Btn>
               <Btn type="primary" onClick={cobrar}>
-                Cobrar
+                Pagar Factura
               </Btn>
             </div>
           </div>
