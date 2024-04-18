@@ -106,7 +106,7 @@ export const CobrosPendientesVista = () => {
 
         <span className="d-flex w-50 gap-3">
           <Input id="input-search" placeholder="Buscar..." onChange={e => handleSearchInput(e)} />
-          <Btn outline onClick={handleSearch}>Buscar</Btn>
+          <Btn  id="btn-buscar" outline onClick={handleSearch}>Buscar</Btn>
         </span>
       </form>
     </div>
