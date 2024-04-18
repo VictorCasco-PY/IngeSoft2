@@ -178,7 +178,9 @@ createRoot(document.getElementById("root")).render(
               path="/caja"
               element={
                 <Layout>
-                  <MainCaja />
+                  <ArqueoProvider>
+                    <MainCaja />
+                  </ArqueoProvider>
                 </Layout>
               }
             />
