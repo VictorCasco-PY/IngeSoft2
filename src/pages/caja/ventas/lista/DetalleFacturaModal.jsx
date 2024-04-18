@@ -115,7 +115,12 @@ const DetalleFacturaModal = ({ factura, closeModal, open }) => {
               </p>
             </div>
             <div className="modal-footer">
-              <Btn type="secondary" outline onClick={closeModal}>
+              <Btn
+                id="btn-cerrarDetalle"
+                type="secondary"
+                outline
+                onClick={closeModal}
+              >
                 Cerrar
               </Btn>
               {/*pagado ? (

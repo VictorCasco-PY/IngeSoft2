@@ -91,7 +91,12 @@ const ListaVentas = () => {
             />
           </div>
           <div className="col">
-            <Btn type="secondary" outline onClick={handleSearch}>
+            <Btn
+              id="btn-buscarPorNombre"
+              type="secondary"
+              outline
+              onClick={handleSearch}
+            >
               Buscar
             </Btn>
           </div>

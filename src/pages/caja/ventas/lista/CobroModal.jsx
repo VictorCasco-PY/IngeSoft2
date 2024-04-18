@@ -113,6 +113,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               <div className="mb-2">
                 <label htmlFor="total">Total</label>
                 <input
+                  id="total"
                   type="text"
                   disabled
                   className="form-control"
@@ -122,6 +123,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               <div className="mb-2">
                 <label htmlFor="efectivo">Efectivo</label>
                 <input
+                  id="efectivo"
                   type="number"
                   name="efectivo"
                   className="form-control"
@@ -132,6 +134,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               <div className="mb-2">
                 <label htmlFor="tarjeta">Tarjeta</label>
                 <input
+                  id="tarjeta"
                   type="number"
                   name="tarjeta"
                   className="form-control"
@@ -142,6 +145,7 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               <div className="mb-2">
                 <label htmlFor="cambio">Transferencia</label>
                 <input
+                  id="transferencia"
                   type="number"
                   name="transferencia"
                   className="form-control"
@@ -151,10 +155,14 @@ const CobroModal = ({ factura, closeModal, open, resetForm }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <Btn type="secondary" onClick={handleCerrar}>
+              <Btn
+                id="btn-cerrarModalCobro"
+                type="secondary"
+                onClick={handleCerrar}
+              >
                 Cerrar
               </Btn>
-              <Btn type="primary" onClick={cobrar}>
+              <Btn id="btn-cobrarVenta" type="primary" onClick={cobrar}>
                 Cobrar
               </Btn>
             </div>
