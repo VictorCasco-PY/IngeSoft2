@@ -54,7 +54,7 @@ const LineIngresoChartDashboard = () => {
         if (isLoadingIngresos) {
             return <Skeleton style={{ width: 150, height: 28 }} />
         } else if (errorNoIngresos) {
-            return <h4>No hay ingresos en el rango seleccionado</h4>
+            return <h4>No hay ingresos en el rango seleccionado.</h4>
         } else {
             return (
                 <h4 className='m-0 p-0'>
