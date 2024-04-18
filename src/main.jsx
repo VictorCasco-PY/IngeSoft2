@@ -37,7 +37,22 @@ createRoot(document.getElementById("root")).render(
       <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
-
+          <Route
+            path="/miUsuario"
+            element={
+              <Layout>
+                <MainMiUsuario />
+              </Layout>
+            }
+          />
+          <Route
+            path="/clientes"
+            element={
+              <Layout>
+                <MainClients />
+              </Layout>
+            }
+          />
           <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
             <Route
               exact
@@ -50,82 +65,114 @@ createRoot(document.getElementById("root")).render(
                 </Layout>
               }
             />
+            <Route
+              path="/users"
+              element={
+                <Layout>
+                  <MainUsers />
+                </Layout>
+              }
+            />
+            <Route
+              path="/arqueo"
+              element={
+                <Layout>
+                  <ArqueoProvider>
+                    <MainArqueo />
+                  </ArqueoProvider>
+                </Layout>
+              }
+            />
           </Route>
-
-          <Route
-            path="/clientes"
-            element={
-              <Layout>
-                <MainClients />
-              </Layout>
-            }
-          />
-          <Route
-            path="/users"
-            element={
-              <Layout>
-                <MainUsers />
-              </Layout>
-            }
-          />
-          <Route
-            path="/clientesinfo/:id"
-            element={
-              <Layout>
-                <InfoClientsProvider>
-                  <InformacionClientes />
-                </InfoClientsProvider>
-              </Layout>
-            }
-          />
-          <Route
-            path="/productos"
-            element={
-              <Layout>
-                <MainProductos />
-              </Layout>
-            }
-          />
-          <Route
-            path="/servicios"
-            element={
-              <Layout>
-                <Servicios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/infoServicio/:id"
-            element={
-              <Layout>
-                <InfoServicios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/proveedores"
-            element={
-              <Layout>
-                <MainProveedores />
-              </Layout>
-            }
-          />
-
-          {/*seccion de caja, agregar sus flujos de compra, venta, etc.*/}
-          <Route
-            path="/caja"
-            element={
-              <Layout>
-                <ArqueoProvider>
-                  <MainCaja />
-                </ArqueoProvider>
-              </Layout>
-            }
-          />
           <Route
             exact
             element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}
           >
+            <Route
+              exact
+              path="/caja/lista"
+              element={
+                <Layout>
+                  <InfoCajas />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/pendientes"
+              element={
+                <Layout>
+                  <CobrosPendientesVista />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/lista-ventas"
+              element={
+                <Layout>
+                  <MainLista />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/ventas"
+              element={
+                <Layout>
+                  <MainVenta />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/compras"
+              element={
+                <Layout>
+                  <ComprasCaja />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/lista-compras"
+              element={
+                <Layout>
+                  <ComprasCajaProvider>
+                    <ListaCompras />
+                  </ComprasCajaProvider>
+                </Layout>
+              }
+            />
+            <Route
+              path="/clientes"
+              element={
+                <Layout>
+                  <MainClients />
+                </Layout>
+              }
+            />
+            <Route
+              path="/clientesinfo/:id"
+              element={
+                <Layout>
+                  <InfoClientsProvider>
+                    <InformacionClientes />
+                  </InfoClientsProvider>
+                </Layout>
+              }
+            />
+            <Route
+              path="/productos"
+              element={
+                <Layout>
+                  <MainProductos />
+                </Layout>
+              }
+            />
+            <Route
+              path="/proveedores"
+              element={
+                <Layout>
+                  <MainProveedores />
+                </Layout>
+              }
+            />
             <Route
               exact
               path="/caja"
@@ -137,107 +184,46 @@ createRoot(document.getElementById("root")).render(
             />
           </Route>
           <Route
-            path="/caja"
+            exact
             element={
-              <Layout>
-                <MainCaja />
-              </Layout>
+              <ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]} />
             }
-          />
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
+          >
             <Route
-              exact
-              path="/caja/lista"
+              path="/servicios"
               element={
                 <Layout>
-                  <InfoCajas />
+                  <Servicios />
+                </Layout>
+              }
+            />
+            <Route
+              path="/clientesinfo/:id"
+              element={
+                <Layout>
+                  <InfoClientsProvider>
+                    <InformacionClientes />
+                  </InfoClientsProvider>
+                </Layout>
+              }
+            />
+            <Route
+              path="/clientes"
+              element={
+                <Layout>
+                  <MainClients />
+                </Layout>
+              }
+            />
+            <Route
+              path="/infoServicio/:id"
+              element={
+                <Layout>
+                  <InfoServicios />
                 </Layout>
               }
             />
           </Route>
-          <Route
-            path="/caja/pendientes"
-            element={
-              <Layout>
-                <CobrosPendientesVista />
-              </Layout>
-            }
-          />
-          <Route
-            path="/caja/lista-ventas"
-            element={
-              <Layout>
-                <MainLista />
-              </Layout>
-            }
-          />
-          <Route
-            path="/caja/ventas"
-            element={
-              <Layout>
-                <MainVenta />
-              </Layout>
-            }
-          />
-          <Route
-            path="/caja/compras"
-            element={
-              <Layout>
-                <ComprasCaja />
-              </Layout>
-            }
-          />
-          <Route
-            path="/caja/lista-compras"
-            element={
-              <Layout>
-                <ComprasCajaProvider>
-                  <ListaCompras />
-                </ComprasCajaProvider>
-              </Layout>
-            }
-          />
-
-          <Route
-            path="/miUsuario"
-            element={
-              <Layout>
-                <MainMiUsuario />
-              </Layout>
-            }
-          />
-
-          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
-            <Route
-              exact
-              path="/caja/historial"
-              element={
-                <Layout>
-                  <MovimientosVista />
-                </Layout>
-              }
-            />
-          </Route>
-          <Route
-            path="/miUsuario"
-            element={
-              <Layout>
-                <MainMiUsuario />
-              </Layout>
-            }
-          />
-          {/*FIN, BORRAR LUEGO DE DEMO*/}
-
-          <Route
-            path="/arqueo"
-            element={
-              <Layout>
-                <ArqueoProvider>
-                  <MainArqueo />
-                </ArqueoProvider>
-              </Layout>
-            }
-          />
 
           <Route
             path="*"

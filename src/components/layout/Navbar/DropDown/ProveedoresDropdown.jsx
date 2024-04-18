@@ -13,7 +13,7 @@ export const ProveedoresDropdown = () => {
 
   return (
     <NavDropdown title="Proveedores" className={isSelected && "selected" } showArrow>
-      <NavBtn type="dropdownItem" href="/proveedores">
+      <NavBtn type="dropdownItem" href="/proveedores" >
         Ver Proveedores
       </NavBtn>
       <NavBtn type="dropdownItem" href="/productos">
