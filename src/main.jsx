@@ -37,22 +37,27 @@ createRoot(document.getElementById("root")).render(
       <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO, RolEnum.ENTRENADOR]} />}>
           <Route
-            path="/miUsuario"
-            element={
-              <Layout>
-                <MainMiUsuario />
-              </Layout>
-            }
-          />
-          <Route
-            path="/clientes"
-            element={
-              <Layout>
-                <MainClients />
-              </Layout>
-            }
-          />
+              path="/clientes"
+              element={
+                <Layout>
+                  <MainClients />
+                </Layout>
+              }
+            />
+            <Route
+              path="/clientesinfo/:id"
+              element={
+                <Layout>
+                  <InfoClientsProvider>
+                    <InformacionClientes />
+                  </InfoClientsProvider>
+                </Layout>
+              }
+            />
+          </Route>
+
           <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN]} />}>
             <Route
               exact
@@ -84,10 +89,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-          <Route
-            exact
-            element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}
-          >
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO]} />}>
             <Route
               exact
               path="/caja/lista"
@@ -140,24 +142,6 @@ createRoot(document.getElementById("root")).render(
               }
             />
             <Route
-              path="/clientes"
-              element={
-                <Layout>
-                  <MainClients />
-                </Layout>
-              }
-            />
-            <Route
-              path="/clientesinfo/:id"
-              element={
-                <Layout>
-                  <InfoClientsProvider>
-                    <InformacionClientes />
-                  </InfoClientsProvider>
-                </Layout>
-              }
-            />
-            <Route
               path="/productos"
               element={
                 <Layout>
@@ -183,12 +167,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-          <Route
-            exact
-            element={
-              <ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]} />
-            }
-          >
+          <Route exact element={<ProtectedRoute roles={[RolEnum.ENTRENADOR, RolEnum.ADMIN]} />}>
             <Route
               path="/servicios"
               element={
@@ -208,14 +187,6 @@ createRoot(document.getElementById("root")).render(
               }
             />
             <Route
-              path="/clientes"
-              element={
-                <Layout>
-                  <MainClients />
-                </Layout>
-              }
-            />
-            <Route
               path="/infoServicio/:id"
               element={
                 <Layout>
@@ -224,7 +195,6 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-
           <Route
             path="*"
             element={
@@ -233,6 +203,15 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
+          
+          <Route
+              path="/miUsuario"
+              element={
+                <Layout>
+                  <MainMiUsuario />
+                </Layout>
+              }
+            />
         </Routes>
       </CurrentUserProvider>
     </Router>
