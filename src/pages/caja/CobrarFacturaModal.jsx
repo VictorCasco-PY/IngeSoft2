@@ -159,28 +159,28 @@ export const CobrarFacturaModal = ({ data, open, closeModal }) => {
             <div>
                 <div>
                     <p className="p-0 m-0">Saldo</p>
-                    <Input value={precioHandler(data?.factura?.saldo)} disabled />
+                    <Input id="saldo" value={precioHandler(data?.factura?.saldo)} disabled />
 
                 </div>
 
                 <div>
                     <p className="p-0 m-0">Efectivo</p>
-                    <Input value={efectivo} onChange={e => handleEfectivo(e)} />
+                    <Input id="efectivo" value={efectivo} onChange={e => handleEfectivo(e)} />
                 </div>
 
                 <div>
                     <p className="p-0 m-0">Tarjeta</p>
-                    <Input value={tarjeta} onChange={e => handleTarjeta(e)} />
+                    <Input id="tarjeta" value={tarjeta} onChange={e => handleTarjeta(e)} />
                 </div>
 
                 <div>
                     <p className="p-0 m-0">Cambio</p>
-                    <Input value={cambio} disabled />
+                    <Input id="cambio" value={cambio} disabled />
                 </div>
 
                 <div className="d-flex justify-content-center align-items-center float-end mt-4 gap-3">
-                    <Btn onClick={resetAndClose} type="secondary">Cerrar</Btn>
-                    <Btn type="primary" onClick={handleCobrar}>Cobrar Factura</Btn>
+                    <Btn id="btn-cerrar" onClick={resetAndClose} type="secondary">Cerrar</Btn>
+                    <Btn id="btn-cobrar" type="primary" onClick={handleCobrar}>Cobrar Factura</Btn>
                 </div>
 
             </div>
