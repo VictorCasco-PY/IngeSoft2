@@ -14,7 +14,6 @@ import useCaja from "../../../hooks/useCaja";
 
 import CajaStorage from "../../../utils/CajaStorage";
 import { CircularProgress } from "@mui/material";
-import UserStorage from "../../../utils/UserStorage";
 import { useCurrentUser } from "../../../context/UserContext";
 import RolEnum from "../../../utils/RolEnum";
 import { getCurrentHour } from "../../../utils/DateStatics";
@@ -181,11 +180,12 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
           <div className="d-flex align-items-center justify-content-center gap-3">
             <Btn
               id="btn-historial"
-              icon={<HiOutlineClock />}
               onClick={() => navigate("/caja/historial")}
+              icon={<HiOutlineClock />}
             >
               Ver historial de movimientos
             </Btn>
+
             {/* {sesionCaja.horaCierre ? (
               <p className="p-0 m-0 cajaMiscFont">
                 Caja cerrada a las {sesionCaja.horaCierre}
