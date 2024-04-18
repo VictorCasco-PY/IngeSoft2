@@ -30,7 +30,7 @@ export const DashboardProvider = ({ children }) => {
 
     const [clientesPorActividad, setClientesPorActividad] = useState(null); //guardar los clientes por actividad [actividad, cantidadClientes]
 
-    const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, isLoading: isLoadingNewClients } = useReporteClientes();
+    const { getCantidadPorEstadoSuscripcion, getNuevosClientesPorFechas, isLoadingMorosos, isLoadingNewClients  } = useReporteClientes();
     const { getProductosMasVendidosPorFecha, isLoading: isLoadingProductosMasVendidos } = useReporteProductos();
     const { getActividadesConMasClientes, isLoading: isLoadingActividades } = useReporteActividades();
 
@@ -223,7 +223,7 @@ export const DashboardProvider = ({ children }) => {
             fechaProductosMasVendidos, //filtros
             getEstadoClientes, getNewClients, getProductosMasVendidos, getActividadesMasRegistradas, //getters datos
             refreshData, checkExpirationTime, //refrescar todos los datos (fetch)
-            isLoadingNewClients, isLoadingProductosMasVendidos, isLoadingActividades //estados de cargando
+            isLoadingMorosos, isLoadingNewClients, isLoadingProductosMasVendidos, isLoadingActividades //estados de cargando
         }}>
             {children}
         </DashboardContext.Provider>

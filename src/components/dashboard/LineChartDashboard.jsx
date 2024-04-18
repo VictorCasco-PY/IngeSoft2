@@ -180,7 +180,14 @@ const LineChartDashboard = () => {
                                 legend: 'Ventas (cantidad)',
                                 legendPosition: 'middle',
                                 legendOffset: -40,
-                                truncateTickAt: 0
+                                truncateTickAt: 0,
+                                format: value => {
+                                    if (value % 1 === 0) {
+                                        return value
+                                    } else {
+                                        return ''
+                                    }
+                                }
                             }}
                             labelSkipWidth={12}
                             labelSkipHeight={12}
