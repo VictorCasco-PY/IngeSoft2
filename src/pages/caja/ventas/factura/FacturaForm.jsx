@@ -438,6 +438,7 @@ const FacturaForm = () => {
           </div>
           <div className="col mt-1">
             <Btn
+              id="btn-agregarItem"
               type="secondary"
               outline
               className="mt-4"
@@ -491,7 +492,12 @@ const FacturaForm = () => {
         </div>
 
         <div className={classes.button_container}>
-          <Btn submit type="primary" onClick={handleSubmit}>
+          <Btn
+            id="btn-generarFactura"
+            submit
+            type="primary"
+            onClick={handleSubmit}
+          >
             Generar factura
           </Btn>
         </div>

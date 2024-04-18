@@ -129,11 +129,19 @@ const DetalleModal = ({
               </p>
             </div>
             <div className="modal-footer">
-              <Btn type="secondary" onClick={closeModal}>
+              <Btn
+                id="btn-cerrarModalFactura"
+                type="secondary"
+                onClick={closeModal}
+              >
                 Cerrar
               </Btn>
 
-              <Btn type="primary" onClick={handleSubmitFactura}>
+              <Btn
+                id="btn-guardarFacturaModal"
+                type="primary"
+                onClick={handleSubmitFactura}
+              >
                 Guardar factura
               </Btn>
             </div>
