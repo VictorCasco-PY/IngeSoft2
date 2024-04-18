@@ -83,6 +83,16 @@ createRoot(document.getElementById("root")).render(
                 </Layout>
               }
             />
+
+            <Route
+              exact
+              path="/caja/historial"
+              element={
+                <Layout>
+                  <MovimientosVista />
+                </Layout>
+              }
+            />
           </Route>
           <Route
             exact
