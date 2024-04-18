@@ -41,6 +41,11 @@
     bottom: 8px;
     right: 0;
 }
+.button_container2 {
+    position: absolute;
+    bottom: 5rem;
+    right: 0;
+}
 
 .form_container {
     position: relative;
