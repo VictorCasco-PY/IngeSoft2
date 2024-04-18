@@ -9,11 +9,12 @@ const ListaCompras = () => {
   const { items = [], addItem } = useComprasCaja() || {};
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [facturas, setFacturas] = useState([]);
 
   const obtenerFacturas = async (page) => {
     try {
       const response = await api.get(`/facturas-proveedores/page/${page}`);
-      response.data.items.forEach((factura) => addItem(factura));
+      setFacturas(response.data.items);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error al obtener las facturas:', error);
@@ -24,8 +25,8 @@ const ListaCompras = () => {
     obtenerFacturas(currentPage);
   }, [currentPage]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -36,7 +37,7 @@ const ListaCompras = () => {
           <h2 style={{ marginLeft: '3rem' }}>Listar Compras Realizadas</h2>
         </div>
         <TablaCaja
-          items={items}
+          items={facturas}
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}

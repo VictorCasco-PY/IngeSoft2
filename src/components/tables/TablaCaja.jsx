@@ -7,7 +7,6 @@ import Pagination from "../../components/pagination/PaginationContainer";
 import { ListaVacía } from "../errores/ListaVacía";
 
 const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
-  const [data, setData] = useState([]);
   const { searchByNombreCliente, getFacturas } = useComprasProveedores();
   const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
@@ -16,7 +15,6 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
     try {
       const response = await getFacturas(page);
       if (response && response.items) {
-        setData(response.items);
         setError(null); // Limpiar el estado de error si la solicitud es exitosa
       }
     } catch (error) {
@@ -45,10 +43,8 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
     try {
       const res = await searchByNombreCliente(search);
       if (res && res.items) {
-        setData(res.items);
         setError(null); // Limpiar el estado de error si la solicitud es exitosa
       } else {
-        setData([]);
         setError("No se encontraron facturas con ese nombre."); // Mostrar mensaje si no se encuentran resultados
       }
     } catch (error) {
@@ -88,7 +84,7 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => {
+          {items.map((item, index) => {
             const factura = item.factura || item; // Usar item si item.factura no está definido
             return (
               <tr key={index}>
