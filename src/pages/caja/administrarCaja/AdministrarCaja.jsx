@@ -180,8 +180,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
 
           <div className="d-flex align-items-center justify-content-center gap-3">
             <Btn
-              id="btn-actualizar"
-              onClick={fetchData}
+              id="btn-historial"
               icon={<HiOutlineClock />}
               onClick={() => navigate("/caja/historial")}
             >
