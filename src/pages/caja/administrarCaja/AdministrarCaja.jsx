@@ -154,7 +154,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
                     </div>
 
                     <div className="d-flex align-items-center justify-content-center gap-3">
-                        <Btn id="btn-actualizar" onClick={fetchData} icon={<HiOutlineClock />} onClick={()=>navigate("/caja/historial")}>
+                        <Btn id="btn-historial" icon={<HiOutlineClock />} onClick={()=>navigate("/caja/historial")}>
                             Ver historial de movimientos
                         </Btn>
                         {sesionCaja.horaCierre ? <p className="p-0 m-0 cajaMiscFont">Caja cerrada a las {sesionCaja.horaCierre}</p> : <p className="p-0 m-0 cajaMiscFont">Caja en curso</p>}
