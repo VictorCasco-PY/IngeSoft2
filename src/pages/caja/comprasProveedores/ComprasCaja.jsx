@@ -1,6 +1,7 @@
 import FormularioCaja from "../../../components/Formularios/FormularioCaja";
 import FlechaAtras from "../../../components/flechaAtras/FlechaAtras";
 import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
+import FacturasFormCompras from "./facturas_ventas/FacturasFormCompras";
 
 
 const ComprasCaja = () => {
@@ -14,7 +15,8 @@ const ComprasCaja = () => {
           <FlechaAtras ruta="/caja"/>
           <h2 style={{ marginLeft: "3rem" }}>Registrar Compra</h2>
         </div>
-        <FormularioCaja />
+        {/*<FormularioCaja />*/}
+        <FacturasFormCompras/>
       </CartaPrincipal>
     </>
   );
