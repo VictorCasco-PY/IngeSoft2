@@ -30,6 +30,7 @@ const FacturaForm = () => {
   const [detallesParaEnviar, setDetallesParaEnviar] = useState([]);
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [botonDeshabilitado, setBotonDeshabilitado] = useState(true);
   const [datosFactura, setDatosFactura] = useState({
     clienteId: "",
     timbrado: 0,
@@ -62,6 +63,7 @@ const FacturaForm = () => {
 
   // Functions
   const handleGuardarFactura = () => {
+    console.log("Factura", datosFactura);
     setModalVisible(true);
   };
 
@@ -73,7 +75,7 @@ const FacturaForm = () => {
       const suscripciones = response.data.items;
       const nuevosDetalles = suscripciones.map((suscripcion) => ({
         suscripcionId: suscripcion.id,
-        descripcion: suscripcion.descripcion,
+        descripcion: suscripcion.actividadNombre,
         precioUnitario:
           suscripcion.modalidad === "SEMANAL"
             ? suscripcion.costoSemanal
@@ -210,6 +212,21 @@ const FacturaForm = () => {
       iva: "",
     });
     document.getElementById("codigo").value = "";
+  };
+
+  // Validar campos de detalle
+  const validarCampos = () => {
+    if (
+      producto.codigo !== "" &&
+      producto.cantidad !== "" &&
+      producto.descripcion !== "" &&
+      producto.precio !== "" &&
+      producto.iva !== ""
+    ) {
+      setBotonDeshabilitado(false);
+    } else {
+      setBotonDeshabilitado(true);
+    }
   };
 
   const handleKeyDown = async (e) => {
@@ -367,6 +384,7 @@ const FacturaForm = () => {
                     ...producto,
                     cantidad: nuevaCantidad,
                   });
+                  validarCampos();
                 }
               }}
             />
@@ -424,6 +442,7 @@ const FacturaForm = () => {
               outline
               className="mt-4"
               onClick={handleAgregarItem}
+              disabled={botonDeshabilitado}
             >
               Agregar Item
             </Btn>
