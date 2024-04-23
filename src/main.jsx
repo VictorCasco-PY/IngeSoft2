@@ -30,7 +30,7 @@ import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
-
+import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -236,7 +236,14 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-
+          <Route
+            path="planes-entrenamiento"
+            element={
+              <Layout>
+                <PlanesVista />
+              </Layout>
+            }
+          />
           <Route
             path="*"
             element={
