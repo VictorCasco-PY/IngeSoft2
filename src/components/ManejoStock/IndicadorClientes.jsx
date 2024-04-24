@@ -23,15 +23,17 @@ const IndicatorClientes = ({ clientes }) => {
 
   return (
     <div
-      style={{
-        backgroundColor: color,
-        color: textColor,
-        borderRadius: "5px",
-        fontWeight: "bold",
-        width: "70%",
-        textAlign: "center",
-        marginLeft: "1rem"
-      }}
+    style={{
+      backgroundColor: color,
+      color: textColor,
+      borderRadius: "5px",
+      fontWeight: "bold",
+      textAlign: "center",
+      width: "45%",
+      marginLeft: "auto",
+      marginRight: "auto"
+    }}
+    
     >
       {displayStock}
     </div>

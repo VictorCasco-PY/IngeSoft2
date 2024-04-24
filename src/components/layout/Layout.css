@@ -1,0 +1,11 @@
+
+/* cambios de andy */
+
+.FondoApp {
+    margin: 0%;
+    width: 100%;
+  }
+#botonextra{
+  padding: none !important;
+  margin: none !important;
+}

@@ -16,11 +16,14 @@ import ButtonBasic from "../../components/bottons/ButtonBasic";
 import CustomAlert from "../../components/alert/CustomAlert";
 import Pagination from "@mui/material/Pagination";
 import toast, { Toaster } from "react-hot-toast";
-import { Button } from "flowbite-react";
 import { IoAddOutline } from "react-icons/io5";
 import { IoCheckmark } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import ReporteStorage from "../../utils/ReportesStorage";
+import CBadge from "../../components/labels/CBadge";
+
 const MainClients = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -110,7 +113,7 @@ const MainClients = () => {
   };
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-};
+  };
   const searchClientes = (term) => {
     const filtered = clientes.filter((cliente) => {
       const nombre = cliente.nombre.toLowerCase();
@@ -171,7 +174,7 @@ const MainClients = () => {
 
   // Funcion para cerrar el modal
   const handleCloseModal = () => {
-    
+
     setModalOpen(false);
   };
 
@@ -288,7 +291,7 @@ const MainClients = () => {
         ...clienteData,
         [name]: "", // Vaciar el campo de teléfono
       });
-    }else {
+    } else {
       // Si no es 'ruc', actualiza normalmente
       setClienteData({
         ...clienteData,
@@ -486,31 +489,71 @@ const MainClients = () => {
     }
   };
 
+  //COLOR AZUL Y OUTLINE EN LINKS
+
+  //INICIO cambio de alerta de clientes morosos
+  const [cantidadClientesMorosos, setCantidadClientesMorosos] = useState(0);
+  useEffect(() => {
+    if (ReporteStorage.getEstadosClientesData()) {
+      setCantidadClientesMorosos(
+        ReporteStorage.getEstadosClientesData().cantidadClientesMorosos
+      );
+    }
+  }, []);
+  //FIN CAMBIO DE ALERTA DE CLIENTES MOROSOS
+
   return (
-    <div className="MaquetaCliente">
-      <div class="card">
-        <div class="container">
-        <div className="card-1">
-        <h2>Clientes</h2>
-        <div className="card-body d-flex align-items-center ">
-        <form className="d-flex flex-grow-1">
-            <input
-              id="Btn-Buscar"
-              className="form-control mt-3 custom-input"
-              type="text"
-              placeholder="Buscar..."
-              value={searchTerm}
-              onChange={handleInputChanges}
-            />
-            <ButtonBasic
-              id="Btn-Buscar"
-              text="Buscar"
-              onClick={handleSearchChange}
-            />
-             </form>
+    <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
+
+      <CartaPrincipal>
+        <div>
+
+          <div className="d-flex">
+            <h1>Clientes</h1>
+            {cantidadClientesMorosos > 0 && (
+              <CBadge type="danger" style={{ margin: 'auto' }} title="Alerta" >
+                <b>{cantidadClientesMorosos}</b> {cantidadClientesMorosos > 1 ? (<><b>clientes</b> no han pagado su suscripción</>) : (<><b>cliente</b> no ha pagado su suscripción</>)}
+              </CBadge>
+            )}
+          </div>
+
+          <div className="card-body d-flex align-items-center ">
+            <form className="d-flex flex-grow-1 align-items-center">
+              <input
+                id="input-search"
+                className="form-control custom-input"
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={handleInputChanges}
+              />
+              <ButtonBasic
+                id="btn-Buscar"
+                text="Buscar"
+                onClick={handleSearchChange}
+              />
+            </form>
             <div className="dropdown">
               <button
-                id="Btn-Filtrar"
+                id="btn-Filtrar"
                 type="button"
                 className="btn btn-primary dropdown-toggle btn-filtrar"
                 data-bs-toggle="dropdown"
@@ -519,18 +562,18 @@ const MainClients = () => {
               </button>
               <ul className="dropdown-menu">
                 <li>
-                <button
+                  <button
                     className="dropdown-item"
-                    id="filtro-opcion-pagado"
+                    id="btn-pagado"
                     onClick={() => handleFiltrar("PAGADO")}
                   >
                     Pagado
-                    </button>
+                  </button>
                 </li>
                 <li>
-                <button
+                  <button
                     className="dropdown-item"
-                    id="filtro-opcion-pendiente"
+                    id="btn-pendiente"
                     onClick={() => handleFiltrar("PENDIENTE")}
                   >
                     Pendiente
@@ -539,7 +582,7 @@ const MainClients = () => {
                 <li>
                   <button
                     className="dropdown-item"
-                    id="filtro-todos"
+                    id="btn-todos"
                     onClick={() => handleFiltrar("")}
                   >
                     Todos
@@ -547,340 +590,340 @@ const MainClients = () => {
                 </li>
               </ul>
             </div>
-            <ButtonCrear 
-            id="botton-crear"
-            text="Nuevo Proveedor"
-            onClick={() => setShowModal(true)}
-               icon={<IoAdd />}
-               color="secondary"
+            <ButtonCrear
+              id="btn-crear"
+              text="Nuevo Cliente"
+              onClick={() => setShowModal(true)}
+              icon={<IoAdd />}
+              color="secondary"
             />
           </div>
         </div>
-          {/* Modal para registrar nuevo cliente */}
-      <ModalBase
-        open={showModal}
-        closeModal={handleCloseModalRegistre}
-        title="Registro de Cliente"
-      >
-        <div>
-          <div
-            className="modal-body"
-            style={{ marginTop: "0px", paddingTop: "0px" }}
-          >
-            <p style={{ fontWeight: "bold", fontSize: "14px" }}>
-              Datos Personales
-            </p>
+        {/* Modal para registrar nuevo cliente */}
+        <ModalBase
+          open={showModal}
+          closeModal={handleCloseModalRegistre}
+          title="Registro de Cliente"
+        >
+          <div>
+            <div
+              className="modal-body"
+              style={{ marginTop: "0px", paddingTop: "0px" }}
+            >
+              <p style={{ fontWeight: "bold", fontSize: "14px" }}>
+                Datos Personales
+              </p>
 
-            <form>
-              <div>
-                <div className="label-container">
-                  <LabelBase label="Nombre:" htmlFor="nombre" />
-                  <span className="required">*</span>
-                </div>
-                <input
-                  style={{ width: "100%", height: "30px" }}
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  className="form-control"
-                  value={clienteData.nombre}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <div className="label-container">
-                  <LabelBase label="Apellido:" htmlFor="apellido" />
-                  <span className="required">*</span>
-                </div>
-
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="apellido"
-                  name="apellido"
-                  className="form-control"
-                  value={clienteDataExtra.apellido}
-                  onChange={handleApellidoChange}
-                />
-              </div>
-              <div className="d-flex">
-                <div style={{ margin: "5px" }}>
+              <form>
+                <div>
                   <div className="label-container">
-                    <LabelBase label="CI/RUC:" htmlFor="ruc" />
+                    <LabelBase label="Nombre:" htmlFor="nombre" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    style={{ width: "100%", height: "30px" }}
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    className="form-control"
+                    value={clienteData.nombre}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div>
+                  <div className="label-container">
+                    <LabelBase label="Apellido:" htmlFor="apellido" />
                     <span className="required">*</span>
                   </div>
 
                   <input
                     type="text"
                     style={{ width: "100%", height: "30px" }}
-                    id="ruc"
-                    name="ruc"
+                    id="apellido"
+                    name="apellido"
                     className="form-control"
-                    value={clienteData.ruc}
+                    value={clienteDataExtra.apellido}
+                    onChange={handleApellidoChange}
+                  />
+                </div>
+                <div className="d-flex">
+                  <div style={{ margin: "5px" }}>
+                    <div className="label-container">
+                      <LabelBase label="CI/RUC:" htmlFor="ruc" />
+                      <span className="required">*</span>
+                    </div>
+
+                    <input
+                      type="text"
+                      style={{ width: "100%", height: "30px" }}
+                      id="ruc"
+                      name="ruc"
+                      className="form-control"
+                      value={clienteData.ruc}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div style={{ margin: "5px" }}>
+                    <LabelBase label="Telefono:" htmlFor="telefono" />
+                    <input
+                      type="text"
+                      style={{ width: "100%", height: "30px" }}
+                      id="telefono"
+                      name="telefono"
+                      className="form-control"
+                      value={clienteData.telefono}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <LabelBase label="e-mail:" htmlFor="email" />
+                  <input
+                    type="text"
+                    style={{ width: "100%", height: "30px" }}
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    value={clienteData.email}
                     onChange={handleInputChange}
                   />
                 </div>
-                <div style={{ margin: "5px" }}>
-                  <LabelBase label="Telefono:" htmlFor="telefono" />
+                <div>
+                  <LabelBase label="Dirección:" htmlFor="direccion" />
                   <input
                     type="text"
                     style={{ width: "100%", height: "30px" }}
-                    id="telefono"
-                    name="telefono"
+                    id="direccion"
+                    name="direccion"
                     className="form-control"
-                    value={clienteData.telefono}
+                    value={clienteData.direccion}
                     onChange={handleInputChange}
                   />
                 </div>
-              </div>
-              <div>
-                <LabelBase label="e-mail:" htmlFor="email" />
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="email"
-                  name="email"
-                  className="form-control"
-                  value={clienteData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
-                <LabelBase label="Dirección:" htmlFor="direccion" />
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="direccion"
-                  name="direccion"
-                  className="form-control"
-                  value={clienteData.direccion}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="campo-obligatorio">
-                <span className="required">*</span>
-                <span className="message">Campo obligatorio</span>
-              </div>
-              <div className="d-flex justify-content-center align-items-center float-end">
-                <ButtonBasic
-                  id="guardarCliente"
-                  text="Guardar"
-                  onClick={handleSubmit}
-                >
-                  {loading ? "Cargando..." : "Agregar Cliente"}
-                </ButtonBasic>
-              </div>
-            </form>
-          </div>
-        </div>
-      </ModalBase>
-      {/*modal para editar cliente*/}
-      <ModalBase
-        open={modalOpen}
-        title="Editar Cliente"
-        closeModal={handleCloseModal}
-      >
-        <div>
-          <div
-            className="modal-body"
-            style={{ marginTop: "0px", paddingTop: "0px" }}
-          >
-            <p style={{ fontWeight: "bold", fontSize: "14px" }}>
-              Datos Personales
-            </p>
-
-            <form>
-              <div>
-                <LabelBase label="Nombre:" htmlFor="nombre" />
-                <input
-                  style={{ width: "100%", height: "30px" }}
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  className="form-control"
-                  value={editingClient ? editingClient.nombre : ""}
-                  onChange={handleNameChange}
-                />
-              </div>
-              <div className="d-flex">
-                <div style={{ margin: "5px" }}>
-                  <LabelBase label="CI/RUC:" htmlFor="ruc" />
-                  <input
-                    type="text"
-                    style={{ width: "100%", height: "30px" }}
-                    id="ruc"
-                    name="ruc"
-                    className="form-control"
-                    value={editingClient ? editingClient.ruc : ""}
-                    onChange={handleRucChange}
-                  />
+                <div className="campo-obligatorio">
+                  <span className="required">*</span>
+                  <span className="message">Campo obligatorio</span>
                 </div>
-                <div style={{ margin: "5px" }}>
-                  <LabelBase label="Telefono:" htmlFor="telefono" />
-                  <input
-                    type="text"
-                    style={{ width: "100%", height: "30px" }}
-                    id="telefono"
-                    name="telefono"
-                    className="form-control"
-                    value={editingClient ? editingClient.telefono : ""}
-                    onChange={handleTelefonoChange}
-                  />
-                </div>
-              </div>
-              <div>
-                <LabelBase label="e-mail:" htmlFor="email" />
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="email"
-                  name="email"
-                  className="form-control"
-                  value={editingClient ? editingClient.email : ""}
-                  onChange={handleEmailChange}
-                />
-              </div>
-              <div>
-                <LabelBase label="Dirección:" htmlFor="direccion" />
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="direccion"
-                  name="direccion"
-                  className="form-control"
-                  value={editingClient ? editingClient.direccion : ""}
-                  onChange={handleDireccionChange}
-                />
-              </div>
-              <div className="d-flex justify-content-center align-items-center float-end">
-                <ButtonBasic
-                  text="Guardar"
-                  ButtonBasic
-                  id="guardarClienteCambios"
-                  onClick={handleGuardarCambios}
-                >
-                  {loading ? "Cargando..." : "Guardar Cambios"}
-                </ButtonBasic>
-              </div>
-            </form>
-          </div>
-        </div>
-      </ModalBase>
-
-      {/* Modal de suscripciones */}
-      <ModalBase
-        open={suscripcionModalOpen}
-        closeModal={handleSuscripcionModalClose}
-        title={
-          selectedClienteId
-            ? `Agregar Suscripción a ${selectedClienteId.nombre}`
-            : "Agregar Suscripción"
-        }
-        total={total}
-      >
-        <form onSubmit={handleSubmitSuscripcion}>
-          <div>
-            <div className="label-container">
-              <LabelBase label="Modalidad de membresia:" htmlFor="modalidad" />
-
-              <span className="required">*</span>
-            </div>
-            <select
-              className="select"
-              value={modalidad}
-              id="modalidad"
-              onChange={(e) => setModalidad(e.target.value)}
-            >
-              <option value="MENSUAL">Mensual</option>
-              <option value="SEMANAL">Semanal</option>
-            </select>
-          </div>
-          <div>
-            <div className="label-container">
-              <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
-              <span className="required">*</span>
-            </div>
-
-            <input
-              className="select-activity"
-              type="date"
-              id="fecha"
-              value={fechaInicio}
-              onChange={(e) => setFechaInicio(e.target.value)}
-            />
-          </div>
-          <div>
-            <div className="label-container">
-              <LabelBase label="Actividades" htmlFor="actividades" />
-              <span className="required">*</span>
-            </div>
-            <select
-              className="select"
-              value=""
-              id="actividades"
-              onChange={(e) => handleAddSelectedActivity(e.target.value)}
-            >
-              <option value="" disabled hidden>
-                Selecciona una actividad
-              </option>
-              {actividades.map((actividad) => (
-                <option key={actividad.id} value={actividad.id}>
-                  {actividad.nombre}
-                </option>
-              ))}
-            </select>
-            <p>
-              {selectedActivities.map((activity) => (
-                <div key={activity.id} className="select-activity">
-                  {activity.nombre}{" "}
-                  <button
-                    className="button-activity"
-                    id="eliminarActividad"
-                    onClick={() => handleRemoveSelectedActivity(activity)}
+                <div className="d-flex justify-content-center align-items-center float-end">
+                  <ButtonBasic
+                    id="btn-guardar"
+                    text="Guardar"
+                    onClick={handleSubmit}
                   >
-                    <IoClose />
-                  </button>
-                  <br />
+                    {loading ? "Cargando..." : "Agregar Cliente"}
+                  </ButtonBasic>
                 </div>
-              ))}
-            </p>
+              </form>
+            </div>
           </div>
-
-          <div className="d-flex">
-            {/*Para manejar el costo mostrar 50.000 o 390.000 */}
-            <LabelBase
-              label={`Costo: ${total.toLocaleString()} Gs`}
-              htmlFor="costo"
-            />
-          </div>
-          <div className="campo-obligatorio">
-            <span className="required">*</span>
-            <span className="message">Campo obligatorio</span>
-          </div>
-          {/* Botón para guardar */}
-          <div className="d-flex justify-content-center align-items-center float-end">
-            <ButtonBasic
-              text="Guardar"
-              type="submit"
-              id="guardarSuscripcion"
-              onClick={handleSubmitSuscripcion}
+        </ModalBase>
+        {/*modal para editar cliente*/}
+        <ModalBase
+          open={modalOpen}
+          title="Editar Cliente"
+          closeModal={handleCloseModal}
+        >
+          <div>
+            <div
+              className="modal-body"
+              style={{ marginTop: "0px", paddingTop: "0px" }}
             >
-              {loading ? "Cargando..." : "Guardar Cambios"}
-            </ButtonBasic>
-          </div>
-        </form>
-      </ModalBase>
+              <p style={{ fontWeight: "bold", fontSize: "14px" }}>
+                Datos Personales
+              </p>
 
-      {showAlert && clientToDelete && (
-        <CustomAlert
-          message={`¿Estás seguro de eliminar a ${clientToDelete.nombre}?`}
-          confirmText="Aceptar"
-          cancelText="Cancelar"
-          confirmAction={handleConfirmDelete}
-          cancelAction={handleCancelDelete}
-        />
-      )}
-  
+              <form>
+                <div>
+                  <LabelBase label="Nombre:" htmlFor="nombre" />
+                  <input
+                    style={{ width: "100%", height: "30px" }}
+                    type="text"
+                    id="nombreEdit"
+                    name="nombre"
+                    className="form-control"
+                    value={editingClient ? editingClient.nombre : ""}
+                    onChange={handleNameChange}
+                  />
+                </div>
+                <div className="d-flex">
+                  <div style={{ margin: "5px" }}>
+                    <LabelBase label="CI/RUC:" htmlFor="ruc" />
+                    <input
+                      type="text"
+                      style={{ width: "100%", height: "30px" }}
+                      id="rucEdit"
+                      name="ruc"
+                      className="form-control"
+                      value={editingClient ? editingClient.ruc : ""}
+                      onChange={handleRucChange}
+                    />
+                  </div>
+                  <div style={{ margin: "5px" }}>
+                    <LabelBase label="Telefono:" htmlFor="telefono" />
+                    <input
+                      type="text"
+                      style={{ width: "100%", height: "30px" }}
+                      id="telefonoEdit"
+                      name="telefono"
+                      className="form-control"
+                      value={editingClient ? editingClient.telefono : ""}
+                      onChange={handleTelefonoChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <LabelBase label="e-mail:" htmlFor="email" />
+                  <input
+                    type="text"
+                    style={{ width: "100%", height: "30px" }}
+                    id="emailEdit"
+                    name="email"
+                    className="form-control"
+                    value={editingClient ? editingClient.email : ""}
+                    onChange={handleEmailChange}
+                  />
+                </div>
+                <div>
+                  <LabelBase label="Dirección:" htmlFor="direccion" />
+                  <input
+                    type="text"
+                    style={{ width: "100%", height: "30px" }}
+                    id="direccionEdit"
+                    name="direccion"
+                    className="form-control"
+                    value={editingClient ? editingClient.direccion : ""}
+                    onChange={handleDireccionChange}
+                  />
+                </div>
+                <div className="d-flex justify-content-center align-items-center float-end">
+                  <ButtonBasic
+                    text="Guardar"
+                    ButtonBasic
+                    id="btn-guardarEdit"
+                    onClick={handleGuardarCambios}
+                  >
+                    {loading ? "Cargando..." : "Guardar Cambios"}
+                  </ButtonBasic>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ModalBase>
+
+        {/* Modal de suscripciones */}
+        <ModalBase
+          open={suscripcionModalOpen}
+          closeModal={handleSuscripcionModalClose}
+          title={
+            selectedClienteId
+              ? `Agregar Suscripción a ${selectedClienteId.nombre}`
+              : "Agregar Suscripción"
+          }
+          total={total}
+        >
+          <form onSubmit={handleSubmitSuscripcion}>
+            <div>
+              <div className="label-container">
+                <LabelBase label="Modalidad de membresia:" htmlFor="modalidad" />
+
+                <span className="required">*</span>
+              </div>
+              <select
+                className="select"
+                value={modalidad}
+                id="modalidad"
+                onChange={(e) => setModalidad(e.target.value)}
+              >
+                <option value="MENSUAL">Mensual</option>
+                <option value="SEMANAL">Semanal</option>
+              </select>
+            </div>
+            <div>
+              <div className="label-container">
+                <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
+                <span className="required">*</span>
+              </div>
+
+              <input
+                className="select-activity"
+                type="date"
+                id="fecha"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+              />
+            </div>
+            <div>
+              <div className="label-container">
+                <LabelBase label="Actividades" htmlFor="actividades" />
+                <span className="required">*</span>
+              </div>
+              <select
+                className="select"
+                value=""
+                id="actividades"
+                onChange={(e) => handleAddSelectedActivity(e.target.value)}
+              >
+                <option value="" disabled hidden>
+                  Selecciona una actividad
+                </option>
+                {actividades.map((actividad) => (
+                  <option id="opcion" key={actividad.id} value={actividad.id}>
+                    {actividad.nombre}
+                  </option>
+                ))}
+              </select>
+              <p>
+                {selectedActivities.map((activity) => (
+                  <div key={activity.id} className="select-activity">
+                    {activity.nombre}{" "}
+                    <button
+                      className="button-activity"
+                      id="eliminarActividad"
+                      onClick={() => handleRemoveSelectedActivity(activity)}
+                    >
+                      <IoClose />
+                    </button>
+                    <br />
+                  </div>
+                ))}
+              </p>
+            </div>
+
+            <div className="d-flex">
+              {/*Para manejar el costo mostrar 50.000 o 390.000 */}
+              <LabelBase
+                label={`Costo: ${total.toLocaleString()} Gs`}
+                htmlFor="costo"
+              />
+            </div>
+            <div className="campo-obligatorio">
+              <span className="required">*</span>
+              <span className="message">Campo obligatorio</span>
+            </div>
+            {/* Botón para guardar */}
+            <div className="d-flex justify-content-center align-items-center float-end">
+              <ButtonBasic
+                text="Guardar"
+                type="submit"
+                id="btn-guardarSuscripcion"
+                onClick={handleSubmitSuscripcion}
+              >
+                {loading ? "Cargando..." : "Guardar Cambios"}
+              </ButtonBasic>
+            </div>
+          </form>
+        </ModalBase>
+
+        {showAlert && clientToDelete && (
+          <CustomAlert
+            message={`¿Estás seguro de eliminar a ${clientToDelete.nombre}?`}
+            confirmText="Aceptar"
+            cancelText="Cancelar"
+            confirmAction={handleConfirmDelete}
+            cancelAction={handleCancelDelete}
+          />
+        )}
+
         <div class="table-container">
           <table className="custom-table">
             <thead>
@@ -916,12 +959,14 @@ const MainClients = () => {
                   </td>
                   <td>{cliente.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <EstadoPago estado={cliente.estado} />{" "}
+                    <EstadoPago estado={cliente.estado ? cliente.estado.toLowerCase() : ''} />
+
                   </td>
                   <td>{cliente.email}</td>
                   <td>{cliente.telefono}</td>
                   <td className="custom-table2">
                     <a
+                      id={`btn-eliminar-cliente-${cliente.id}`}
                       href="#"
                       onClick={() => handleShowAlert(cliente)}
                       style={{ fontSize: "0.8rem" }}
@@ -929,6 +974,7 @@ const MainClients = () => {
                       <RiDeleteBinLine />
                     </a>
                     <a
+                      id={`btn-editar-cliente-${cliente.id}`}
                       href="#"
                       onClick={() => handleEditClientClick(cliente)}
                       style={{ marginLeft: "1em", fontSize: "0.8rem" }}
@@ -936,6 +982,7 @@ const MainClients = () => {
                       <FiEdit2 />
                     </a>
                     <a
+                      id={`btn-agregar-suscripcion-${cliente.id}`}
                       href="#"
                       onClick={() => handleSuscripcionModalOpen(cliente)}
                       style={{ marginLeft: "1em", fontSize: "0.8rem" }}
@@ -947,36 +994,19 @@ const MainClients = () => {
               ))}
             </tbody>
           </table>
+
         </div>
-        </div>
-        <div className="pagination-container">
+        <div className="align-self-center">
           <Pagination
-             id="selector-paginacion"
-             count={totalPages} // Número total de páginas
-             page={currentPage} // Página actual
-             onChange={handlePageChange}
+            id="selector-paginacion"
+            count={totalPages} // Número total de páginas
+            page={currentPage} // Página actual
+            onChange={handlePageChange}
           />
         </div>
-      </div>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          success: {
-            style: {
-              background: "#75B798",
-              color: "#0A3622",
-            },
-          },
-          error: {
-            style: {
-              background: "#FFDBD9",
-              color: "#D92D20",
-            },
-          },
-        }}
-      />
-    </div>
+
+      </CartaPrincipal>
+    </>
   );
 };
 

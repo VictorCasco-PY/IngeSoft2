@@ -16,12 +16,17 @@ import LabelBase from "../../components/labels/LabelBase.jsx";
 import EstadoPago from "../../components/estado_pago/EstadoPago.jsx";
 import { Link } from "react-router-dom";
 import api from "../../utils/api";
+import TablaActividadesCliente from "../../components/tablas/TablaActividadesCliente.jsx";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal.jsx";
 
 const InfoClients = () => {
   const { id } = useParams();
   const [cliente, setCliente] = useState(null);
+
   const [showPayments, setShowPayments] = useState(true);
   const [showMeasurements, setShowMeasurements] = useState(false);
+  const [showActivities, setShowActivities] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [value, setValue] = useState("one");
   const [editingClient, setEditingClient] = useState(null);
@@ -70,9 +75,15 @@ const InfoClients = () => {
     if (newValue === "one") {
       setShowPayments(true);
       setShowMeasurements(false);
-    } else {
+      setShowActivities(false);
+    } else if (newValue === "two") {
       setShowPayments(false);
       setShowMeasurements(true);
+      setShowActivities(false);
+    } else if (newValue === "three") {
+      setShowPayments(false);
+      setShowMeasurements(false);
+      setShowActivities(true);
     }
   };
   const handleNameChange = (event) => {
@@ -116,7 +127,7 @@ const InfoClients = () => {
   };
 
   return (
-    <div className="container-fluid MaquetaCliente">
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -135,7 +146,7 @@ const InfoClients = () => {
           },
         }}
       />
-      <div className="cuadro-central">
+      <CartaPrincipal>
         <div style={{ marginLeft: "3%" }}>
           <Link to="/clientes">
             <button className="custom-button">
@@ -160,7 +171,6 @@ const InfoClients = () => {
                 </Alert>
                 {/*https://mui.com/material-ui/react-alert/     Para buscar las otras alertas*/}
               </div>
-
               <div className="d-flex justify-content-center mb-4 float-end">
                 <ButtonBasic
                   icon={<IoPencilOutline />}
@@ -176,7 +186,6 @@ const InfoClients = () => {
             open={modalOpen}
             title="Editar Cliente"
             closeModal={handleCloseModal}
-            
           >
             <form className="mb-3">
               <div className="mb-2 block">
@@ -190,7 +199,6 @@ const InfoClients = () => {
                   onChange={handleNameChange}
                 />
               </div>
-
               <div className="mb-2 block">
                 <LabelBase label="Plan Actual:" htmlFor="plan-actual" />
                 <select
@@ -230,26 +238,25 @@ const InfoClients = () => {
               </div>
             </form>
           </ModalBase>
-
           <hr />
           {cliente && (
             <div className="datos-extras">
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>Plan Actual</h4>
-                <p style={{fontSize: "20px", textAlign:"center"}}>Mensual</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>Plan Actual</h4>
+                <p style={{ fontSize: "20px", textAlign: "center" }}>Mensual</p>
               </div>
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>RUC</h4>
-                <p style={{fontSize: "20px"}}>{cliente.ruc}</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>RUC</h4>
+                <p style={{ fontSize: "20px" }}>{cliente.ruc}</p>
               </div>
               <div>
-                <h4 style={{fontSize: "30px", color:"#667085"}}>N° de Telefono</h4>
-                <p style={{fontSize: "20px", textAlign:"center"}}>{cliente.telefono}</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>N° de Telefono</h4>
+                <p style={{ fontSize: "20px", textAlign: "center" }}>{cliente.telefono}</p>
               </div>
             </div>
           )}
-          <Box className="Pago-Mediciones d-flex justify-content-between align-items-center mb-3">
-            <div style={{ marginLeft: "40%" }}>
+          <Box className="Pago-Mediciones d-flex justify-content-center align-items-center mb-3">
+            <div>
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -259,18 +266,19 @@ const InfoClients = () => {
               >
                 <Tab value="one" label="Pagos" />
                 <Tab value="two" label="Mediciones" />
+                <Tab value="three" label="Actividades" />
               </Tabs>
             </div>
-            {/* 
-            <div style={{marginRight:"6%"}}>
-              <ButtonBasic
-                icon={<IoAdd />}
-                color="secondary"
-                text="Nueva Medicion"
-                onClick={handleEditClientClick}
-              />
-            </div>
-            */}
+            {/*
+              <div style={{marginRight:"6%"}}>
+                <ButtonBasic
+                  icon={<IoAdd />}
+                  color="secondary"
+                  text="Nueva Medicion"
+                  onClick={handleEditClientClick}
+                />
+              </div>
+              */}
           </Box>
           {/* Renderiza la tabla de pagos si showPayments es true */}
           {showPayments && (
@@ -284,7 +292,7 @@ const InfoClients = () => {
               </thead>
               <tbody>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">11111</th>
+                  <th style={{ color: "#6941C6" }} scope="row">11111</th>
                   <td>Enero</td>
                   <td>
                     <EstadoPago estado="No pagado" />
@@ -292,7 +300,7 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">2222</th>
+                  <th style={{ color: "#6941C6" }} scope="row">2222</th>
                   <td>Febrero</td>
                   <td>
                     <EstadoPago estado="Pagado" />
@@ -300,7 +308,7 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{color:"#6941C6"}} scope="row">33333</th>
+                  <th style={{ color: "#6941C6" }} scope="row">33333</th>
                   <td>Marzo</td>
                   <td>
                     <EstadoPago estado="Pagado" />
@@ -341,12 +349,15 @@ const InfoClients = () => {
               </tbody>
             </table>
           )}
+          {showActivities && (
+            <TablaActividadesCliente clienteId={id} toast={toast} />
+          )}
           <div className="d-flex justify-content-center mt-4">
             <Pagination count={5} shape="rounded" color="secondary" />
           </div>
         </div>
-      </div>
-    </div>
+      </CartaPrincipal>
+    </>
   );
 };
 

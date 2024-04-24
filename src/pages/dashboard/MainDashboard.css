@@ -1,0 +1,92 @@
+@import url('../../global.css');
+
+
+.MDGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.15rem;
+    align-items: start;
+}
+
+.DashboardFirstSection {
+    display: flex;
+    flex-direction: row;
+}
+
+.DashboardSecondSection {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.DashboardHeader {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.notSelect {
+    user-select: none;
+}
+
+.blurScreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    filter: blur(1px);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 999;
+}
+
+.actBlur {
+    display: block !important;
+}
+
+.lastRefreshAbsolute{ 
+    position: absolute;
+    right: 13%;
+    top:15%;
+}
+
+@media (min-width: 1910px) {
+    .MDGrid {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .lastRefreshAbsolute{ 
+        right: 5%;
+        top:14%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .MDGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    .actBlur {
+        display: none !important;
+    }
+
+    .DashboardFirstSection {
+        flex-direction: column;
+    }
+
+    .DashboardSecondSection {
+        flex-direction: column;
+    }
+
+    .DashboardHeader {
+        align-self: center;
+    }
+
+}

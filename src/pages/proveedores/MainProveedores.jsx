@@ -16,6 +16,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ErrorPagina from "../../components/errores/ErrorPagina";
 import Pagination from "../../components/pagination/PaginationContainer";
 import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
+import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 
 
 const MainProveedores = () => {
@@ -335,7 +336,7 @@ const MainProveedores = () => {
     };
 
     return (
-        <div className="MaquetaCliente">
+        <>
             <Toaster
                 position="top-right"
                 reverseOrder={false}
@@ -354,228 +355,217 @@ const MainProveedores = () => {
                     },
                 }}
             />
-            <div class="card">
-                <div class="container">
-                    <div className="card-1">
-                        <h2>Proveedores</h2>
-                        <div className="card-body d-flex align-items-center ">
-                            <form className="d-flex flex-grow-1">
-                                <input
-                                    id="input-search"
-                                    className="form-control mt-3 custom-input"
-                                    type="text"
-                                    placeholder="Buscar..."
-                                    value={searchQuery}
-                                    onChange={handleInputChange}
-                                />
-                                <ButtonBasic
-                                    id="btn-buscar"
-                                    text="Buscar"
-                                    onClick={handleSearchClick}
-                                />
-                            </form>
-
-                            <div className="dropdown">
-                                <button
-                                    id="btn-filtrar"
-                                    type="button"
-                                    className="btn btn-primary dropdown-toggle btn-filtrar"
-                                    data-bs-toggle="dropdown"
-                                >
-                                    <IoCheckmark />
-                                    {appliedFilter ? `Filtrado por ${appliedFilter}` : "Filtrar por..."}
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <a className="dropdown-item" href="#"
-                                            id="nombre-filtro"
-                                            onClick={() => handleFilterSelector("nombre")}>
-                                            Nombre
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="#"
-                                            id="ruc-filtro"
-                                            onClick={() => handleFilterSelector("RUC")}>
-                                            RUC
-                                        </a>
-                                    </li>
-                                </ul>
+            <CartaPrincipal>
+                <div>
+                    <h1>Proveedores</h1>
+                    <div className="card-body d-flex align-items-center ">
+                        <form className="d-flex flex-grow-1 align-items-center">
+                            <input
+                                id="input-search"
+                                className="form-control custom-input"
+                                type="text"
+                                placeholder="Buscar..."
+                                value={searchQuery}
+                                onChange={handleInputChange}
+                            />
+                            <ButtonBasic
+                                id="btn-buscar"
+                                text="Buscar"
+                                onClick={handleSearchClick}
+                            />
+                        </form>
+                        <div className="dropdown">
+                            <button
+                                id="btn-filtrar"
+                                type="button"
+                                className="btn btn-primary dropdown-toggle btn-filtrar"
+                                data-bs-toggle="dropdown"
+                            >
+                                <IoCheckmark />
+                                {appliedFilter ? `Filtrado por ${appliedFilter}` : "Filtrar por..."}
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <a className="dropdown-item" href="#"
+                                        id="nombre-filtro"
+                                        onClick={() => handleFilterSelector("nombre")}>
+                                        Nombre
+                                    </a>
+                                </li>
+                                <li>
+                                    <a className="dropdown-item" href="#"
+                                        id="ruc-filtro"
+                                        onClick={() => handleFilterSelector("RUC")}>
+                                        RUC
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <ButtonCrear
+                            id="btn-crear"
+                            text="Nuevo Proveedor"
+                            onClick={handleNuevoProveedor}
+                            icon={<IoAdd />}
+                            color="secondary"
+                        />
+                    </div>
+                </div>
+                <ModalBase
+                    open={showModal || showEditModal}
+                    closeModal={handleCloseModal}
+                    title={showModal ? "Crear Nuevo Proveedor" : "Editar Proveedor"}
+                >
+                    <form className="mb-3">
+                        <div className="mb-2 block">
+                            <div className="label-container">
+                                <LabelBase label="Nombre:" htmlFor="nombre" />
+                                <span className="required">*</span>
                             </div>
-
-                            <ButtonCrear
-                                id="btn-crear"
-                                text="Nuevo Proveedor"
-                                onClick={handleNuevoProveedor}
-                                icon={<IoAdd />}
-                                color="secondary"
+                            <input
+                                type="text"
+                                id="nombre"
+                                name="nombre"
+                                className="form-control"
+                                value={proveedorDataToSend.nombre}
+                                onChange={handleCampoChange}
+                                required
                             />
                         </div>
-                    </div>
-
-                    <ModalBase
-                        open={showModal || showEditModal}
-                        closeModal={handleCloseModal}
-                        title={showModal ? "Crear Nuevo Proveedor" : "Editar Proveedor"}
-                    >
-                        <form className="mb-3">
-                            <div className="mb-2 block">
-                                <div className="label-container">
-                                    <LabelBase label="Nombre:" htmlFor="nombre" />
-                                    <span className="required">*</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="nombre"
-                                    name="nombre"
-                                    className="form-control"
-                                    value={proveedorDataToSend.nombre}
-                                    onChange={handleCampoChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-2 block">
-                                <div className="label-container">
-                                    <LabelBase label="Ruc:" htmlFor="ruc" />
-                                    <span className="required">*</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="ruc"
-                                    name="ruc"
-                                    className="form-control"
-                                    value={proveedorDataToSend.ruc}
-                                    onChange={handleCampoChange}
-                                    required
-                                ></input>
-                            </div>
-                            <div className="mb-2 block">
-                                <div className="label-container">
-                                    <LabelBase label="Email:" htmlFor="email" />
-                                    <span className="required">*</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="email"
-                                    name="email"
-                                    className="form-control"
-                                    value={proveedorDataToSend.email}
-                                    onChange={handleCampoChange}
-                                ></input>
-                            </div>
-                            <div className="mb-2 block">
-                                <div className="label-container">
-                                    <LabelBase label="Teléfono:" htmlFor="telefono" />
-                                    <span className="required">*</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="telefono"
-                                    name="telefono"
-                                    className="form-control"
-                                    value={proveedorDataToSend.telefono}
-                                    onChange={handleCampoChange}
-                                ></input>
-                            </div>
-                            <div className="mb-2 block">
-                                <div className="label-container">
-                                    <LabelBase label="Dirección:" htmlFor="direccion" />
-                                    <span className="required">*</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    id="direccion"
-                                    name="direccion"
-                                    className="form-control"
-                                    value={proveedorDataToSend.direccion}
-                                    onChange={handleCampoChange}
-                                ></input>
-                            </div>
-
-                            <div className="campo-obligatorio">
+                        <div className="mb-2 block">
+                            <div className="label-container">
+                                <LabelBase label="Ruc:" htmlFor="ruc" />
                                 <span className="required">*</span>
-                                <span className="message">Campo obligatorio</span>
                             </div>
-                            <div className="d-flex justify-content-center align-items-center float-end">
-                                <ButtonCrear
-                                    id="btn-guardar"
-                                    text="Aceptar"
-                                    onClick={() => handleAceptar()}
-                                />
+                            <input
+                                type="text"
+                                id="ruc"
+                                name="ruc"
+                                className="form-control"
+                                value={proveedorDataToSend.ruc}
+                                onChange={handleCampoChange}
+                                required
+                            ></input>
+                        </div>
+                        <div className="mb-2 block">
+                            <div className="label-container">
+                                <LabelBase label="Email:" htmlFor="email" />
+                                <span className="required">*</span>
                             </div>
-                        </form>
-                    </ModalBase>
-
-                    {showAlert && proveedorToDelete && (
-                        <CustomAlert
-                            message={`¿Estás seguro de eliminar el proveedor ${proveedorToDelete.nombre}?`}
-                            id="alerta-personalizada"
-                            confirmText="Aceptar"
-                            cancelText="Cancelar"
-                            confirmAction={handleConfirmDelete}
-                            cancelAction={handleCancelDelete}
-                        />
-                    )}
-
-                    <div class="table-container">
-                        {error && <ErrorPagina />}{" "}
-                        {/* Muestra el componente de error si hay un error */}
-                        {!error &&
-                            filteredProveedores.length === 0 &&
-                            !searchResultsFound && (
-                                <ElementoNoEncontrado mensaje="Proveedor no encontrado!" />
-                            )}
-                        {!error && filteredProveedores.length > 0 && (
-                            <table className="custom-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Nombre del Proveedor</th>
-                                        <th scope="col">
-                                            RUC
-                                        </th>
-                                        <th scope="col">
-                                            Email
-                                        </th>
-                                        <th scope="col">Número de Teléfono</th>
-                                        <th scope="col">Dirección</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredProveedores.map((proveedor) => (
-                                        <tr key={proveedor.id}>
-                                            <td>{proveedor.nombre}</td>
-                                            <td>{proveedor.ruc}</td>
-                                            <td>{proveedor.email}</td>
-                                            <td>{proveedor.telefono}</td>
-                                            <td>{proveedor.direccion}</td>
-                                            <td class="text-center">
-                                                <a
-                                                    href="#"
-                                                    id={`btn-eliminar-proveedor-${proveedor.id}`}
-                                                    onClick={() => handleShowAlert(proveedor)}
-                                                    style={{ fontSize: "1.2rem" }}
-                                                >
-                                                    <RiDeleteBinLine />
-                                                </a>
-                                                <a
-                                                    href="#"
-                                                    id={`btn-editar-proveedor-${proveedor.id}`}
-                                                    onClick={() => handleEditarProveedor(proveedor)}
-                                                    style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
-                                                >
-                                                    <FiEdit2 />
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <input
+                                type="text"
+                                id="email"
+                                name="email"
+                                className="form-control"
+                                value={proveedorDataToSend.email}
+                                onChange={handleCampoChange}
+                            ></input>
+                        </div>
+                        <div className="mb-2 block">
+                            <div className="label-container">
+                                <LabelBase label="Teléfono:" htmlFor="telefono" />
+                                <span className="required">*</span>
+                            </div>
+                            <input
+                                type="text"
+                                id="telefono"
+                                name="telefono"
+                                className="form-control"
+                                value={proveedorDataToSend.telefono}
+                                onChange={handleCampoChange}
+                            ></input>
+                        </div>
+                        <div className="mb-2 block">
+                            <div className="label-container">
+                                <LabelBase label="Dirección:" htmlFor="direccion" />
+                                <span className="required">*</span>
+                            </div>
+                            <input
+                                type="text"
+                                id="direccion"
+                                name="direccion"
+                                className="form-control"
+                                value={proveedorDataToSend.direccion}
+                                onChange={handleCampoChange}
+                            ></input>
+                        </div>
+                        <div className="campo-obligatorio">
+                            <span className="required">*</span>
+                            <span className="message">Campo obligatorio</span>
+                        </div>
+                        <div className="d-flex justify-content-center align-items-center float-end">
+                            <ButtonCrear
+                                id="btn-guardar"
+                                text="Aceptar"
+                                onClick={() => handleAceptar()}
+                            />
+                        </div>
+                    </form>
+                </ModalBase>
+                {showAlert && proveedorToDelete && (
+                    <CustomAlert
+                        message={`¿Estás seguro de eliminar el proveedor ${proveedorToDelete.nombre}?`}
+                        id="alerta-personalizada"
+                        confirmText="Aceptar"
+                        cancelText="Cancelar"
+                        confirmAction={handleConfirmDelete}
+                        cancelAction={handleCancelDelete}
+                    />
+                )}
+                <div class="table-container">
+                    {error && <ErrorPagina />}{" "}
+                    {/* Muestra el componente de error si hay un error */}
+                    {!error &&
+                        filteredProveedores.length === 0 &&
+                        !searchResultsFound && (
+                            <ElementoNoEncontrado mensaje="Proveedor no encontrado!" />
                         )}
-                    </div>
-
-                </div>
-                <div className="pagination-container">
+                    {!error && filteredProveedores.length > 0 && (
+                        <table className="custom-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre del Proveedor</th>
+                                    <th scope="col">
+                                        RUC
+                                    </th>
+                                    <th scope="col">
+                                        Email
+                                    </th>
+                                    <th scope="col">Número de Teléfono</th>
+                                    <th scope="col">Dirección</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredProveedores.map((proveedor) => (
+                                    <tr key={proveedor.id}>
+                                        <td>{proveedor.nombre}</td>
+                                        <td>{proveedor.ruc}</td>
+                                        <td>{proveedor.email}</td>
+                                        <td>{proveedor.telefono}</td>
+                                        <td>{proveedor.direccion}</td>
+                                        <td class="text-center">
+                                            <a
+                                                href="#"
+                                                id={`btn-eliminar-proveedor-${proveedor.id}`}
+                                                onClick={() => handleShowAlert(proveedor)}
+                                                style={{ fontSize: "1.2rem" }}
+                                            >
+                                                <RiDeleteBinLine />
+                                            </a>
+                                            <a
+                                                href="#"
+                                                id={`btn-editar-proveedor-${proveedor.id}`}
+                                                onClick={() => handleEditarProveedor(proveedor)}
+                                                style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                                            >
+                                                <FiEdit2 />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                     <Pagination
                         id="selector-paginacion"
                         totalPages={totalPages}
@@ -583,8 +573,8 @@ const MainProveedores = () => {
                         onPageChange={handlePageChange}
                     />
                 </div>
-            </div>
-        </div>
+            </CartaPrincipal>
+        </>
     );
 };
 

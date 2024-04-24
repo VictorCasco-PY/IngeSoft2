@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from 'react-loader-spinner'
@@ -8,6 +8,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import toast, { Toaster } from "react-hot-toast";
 import api from "../utils/api";
 import "../style.css";
+import { useCurrentUser } from "../context/UserContext";
 
 
 const Login = () => {
@@ -20,7 +21,15 @@ const Login = () => {
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const { login: contextLogin, userId } = useCurrentUser();
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (userId) {
+            navigate("/clientes");
+        }
+    }, [userId]);
 
     const handleChange = (event) => {
         setUsuario({
@@ -29,12 +38,14 @@ const Login = () => {
         });
     };
 
+    //voy a cambiar esta funcion para utilizar un hook de useAuth en el sig sprint, asi si el token expiró, se redirige a login automaticamente
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
         api.post("/auth/login", usuario)
             .then((response) => {
-                localStorage.setItem("user", JSON.stringify(response.data));
+                //cambio de andy: guardar el usuario en el contexto
+                contextLogin(response.data);
                 navigate("/clientes");
             })
             .catch((error) => {
@@ -76,6 +87,10 @@ const Login = () => {
             setPasswordFocused(false);
         }
     };
+
+    if (userId) {
+        return (<></>)
+    }
 
     return (
         <div className="login-container">

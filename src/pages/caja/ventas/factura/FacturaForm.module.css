@@ -1,0 +1,65 @@
+.title {
+    display: inline-block;
+    margin-left: 30px;
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.title_container {
+    display: flex;
+    align-items: center;
+}
+
+
+.detalles_content {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.direccion_input {
+    width: 100%;
+}
+
+.razon_social_input {
+    width: 100%;
+}
+
+.ruc_input {
+    width: 80%;
+}
+
+.detalle_input_sm {
+    width: 100px;
+}
+
+.detalle_input_md {
+    width: 150px;
+}
+
+.button_container {
+    position: absolute;
+    bottom: 8px;
+    right: 0;
+}
+.button_container2 {
+    position: absolute;
+    bottom: 5rem;
+    right: 0;
+}
+
+.form_container {
+    position: relative;
+    height: 750px;
+}
+
+input {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 5px 10px;
+}
+
+.table_container {
+    max-height: calc(5 * 40px);
+    /* 40px es la altura de cada fila, ajusta según sea necesario */
+    overflow-y: auto;
+}

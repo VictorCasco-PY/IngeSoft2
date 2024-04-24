@@ -84,7 +84,7 @@
   justify-content: center;
   margin: 20px;
   padding: 20px;
-  border: 2px solid #e74c3c; /* Color rojo para resaltar el error */
+  border: 2px solid #D8B30A; /* Color rojo para resaltar el error */
   border-radius: 10px;
   background-color: #f9f9f9; /* Color de fondo */
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
@@ -92,7 +92,7 @@
 
 .error-icon {
   font-size: 48px;
-  color: #e74c3c; /* Color rojo para el icono */
+  color: #D8B30A; /* Color rojo para el icono */
 }
 
 .error-message {
