@@ -30,6 +30,7 @@ import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
+import  ReporteCliente  from "./pages/reportes/MainClientesReporte";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -232,6 +233,15 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <InfoServicios />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/reportes"
+              element={
+                <Layout>
+                  <ReporteCliente />
                 </Layout>
               }
             />
