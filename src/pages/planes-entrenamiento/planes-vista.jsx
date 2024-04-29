@@ -3,42 +3,64 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Btn } from "../../components/bottons/Button";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineClock } from "react-icons/hi";
 import { Toaster } from "react-hot-toast";
+import ModalEntrenamiento from "../../components/modals/ModalEntrenamiento";
 import "../caja/administrarCaja/AdministrarCaja.css";
-
+import EntrenamientoPrincipiante from "./planeamiento/EntrenamientoPrincipiante";
+import { usePlanes } from "../../hooks/usePlanes";
 const PlanesVista = () => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [nivelSeleccionado, setNivelSeleccionado] = useState("");
+  const { crearProgramas } = usePlanes();
+
+  const handleCrearPrograma = async (datosPrograma) => {
+    try {
+      await crearProgramas(datosPrograma);
+      console.log("Programa creado:", datosPrograma);
+    } catch (error) {
+      console.error("Error al crear programa:", error);
+    }
+  };
+  const handleOpenModal = (nivel) => {
+    setShowModal(true);
+    setNivelSeleccionado(nivel);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
-
+/*
   const goToPlaneamientoPrincipiante = () => {
     if (disabledCerrarCaja) return;
     navigate("/caja/compras");
   };
-
+*/
   const goToListaPrincipiante = () => {
     if (disabledCerrarCaja) return;
-    navigate("/caja/lista-compras");
+    navigate("/planes-entrenamiento/principiante");
   };
-
+/*
   const goToPlaneamientoIntermedio = () => {
     if (disabledCerrarCaja) return;
     navigate("/caja/ventas");
   };
-
+*/
   const goToListaIntermedio = () => {
     if (disabledCerrarCaja) return;
-    navigate("/caja/lista-ventas");
+    navigate("/planes-entrenamiento/intermedio");
   };
-
+/*
   const goToPlaneamientoAvanzado = () => {
     if (disabledCerrarCaja) return;
     navigate("/caja/pendientes");
   };
+  */
   const goToListaAvanzado = () => {
     if (disabledCerrarCaja) return;
-    navigate("/caja/pendientes");
+    navigate("/planes-entrenamiento/avanzado");
   };
 
   return (
@@ -64,7 +86,7 @@ const PlanesVista = () => {
 
       <CartaPrincipal>
         <div className="d-flex align-items-center justify-content-center gap-3 flex-column">
-          <h1>Planes de Entrenamiento</h1>
+          <h1 style={{marginTop:"4rem"}}>Planes de Entrenamiento</h1>
         </div>
 
         <div className="d-flex gap-5 justify-content-center mt-5 flex-md-row flex-sm-column align-items-center cajasContainer">
@@ -74,7 +96,7 @@ const PlanesVista = () => {
             <Btn
               id="btn-nueva-venta"
               type="primary"
-              onClick={goToPlaneamientoIntermedio}
+              onClick={() => handleOpenModal("Principiante")}
               disabled={disabledCerrarCaja}
             >
               Nuevo Planeamiento
@@ -83,7 +105,7 @@ const PlanesVista = () => {
             <Btn
               id="btn-listar-ventas"
               outline
-              onClick={goToListaIntermedio}
+              onClick={goToListaPrincipiante}
               disabled={disabledCerrarCaja}
             >
               Ver Planeamientos
@@ -95,7 +117,7 @@ const PlanesVista = () => {
             <Btn
               id="btn-nueva-compra"
               type="primary"
-              onClick={goToPlaneamientoPrincipiante}
+              onClick={() => handleOpenModal("Intermedio")}
               disabled={disabledCerrarCaja}
             >
               Nuevo Planeamiento
@@ -104,7 +126,7 @@ const PlanesVista = () => {
             <Btn
               id="btn-listar-compras"
               outline
-              onClick={goToListaPrincipiante}
+              onClick={goToListaIntermedio}
               disabled={disabledCerrarCaja}
             >
               Ver Planeamientos
@@ -116,7 +138,7 @@ const PlanesVista = () => {
             <Btn
               id="btn-listar-cobros"
               type="primary"
-              onClick={goToPlaneamientoAvanzado}
+              onClick={() => handleOpenModal("Avanzado")}
               disabled={disabledCerrarCaja}
             >
               Nuevo Planeamiento
@@ -131,6 +153,13 @@ const PlanesVista = () => {
             </Btn>
           </div>
         </div>
+        {showModal && (
+        <ModalEntrenamiento
+          nivel={nivelSeleccionado}
+          onClose={handleCloseModal}
+          onCreate={handleCrearPrograma}
+        />
+      )}
       </CartaPrincipal>
     </>
   );
