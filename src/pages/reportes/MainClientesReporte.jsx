@@ -4,9 +4,11 @@ import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 import BasicDatePicker from "../../components/DatePicker/BasicDatePicker";
 import useReporteClienteNuevo from "../../hooks/useReporteClienteNuevo";
 import Pagination from "../../components/pagination/PaginationContainer";
-import FilterAltIcon from '@mui/icons-material/FilterAlt'; // Importa el ícono de filtro
+import FilterAltIcon from '@mui/icons-material/FilterAlt'; 
 import "./MainClientesReporte.css";
 import { Btn } from '../../components/bottons/Button';
+import toast, { Toaster } from "react-hot-toast";
+
 
 const MainReporteCliente = () => {
     const { data, isLoadingNewClients, error, getNuevosClientesPorFechas } = useReporteClienteNuevo();
@@ -22,8 +24,16 @@ const MainReporteCliente = () => {
             try {// formato de fecha DD/MM/YYYY
                 const fechaInicioFormatted = fechaInicio ? fechaInicio.toISOString().split('T')[0] : null;
                 const fechaFinFormatted = fechaFin ? fechaFin.toISOString().split('T')[0] : null;
+               
                 
                 if (fechaInicioFormatted && fechaFinFormatted && searchClicked) { 
+                    
+                    if (fechaFin < fechaInicio) {
+                        // Mostrar mensaje de error
+                        toast.error("La fecha 'Hasta' debe ser mayor que la fecha 'Desde'");
+                        
+                    }
+
                     const response = await getNuevosClientesPorFechas(fechaInicioFormatted, fechaFinFormatted, currentPage);
                     setTotalPages(response.totalPages);
                 }
@@ -43,6 +53,7 @@ const MainReporteCliente = () => {
     };
 
     return (
+        
         <CartaPrincipal>
             <h1>Reporte de nuevos clientes</h1>
             <div className='fecha-container'>         
@@ -66,7 +77,24 @@ const MainReporteCliente = () => {
                     <FilterAltIcon />
                 </Btn>
             </div>
-            {error && <div>Error: {error.message}</div>}
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                    success: {
+                        style: {
+                            background: "#75B798",
+                            color: "#0A3622",
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: "#FFDBD9",
+                            color: "#D92D20",
+                        },
+                    },
+                }}
+            />
             {isLoadingNewClients ? (
                 <div>Cargando...</div>
             ) : (
