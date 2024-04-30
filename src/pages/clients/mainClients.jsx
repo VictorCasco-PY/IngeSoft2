@@ -23,6 +23,7 @@ import ButtonCrear from "../../components/bottons/ButtonCrear";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 import ReporteStorage from "../../utils/ReportesStorage";
 import CBadge from "../../components/labels/CBadge";
+import useReporteClientes from "../../hooks/useReporteClientes";
 
 const MainClients = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -493,13 +494,21 @@ const MainClients = () => {
 
   //INICIO cambio de alerta de clientes morosos
   const [cantidadClientesMorosos, setCantidadClientesMorosos] = useState(0);
+  const [morososReloadBool, setMorososReloadBool] = useState(false); //utilizar este estado si se necesita recargar la cantidad de clientes morosos
+  const { getCantidadPorEstadoSuscripcion, isLoadingMorosos } = useReporteClientes();
+
   useEffect(() => {
-    if (ReporteStorage.getEstadosClientesData()) {
-      setCantidadClientesMorosos(
-        ReporteStorage.getEstadosClientesData().cantidadClientesMorosos
-      );
+    const fetchCantidadClientesMorosos = async () => {
+      try {
+        const response = await getCantidadPorEstadoSuscripcion();
+        const cantMorosos = response.cantidadClientesMorosos;
+        setCantidadClientesMorosos(cantMorosos);
+      } catch (error) {
+        toast.error("Error al obtener la cantidad de clientes morosos");
+      }
     }
-  }, []);
+    fetchCantidadClientesMorosos();
+  }, [morososReloadBool]);
   //FIN CAMBIO DE ALERTA DE CLIENTES MOROSOS
 
   return (
@@ -529,7 +538,7 @@ const MainClients = () => {
           <div className="d-flex">
             <h1>Clientes</h1>
             {cantidadClientesMorosos > 0 && (
-              <CBadge type="danger" style={{ margin: 'auto' }} title="Alerta" >
+              <CBadge type="danger" style={{ margin: 'auto' }} title="Alerta" loading={isLoadingMorosos}>
                 <b>{cantidadClientesMorosos}</b> {cantidadClientesMorosos > 1 ? (<><b>clientes</b> no han pagado su suscripción</>) : (<><b>cliente</b> no ha pagado su suscripción</>)}
               </CBadge>
             )}

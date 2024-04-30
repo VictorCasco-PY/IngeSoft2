@@ -31,7 +31,11 @@ import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
 import MainArqueoLista from "./pages/arqueo/MainArqueoLista";
-
+import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
+import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento/EntrenamientoPrincipiante";
+import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
+import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/EntrenamientoAvanzado";
+import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -244,7 +248,46 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-
+          <Route
+            path="planes-entrenamiento"
+            element={
+              <Layout>
+                <PlanesVista />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/principiante"
+            element={
+              <Layout>
+                <EntrenamientoPrincipiante />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/intermedio"
+            element={
+              <Layout>
+                <EntrenamientoIntermedio />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/avanzado"
+            element={
+              <Layout>
+                <EntrenamientoAvanzado />
+              </Layout>
+            }
+          />
+           <Route
+            path="planes-entrenamiento/:slug"
+            element={
+              <Layout>
+                <DetalleEntrenamiento />
+              </Layout>
+            }
+          />
           <Route
             path="*"
             element={
