@@ -33,7 +33,7 @@ const ModalExtraccionCaja = ({ onClose, toast }) => {
       toast.success("Extraccion realizada exitosamente");
       onClose();
     } catch (error) {
-      toast.error("La extraccion no pudo realizarce");
+      toast.error("La extraccion no pudo realizarse");
       toast.error("Verifique el monto actual de la caja");
       console.error("Error al realizar la extracción de caja:", error);
       console.error(
