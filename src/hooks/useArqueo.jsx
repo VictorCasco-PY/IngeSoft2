@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import api from "../utils/api";
-import CajaStorage from "../utils/CajaStorage";
 
 const useArqueo = () => {
   const ARQUEO_URL = "/arqueo";
 
-  const [data, setData] = useState({});
+  const [arqueos, setArqueos] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getArqueoBySesionId = async () => {
+  const handleRequest = async (funcionBackend) => {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await api.get(
-        ARQUEO_URL + `/${CajaStorage.getSesionCajaId}`
-      );
-      setData(response.data);
-      return response.data;
+      const res = await funcionBackend();
+      setArqueos(res.data.items);
+      setTotalPages(res.totalPages);
+      return res.data.items;
     } catch (error) {
       setError(error);
       return error;
@@ -26,7 +25,11 @@ const useArqueo = () => {
     }
   };
 
-  return { getArqueoBySesionId, data, isLoading };
+  const getArqueos = async (page = 1, params) => {
+    return handleRequest(() => api.get(`${ARQUEO_URL}/page/${page}`, params));
+  };
+
+  return { getArqueos, arqueos, totalPages, error, isLoading };
 };
 
 export default useArqueo;
