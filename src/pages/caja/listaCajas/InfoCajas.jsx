@@ -137,7 +137,8 @@ const InfoCajas = () => {
                                     <td className="py-3">{precioHandler(caja.monto)}</td>
                                     <td className="py-3 d-flex gap-2">
                                         <DeleteIcon className='hCursor clickableIcon' id={`btn-delete-caja-${caja.id}`} onClick={() => { selectCajaBorrarPopup(caja) }} />
-                                        <EditIcon className='hCursor clickableIcon' id={`btn-edit-caja-${caja.id}`} onClick={() => { selectCajaModal(caja) }} />
+                                        {/*descartamos la opcion de poder editar la caja, ya poseemos la extraccion de la misma*/}
+                                        {/*<EditIcon className='hCursor clickableIcon' id={`btn-edit-caja-${caja.id}`} onClick={() => { selectCajaModal(caja) }} /> */}
                                     </td>
                                 </tr>
                             )

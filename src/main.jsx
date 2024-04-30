@@ -31,6 +31,7 @@ import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
 import  ReporteCliente  from "./pages/reportes/MainClientesReporte";
+import MainArqueoLista from "./pages/arqueo/MainArqueoLista";
 import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
 import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento/EntrenamientoPrincipiante";
 import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
@@ -89,7 +90,14 @@ createRoot(document.getElementById("root")).render(
                 </Layout>
               }
             />
-
+            <Route
+              path="/arqueo/lista"
+              element={
+                <Layout>
+                  <MainArqueoLista />
+                </Layout>
+              }
+            />
             <Route
               exact
               path="/caja/historial"
