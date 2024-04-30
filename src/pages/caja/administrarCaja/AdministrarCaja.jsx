@@ -135,12 +135,17 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
     return `${fechaArr[2]}-${fechaArr[1]}-${fechaArr[0]}`;
   };
 
+  console.log("Monto caja:", caja.monto);
+
   const postArqueo = async () => {
     try {
-      const response = await api.post(
-        `/arqueo/${CajaStorage.getSesionCajaId()}`
-      );
+      const response = await api.post("/arqueo", {
+        sesionCajaId: CajaStorage.getSesionCajaId(),
+        cajaId: CajaStorage.getCajaId(),
+        montoApertura: caja.monto,
+      });
       saveArqueoData(response.data);
+      console.log("New arqueo0", response.data);
       navigate("/arqueo");
     } catch (error) {
       console.error(error);
