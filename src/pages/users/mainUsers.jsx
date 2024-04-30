@@ -570,7 +570,7 @@ const MainUsers = () => {
                 <input
                   type="text"
                   style={{ width: "100%", height: "30px" }}
-                  id="input-direccion"
+                  id="input-email"
                   name="email"
                   className="form-control"
                   value={userData.email}
