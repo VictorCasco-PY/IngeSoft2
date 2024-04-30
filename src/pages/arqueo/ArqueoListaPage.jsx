@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "../../components/table/Table";
 import api from "../../utils/api";
 import Pagination from "../../components/pagination/PaginationContainer";
+import { Toaster, toast } from "react-hot-toast";
 
 const ArqueoListaPage = () => {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const ArqueoListaPage = () => {
       setData(response.data.items);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
 
@@ -29,6 +30,24 @@ const ArqueoListaPage = () => {
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
       <Table
         headers={[
           "Fecha",
@@ -45,10 +64,11 @@ const ArqueoListaPage = () => {
             <td className="py-3">
               {!arqueo.montoApertura == 0
                 ? arqueo.montoApertura.toLocaleString("es-ES")
-                : 0}
+                : 0}{" "}
+              Gs.
             </td>
             <td className="py-3">
-              {arqueo.montoTotal.toLocaleString("es-ES")}
+              {arqueo.montoTotal.toLocaleString("es-ES")} Gs.
             </td>
           </tr>
         ))}
