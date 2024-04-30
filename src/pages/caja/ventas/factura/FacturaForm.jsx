@@ -138,7 +138,7 @@ const FacturaForm = () => {
       let iva5 = 0;
       let iva10 = 0;
       detallesParaEnviar.forEach((detalle) => {
-        subTotal += detalle.subtotal;
+        subTotal += detalle.subtotal + iva10;
         if (detalle.iva === 5) {
           iva5 += detalle.ivaTotal;
         } else if (detalle.iva === 10) {
@@ -159,8 +159,8 @@ const FacturaForm = () => {
         subTotal: subTotal,
         iva5: iva5,
         iva10: iva10,
-        total: total,
-        saldo: total,
+        total: total + iva10 + iva5,
+        saldo: total + iva10 + iva5,
       });
 
       handleGuardarFactura();
