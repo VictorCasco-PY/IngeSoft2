@@ -3,16 +3,19 @@ import { Table } from "../../components/table/Table";
 import api from "../../utils/api";
 import Pagination from "../../components/pagination/PaginationContainer";
 import { Toaster, toast } from "react-hot-toast";
+import { Btn } from "../../components/bottons/Button";
 
 const ArqueoListaPage = () => {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const getArqueos = async (page) => {
+  const getArqueos = async (page, fecha = null) => {
     try {
-      const response = await api.get(`/arqueo/page/${page}`);
-      console.log(response.data.items);
+      let endpoint = fecha
+        ? `/arqueo/searchByFecha/${fecha}/page/${page}` //Filtro no funciona aun
+        : `/arqueo/page/${page}`;
+      const response = await api.get(endpoint);
       setData(response.data.items);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -26,6 +29,20 @@ const ArqueoListaPage = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleFilterByDate = () => {
+    const fecha = document.getElementById("input-search").value;
+    if (fecha) {
+      getArqueos(currentPage, fecha);
+    } else {
+      toast.error("Ingrese una fecha para filtrar.");
+    }
+  };
+
+  const handleResetFilter = () => {
+    document.getElementById("input-search").value = "";
+    getArqueos(currentPage);
   };
 
   return (
@@ -48,6 +65,21 @@ const ArqueoListaPage = () => {
           },
         }}
       />
+      <div className="row d-flex align-items-center mb-3">
+        <div className="col-4">
+          <input id="input-search" type="date" className="form-control" />
+        </div>
+        <div className="col-1">
+          <Btn id="btn-buscar" outline onClick={handleFilterByDate}>
+            Filtrar
+          </Btn>
+        </div>
+        <div className="col-1">
+          <Btn id="btn-reset" outline onClick={handleResetFilter}>
+            Limpiar
+          </Btn>
+        </div>
+      </div>
       <Table
         headers={[
           "Fecha",
