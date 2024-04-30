@@ -30,14 +30,23 @@ const ArqueoListaPage = () => {
   return (
     <>
       <Table
-        headers={["Fecha", "Caja", "Saldo de apertura", "Saldo de cierre"]}
+        headers={[
+          "Fecha",
+          "Nombre de caja",
+          "Saldo de apertura",
+          "Saldo de cierre",
+        ]}
         striped
       >
         {data.map((arqueo, index) => (
           <tr key={index}>
             <td className="py-3">{arqueo.fecha}</td>
-            <td className="py-3">Caja</td>
-            <td className="py-3">0</td>
+            <td className="py-3">{arqueo.nombreCaja}</td>
+            <td className="py-3">
+              {!arqueo.montoApertura == 0
+                ? arqueo.montoApertura.toLocaleString("es-ES")
+                : 0}
+            </td>
             <td className="py-3">
               {arqueo.montoTotal.toLocaleString("es-ES")}
             </td>
