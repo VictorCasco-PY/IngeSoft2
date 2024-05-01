@@ -20,6 +20,7 @@ import RolEnum from "../../../utils/RolEnum";
 import { getCurrentHour } from "../../../utils/DateStatics";
 import api from "../../../utils/api";
 import { useArqueoContext } from "../../../context/ArqueoContext";
+import ModalExtraccionCaja from "../extraccionCaja/ModalExtraccionCaja";
 
 const AdministrarCaja = ({ setSesionAbierta }) => {
   const navigate = useNavigate();
@@ -37,6 +38,17 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
   const [disabledCerrarCaja, setDisabledCerrarCaja] = useState(false);
 
   const { saveArqueoData } = useArqueoContext();
+
+  // Estados para controlar el modal de extraccion
+  const [openExtraccionModal, setOpenExtraccionModal] = useState(false);
+
+  // funciones para abrir y cerrar el modal de extraccion
+  const handleOpenExtraccionModal = () => {
+    setOpenExtraccionModal(true);
+  };
+  const handleCloseExtraccionModal = () => {
+    setOpenExtraccionModal(false);
+  };
 
   const fetchData = async () => {
     const data1 = await getCajaById(CajaStorage.getCajaId());
@@ -285,6 +297,26 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
               Listar Cobros Pendientes
             </Btn>
           </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Btn
+            id="btn-modal-extraccion"
+            className="mt-4"
+            outline
+            onClick={handleOpenExtraccionModal}
+          >
+            Extraer monto
+          </Btn>
+
+          {/* Modal de extraccion de caja */}
+          {openExtraccionModal && (
+            <ModalExtraccionCaja
+              onClose={handleCloseExtraccionModal}
+              toast={toast}
+              realizarExtraccion={() => {}}
+              isLoading={false}
+            />
+          )}
         </div>
       </CartaPrincipal>
     </>

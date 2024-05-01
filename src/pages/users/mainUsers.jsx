@@ -570,7 +570,7 @@ const MainUsers = () => {
                 <input
                   type="text"
                   style={{ width: "100%", height: "30px" }}
-                  id="input-direccion"
+                  id="input-email"
                   name="email"
                   className="form-control"
                   value={userData.email}
@@ -659,6 +659,7 @@ const MainUsers = () => {
                       <td>{user.telefono}</td>
                       <td class="text-center">
                         <a
+                        id="btn-delete"
                           href="#"
                           onClick={() => handleShowAlert(user)}
                           style={{ fontSize: "1.2rem" }}
@@ -666,6 +667,7 @@ const MainUsers = () => {
                           <RiDeleteBinLine />
                         </a>
                         <a
+                        id="btn-edit"
                           href="#"
                           onClick={() => handleEditarUsuario(user)}
                           style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
