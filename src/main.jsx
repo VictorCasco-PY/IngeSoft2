@@ -30,13 +30,15 @@ import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
-import  ReporteCliente  from "./pages/reportes/MainClientesReporte";
+import ReporteCliente from "./pages/reportes/MainClientesReporte";
 import MainArqueoLista from "./pages/arqueo/MainArqueoLista";
 import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
 import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento/EntrenamientoPrincipiante";
 import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
 import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/EntrenamientoAvanzado";
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
+import AsignarPlanACliente from "./pages/planes-entrenamiento/cliente-planes/AsignarPlanACliente";
+import MainAsignarPlanACliente from "./pages/planes-entrenamiento/cliente-planes/MainAsignarPlanACliente";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -104,6 +106,14 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <MovimientosVista />
+                </Layout>
+              }
+            />
+            <Route
+              path="/planes-entrenamiento/asignar"
+              element={
+                <Layout>
+                  <MainAsignarPlanACliente />
                 </Layout>
               }
             />
@@ -291,7 +301,7 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-           <Route
+          <Route
             path="planes-entrenamiento/:slug"
             element={
               <Layout>
