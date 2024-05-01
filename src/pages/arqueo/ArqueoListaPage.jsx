@@ -4,22 +4,30 @@ import api from "../../utils/api";
 import Pagination from "../../components/pagination/PaginationContainer";
 import { Toaster, toast } from "react-hot-toast";
 import { Btn } from "../../components/bottons/Button";
+import ElementoNoEncontrado from "../../components/errores/ElementoNoEncontrado";
 
 const ArqueoListaPage = () => {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const getArqueos = async (page, fecha = null) => {
     try {
+      setLoading(true);
       let endpoint = fecha
-        ? `/arqueo/searchByFecha/${fecha}/page/${page}` //Filtro no funciona aun
+        ? `/arqueo/searchByFecha/${fecha}/page/${page}`
         : `/arqueo/page/${page}`;
       const response = await api.get(endpoint);
       setData(response.data.items);
       setTotalPages(response.data.totalPages);
+      setLoading(false);
     } catch (error) {
-      toast.error(error);
+      toast.error("No hay arqueos en esa fecha");
+      handleResetFilter();
+      setError(true);
+      setLoading(false);
     }
   };
 
@@ -34,7 +42,8 @@ const ArqueoListaPage = () => {
   const handleFilterByDate = () => {
     const fecha = document.getElementById("input-search").value;
     if (fecha) {
-      getArqueos(currentPage, fecha);
+      getArqueos(1, fecha);
+      setError(false);
     } else {
       toast.error("Ingrese una fecha para filtrar.");
     }
@@ -42,6 +51,7 @@ const ArqueoListaPage = () => {
 
   const handleResetFilter = () => {
     document.getElementById("input-search").value = "";
+    setError(false);
     getArqueos(currentPage);
   };
 
@@ -75,36 +85,42 @@ const ArqueoListaPage = () => {
           </Btn>
         </div>
         <div className="col-1">
-          <Btn id="btn-reset" outline onClick={handleResetFilter}>
+          <Btn id="btn-reset" onClick={handleResetFilter}>
             Limpiar
           </Btn>
         </div>
       </div>
-      <Table
-        headers={[
-          "Fecha",
-          "Nombre de caja",
-          "Saldo de apertura",
-          "Saldo de cierre",
-        ]}
-        striped
-      >
-        {data.map((arqueo, index) => (
-          <tr key={index}>
-            <td className="py-3">{arqueo.fecha}</td>
-            <td className="py-3">{arqueo.nombreCaja}</td>
-            <td className="py-3">
-              {!arqueo.montoApertura == 0
-                ? arqueo.montoApertura.toLocaleString("es-ES")
-                : 0}{" "}
-              Gs.
-            </td>
-            <td className="py-3">
-              {arqueo.montoTotal.toLocaleString("es-ES")} Gs.
-            </td>
-          </tr>
-        ))}
-      </Table>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : error ? (
+        <ElementoNoEncontrado mensaje="No hay arqueos en esta fecha" />
+      ) : (
+        <Table
+          headers={[
+            "Fecha",
+            "Nombre de caja",
+            "Saldo de apertura",
+            "Saldo de cierre",
+          ]}
+          striped
+        >
+          {data.map((arqueo, index) => (
+            <tr key={index}>
+              <td className="py-3">{arqueo.fecha}</td>
+              <td className="py-3">{arqueo.nombreCaja}</td>
+              <td className="py-3">
+                {!arqueo.montoApertura == 0
+                  ? arqueo.montoApertura.toLocaleString("es-ES")
+                  : 0}{" "}
+                Gs.
+              </td>
+              <td className="py-3">
+                {arqueo.montoTotal.toLocaleString("es-ES")} Gs.
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
       <div>
         <Pagination
           totalPages={totalPages}
