@@ -104,6 +104,9 @@ const EntrenamientoIntermedio = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
+  const handleProgramaClick = (programa) => {
+    navigate(`/planes-entrenamiento/intermedio/${programa.id}`);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -130,7 +133,7 @@ const EntrenamientoIntermedio = () => {
           </thead>
           <tbody>
             {data.items?.map((programa) => (
-              <tr key={programa.id}>
+              <tr key={programa.id} onClick={() => handleProgramaClick(programa)}>
                 <td>{programa.titulo}</td>
                 <td>{programa.nombreActividad}</td>
                 <td>{programa.nivel}</td>

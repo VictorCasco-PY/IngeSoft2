@@ -8,7 +8,7 @@ import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
-const DetalleEntrenamiento = () => {
+const DetalleEntrenamientoIntermedio = () => {
   const { id } = useParams();
   const { getProgramasById } = usePlanes();
   const [programa, setPrograma] = useState(null);
@@ -65,7 +65,7 @@ const DetalleEntrenamiento = () => {
 
           <div className="info-programa">
             <div className="d-flex align-items-center gap-3">
-              <FlechaAtras ruta="/planes-entrenamiento/principiante" />
+              <FlechaAtras ruta="/planes-entrenamiento/intermedio" />
               <h2>{programa.titulo}</h2>
             </div>
             <div className="float-end">
@@ -118,4 +118,4 @@ const DetalleEntrenamiento = () => {
   );
 };
 
-export default DetalleEntrenamiento;
+export default DetalleEntrenamientoIntermedio;

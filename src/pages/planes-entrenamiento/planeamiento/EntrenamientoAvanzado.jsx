@@ -53,9 +53,10 @@ const EntrenamientoAvanzado = () => {
     }
   };
 
-  const handleEntrenamiento = (slug) => {
-    navigate(`/planes-entrenamiento/${slug}`);
+  const handleProgramaClick = (programa) => {
+    navigate(`/planes-entrenamiento/avanzado/${programa.id}`);
   };
+
 
   const handleSearchInput = (e) => {
     const value = e.target.value;
@@ -130,7 +131,7 @@ const EntrenamientoAvanzado = () => {
           </thead>
           <tbody>
             {data.items?.map((programa) => (
-              <tr key={programa.id}>
+              <tr key={programa.id} onClick={() => handleProgramaClick(programa)}>
                 <td>{programa.titulo}</td>
                 <td>{programa.nombreActividad}</td>
                 <td>{programa.nivel}</td>

@@ -11,7 +11,8 @@ import FlechaAtras from "../../../components/flechaAtras/FlechaAtras";
 import { Table } from "../../../components/table/Table";
 import { Input } from "../../../components/input/input";
 import { Btn } from "../../../components/bottons/Button";
-import { IoCheckmark } from "react-icons/io5";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FiEdit2 } from "react-icons/fi";
 import { usePlanes } from "../../../hooks/usePlanes";
 import { useNavigate } from "react-router-dom";
 
@@ -53,8 +54,8 @@ const EntrenamientoPrincipiante = () => {
     }
   };
 
-  const handleEntrenamiento = (slug) => {
-    navigate(`/planes-entrenamiento/${slug}`);
+  const handleProgramaClick = (programa) => {
+    navigate(`/planes-entrenamiento/principiante/${programa.id}`);
   };
 
   const handleSearchInput = (e) => {
@@ -130,12 +131,29 @@ const EntrenamientoPrincipiante = () => {
           </thead>
           <tbody>
             {data.items?.map((programa) => (
-              <tr key={programa.id}>
+              <tr key={programa.id} onClick={() => handleProgramaClick(programa)}>
                 <td>{programa.titulo}</td>
                 <td>{programa.nombreActividad}</td>
                 <td>{programa.nivel}</td>
                 <td>{programa.sexo}</td>
-
+                <td class="text-center">
+                      <a
+                        id={`btn-eliminar-programa-${programa.id}`}
+                        href="#"
+                        onClick={() => handleShowAlert(programa)}
+                        style={{ fontSize: "1.2rem" }}
+                      >
+                        <RiDeleteBinLine />
+                      </a>
+                      <a
+                        id={`btn-editar-programa-${programa.id}`}
+                        href="#"
+                        onClick={() => handleEditarprograma(programa)}
+                        style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                      >
+                        <FiEdit2 />
+                      </a>
+                    </td>
                 {/* Añade botones u opciones para editar o eliminar si es necesario */}
               </tr>
             ))}
