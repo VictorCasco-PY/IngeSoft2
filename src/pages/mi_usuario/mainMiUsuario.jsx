@@ -350,7 +350,6 @@ const MainMiUsuario = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    {/* Aquí colocarías tu icono */}
                   </svg>
                 </span>
                 {detailsVisible ? (

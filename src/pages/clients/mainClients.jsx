@@ -14,7 +14,7 @@ import LabelBase from "../../components/labels/LabelBase";
 import ModalBase from "../../components/modals/ModalBase";
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import CustomAlert from "../../components/alert/CustomAlert";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "../../components/pagination/PaginationContainer";
 import toast, { Toaster } from "react-hot-toast";
 import { IoAddOutline } from "react-icons/io5";
 import { IoCheckmark } from "react-icons/io5";
@@ -175,11 +175,8 @@ const MainClients = () => {
 
   // Funcion para cerrar el modal
   const handleCloseModal = () => {
-
     setModalOpen(false);
   };
-
-
 
   const handleCloseModalRegistre = () => {
     {
@@ -216,7 +213,8 @@ const MainClients = () => {
     // Verificar si algún campo esta vacios
     const camposObligatorios = ["nombre", "apellido", "ruc"];
     for (const campo of camposObligatorios) {
-      if (!clienteData[campo] && !clienteDataExtra.apellido) { // Verificar si el campo está vacío
+      if (!clienteData[campo] && !clienteDataExtra.apellido) {
+        // Verificar si el campo está vacío
         toast.error(`El campo ${campo} es obligatorio`);
         return;
       }
@@ -287,7 +285,8 @@ const MainClients = () => {
         [name]: value,
         cedula: cedulaValue,
       });
-    } else if (name === "telefono" && value.trim() === "") { // Si el campo es el teléfono y se elimina todo el contenido
+    } else if (name === "telefono" && value.trim() === "") {
+      // Si el campo es el teléfono y se elimina todo el contenido
       setClienteData({
         ...clienteData,
         [name]: "", // Vaciar el campo de teléfono
@@ -513,28 +512,26 @@ const MainClients = () => {
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          success: {
-            style: {
-              background: "#75B798",
-              color: "#0A3622",
-            },
-          },
-          error: {
-            style: {
-              background: "#FFDBD9",
-              color: "#D92D20",
-            },
-          },
-        }}
-      />
-
       <CartaPrincipal>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            success: {
+              style: {
+                background: "#75B798",
+                color: "#0A3622",
+              },
+            },
+            error: {
+              style: {
+                background: "#FFDBD9",
+                color: "#D92D20",
+              },
+            },
+          }}
+        />
         <div>
-
           <div className="d-flex">
             <h1>Clientes</h1>
             {cantidadClientesMorosos > 0 && (
@@ -833,7 +830,10 @@ const MainClients = () => {
           <form onSubmit={handleSubmitSuscripcion}>
             <div>
               <div className="label-container">
-                <LabelBase label="Modalidad de membresia:" htmlFor="modalidad" />
+                <LabelBase
+                  label="Modalidad de membresia:"
+                  htmlFor="modalidad"
+                />
 
                 <span className="required">*</span>
               </div>
@@ -968,8 +968,11 @@ const MainClients = () => {
                   </td>
                   <td>{cliente.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <EstadoPago estado={cliente.estado ? cliente.estado.toLowerCase() : ''} />
-
+                    <EstadoPago
+                      estado={
+                        cliente.estado ? cliente.estado.toLowerCase() : ""
+                      }
+                    />
                   </td>
                   <td>{cliente.email}</td>
                   <td>{cliente.telefono}</td>
@@ -1008,12 +1011,11 @@ const MainClients = () => {
         <div className="align-self-center">
           <Pagination
             id="selector-paginacion"
-            count={totalPages} // Número total de páginas
-            page={currentPage} // Página actual
-            onChange={handlePageChange}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
         </div>
-
       </CartaPrincipal>
     </>
   );
