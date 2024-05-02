@@ -1,5 +1,8 @@
 import React from 'react';
 import './labels.css'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import SkeletonWrapper from '../loadingSkeleton/SkeletonWrapper';
 
 /*
     TYPE: 'danger' | 'success' | 'warning' , color de fondo
@@ -14,7 +17,7 @@ import './labels.css'
     </CBadge>
 */
 
-const CBadge = ({ type, title, children, icon, isStrongTitle = true, ...props }) => {
+const CBadge = ({ type, title, children, icon, isStrongTitle = true, loading=false, ...props }) => {
 
     let bodyClass = '';
     let titleClass = '';
@@ -30,15 +33,27 @@ const CBadge = ({ type, title, children, icon, isStrongTitle = true, ...props })
     }
 
     return (
-        <div className={`alertBody ${bodyClass}`} {...props}>
-            <div className={`alertTitle ${isStrongTitle ? titleClass : ''}`}>
-                {icon && icon}
-                <p className='m-0 p-0'>{title}</p>
-            </div>
-            <p className='m-0 p-0'>
-                {children}
-            </p>
-        </div>
+        loading ?
+            (
+                <div className={`alertBody `}  {...props}>
+                    <SkeletonWrapper width={250}>
+                        <Skeleton style={{ height: 40 }} />
+                    </SkeletonWrapper>
+                </div>
+            )
+            :
+            (
+                <div className={`alertBody ${bodyClass}`} {...props}>
+                    <div className={`alertTitle ${isStrongTitle ? titleClass : ''}`}>
+                        {icon && icon}
+                        <p className='m-0 p-0'>{title}</p>
+                    </div>
+                    <p className='m-0 p-0'>
+                        {children}
+                    </p>
+                </div>
+            )
+
     );
 };
 

@@ -390,7 +390,7 @@ const MainProductos = () => {
           <div className="d-flex">
             <h1>Tienda</h1>
             {cantidadProductosSinStock > 0 && (
-              <CBadge type="warning" style={{ margin: 'auto' }} title="Aviso" >
+              <CBadge type="warning" style={{ margin: 'auto' }} title="Aviso" loading={isLoadingProductosSinStock}>
                 Ya no hay stock de <b>{cantidadProductosSinStock} {cantidadProductosSinStock > 1 ? 'productos' : 'producto'}</b>
               </CBadge>
             )}
