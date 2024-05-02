@@ -112,6 +112,10 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
     if (disabledCerrarCaja) return;
     navigate("/caja/pendientes");
   };
+  const goToListarCobrosPendientes = () => {
+    if (disabledCerrarCaja) return;
+    navigate("/caja/pendientes/cobros");
+  };
 
   const cerrarCajaActual = async () => {
     setDisabledCerrarCaja(true);
@@ -295,6 +299,14 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
               disabled={disabledCerrarCaja}
             >
               Listar Cobros Pendientes
+            </Btn>
+            <Btn
+              id="btn-listar-cobros"
+              outline
+              onClick={goToListarCobrosPendientes}
+              disabled={disabledCerrarCaja}
+            >
+              Listar Cobros a Proveedores
             </Btn>
           </div>
         </div>
