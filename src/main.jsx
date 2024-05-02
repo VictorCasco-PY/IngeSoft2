@@ -37,6 +37,8 @@ import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento
 import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
 import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/EntrenamientoAvanzado";
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
+import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamientoIntermedio";
+import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 import AsignarPlanACliente from "./pages/planes-entrenamiento/cliente-planes/AsignarPlanACliente";
 import MainAsignarPlanACliente from "./pages/planes-entrenamiento/cliente-planes/MainAsignarPlanACliente";
 
@@ -302,10 +304,26 @@ createRoot(document.getElementById("root")).render(
             }
           />
           <Route
-            path="planes-entrenamiento/:slug"
+            path="planes-entrenamiento/principiante/:id"
             element={
               <Layout>
                 <DetalleEntrenamiento />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/intermedio/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoIntermedio />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/avanzado/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoAvanzado />
               </Layout>
             }
           />

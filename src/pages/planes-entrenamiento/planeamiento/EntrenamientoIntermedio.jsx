@@ -14,6 +14,8 @@ import { Btn } from "../../../components/bottons/Button";
 import { IoCheckmark } from "react-icons/io5";
 import { usePlanes } from "../../../hooks/usePlanes";
 import { useNavigate } from "react-router-dom";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FiEdit2 } from "react-icons/fi";
 
 const EntrenamientoIntermedio = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,6 +106,9 @@ const EntrenamientoIntermedio = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
+  const handleProgramaClick = (programa) => {
+    navigate(`/planes-entrenamiento/intermedio/${programa.id}`);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -130,13 +135,29 @@ const EntrenamientoIntermedio = () => {
           </thead>
           <tbody>
             {data.items?.map((programa) => (
-              <tr key={programa.id}>
+              <tr key={programa.id} onClick={() => handleProgramaClick(programa)}>
                 <td>{programa.titulo}</td>
                 <td>{programa.nombreActividad}</td>
                 <td>{programa.nivel}</td>
                 <td>{programa.sexo}</td>
-
-                {/* Añade botones u opciones para editar o eliminar si es necesario */}
+                <td class="text-center">
+                      <a
+                        id={`btn-eliminar-programa-${programa.id}`}
+                        href="#"
+                        onClick={() => handleShowAlert(programa)}
+                        style={{ fontSize: "1.2rem" }}
+                      >
+                        <RiDeleteBinLine />
+                      </a>
+                      <a
+                        id={`btn-editar-programa-${programa.id}`}
+                        href="#"
+                        onClick={() => handleEditarprograma(programa)}
+                        style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                      >
+                        <FiEdit2 />
+                      </a>
+                    </td>
               </tr>
             ))}
           </tbody>

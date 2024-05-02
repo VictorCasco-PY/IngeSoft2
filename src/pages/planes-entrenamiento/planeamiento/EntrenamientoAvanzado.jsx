@@ -14,7 +14,8 @@ import { Btn } from "../../../components/bottons/Button";
 import { IoCheckmark } from "react-icons/io5";
 import { usePlanes } from "../../../hooks/usePlanes";
 import { useNavigate } from "react-router-dom";
-
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FiEdit2 } from "react-icons/fi";
 const EntrenamientoAvanzado = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
@@ -25,7 +26,8 @@ const EntrenamientoAvanzado = () => {
   const [error, setError] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const navigate = useNavigate();
-  const { getProgramasAvanzado, getProgramasByActividad, getActividades } = usePlanes();
+  const { getProgramasAvanzado, getProgramasByActividad, getActividades } =
+    usePlanes();
 
   useEffect(() => {
     fetchData();
@@ -53,8 +55,8 @@ const EntrenamientoAvanzado = () => {
     }
   };
 
-  const handleEntrenamiento = (slug) => {
-    navigate(`/planes-entrenamiento/${slug}`);
+  const handleProgramaClick = (programa) => {
+    navigate(`/planes-entrenamiento/avanzado/${programa.id}`);
   };
 
   const handleSearchInput = (e) => {
@@ -63,32 +65,29 @@ const EntrenamientoAvanzado = () => {
     if (value === "") {
       fetchData(); // Restablece los elementos cuando el campo de búsqueda está vacío
       setNotFound(false); // Restablece el estado notFound cuando borras el contenido del campo de búsqueda
-
     }
   };
-  
 
   const handleSearch = async () => {
     if (search === "") {
       fetchData();
       return;
     }
-  
+
     setIsLoading(true);
     try {
       const res = await getProgramasAvanzado(1, search); // Aquí pasa el parámetro de búsqueda
       setData(res);
-      if(res.items.length === 0){
+      if (res.items.length === 0) {
         setNotFound(true);
       }
     } catch (error) {
       setError(error);
-      
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleFilter = async (actividad) => {
     setIsLoading(true);
     try {
@@ -112,9 +111,11 @@ const EntrenamientoAvanzado = () => {
   const switchRender = () => {
     if (isLoading) return <Loader />;
 
-    if (notFound) return <ListaVacía mensaje="No hay entrenamientos con ese nombre." />;
+    if (notFound)
+      return <ListaVacía mensaje="No hay entrenamientos con ese nombre." />;
 
-    if (error) return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos." />;
+    if (error)
+      return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos." />;
 
     return (
       <>
@@ -130,13 +131,32 @@ const EntrenamientoAvanzado = () => {
           </thead>
           <tbody>
             {data.items?.map((programa) => (
-              <tr key={programa.id}>
+              <tr
+                key={programa.id}
+                onClick={() => handleProgramaClick(programa)}
+              >
                 <td>{programa.titulo}</td>
                 <td>{programa.nombreActividad}</td>
                 <td>{programa.nivel}</td>
                 <td>{programa.sexo}</td>
-
-                {/* Añade botones u opciones para editar o eliminar si es necesario */}
+                <td class="text-center">
+                  <a
+                    id={`btn-eliminar-programa-${programa.id}`}
+                    href="#"
+                    onClick={() => handleShowAlert(programa)}
+                    style={{ fontSize: "1.2rem" }}
+                  >
+                    <RiDeleteBinLine />
+                  </a>
+                  <a
+                    id={`btn-editar-programa-${programa.id}`}
+                    href="#"
+                    onClick={() => handleEditarprograma(programa)}
+                    style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                  >
+                    <FiEdit2 />
+                  </a>
+                </td>{" "}
               </tr>
             ))}
           </tbody>
@@ -193,7 +213,6 @@ const EntrenamientoAvanzado = () => {
           </ul>
         </div>
          */}
-
       </div>
       {switchRender()}
       {/* Modal */}
