@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,13 +8,32 @@ import ButtonBasic from "../bottons/ButtonBasic";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { usePlanes } from "../../hooks/usePlanes";
 import { useParams } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+
+const initialState = {
+  ejercicios: [],
+};
+
+const ejercicioReducer = (state, action) => {
+  switch (action.type) {
+    case "ADD_EJERCICIO":
+      return { ...state, ejercicios: [...state.ejercicios, action.ejercicio] };
+    case "DELETE_EJERCICIO":
+      return {
+        ...state,
+        ejercicios: state.ejercicios.filter((e) => e !== action.ejercicio),
+      };
+    default:
+      return state;
+  }
+};
 function FormularioEjercicios() {
+  const [state, dispatch] = useReducer(ejercicioReducer, initialState);
   const { id } = useParams();
   const { crearEjercicios } = usePlanes();
   const [showModal, setShowModal] = useState(false);
-  const [ejercicios, setEjercicios] = useState([]);
-  const [hasChanges, setHasChanges] = useState(false);
+  const { ejercicios } = state;
+
   const [maxExercisesWithoutScroll, setMaxExercisesWithoutScroll] = useState(2);
   const [ejerciciosData, setEjerciciosData] = useState({
     nombre: "",
@@ -23,9 +42,7 @@ function FormularioEjercicios() {
     peso: "",
     repeticiones: "",
   });
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  
   const validationSchema = Yup.object().shape({
     nombre: Yup.string()
       .max(30, "Nombre debe tener máximo 30 caracteres")
@@ -56,34 +73,29 @@ function FormularioEjercicios() {
       peso: parseFloat(ejerciciosData.peso),
       repeticiones: parseInt(ejerciciosData.repeticiones),
     };
-    setEjercicios([...ejercicios, ejercicio]);
-    setHasChanges(true);
-    // Limpiar los campos después de enviar el formulario
-    setEjerciciosData({
-      nombre: "",
-      descripcion: "",
-      tiempo: "",
-      peso: "",
-      repeticiones: "",
-    });
+    dispatch({ type: "ADD_EJERCICIO", ejercicio });
+    console.log(ejercicio)
   };
 
   const handleGuardar = async () => {
     try {
       for (const ejercicio of ejercicios) {
         await crearEjercicios(id, ejercicio);
-        toast.success("Ejercicio creado satisfactoriamente");
+        toast.success("Ejercicio creado con exito");
       }
-      setHasChanges(false);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDelete = (index) => {
-    const updatedEjercicios = [...ejercicios];
-    updatedEjercicios.splice(index, 1);
-    setEjercicios(updatedEjercicios);
+  const handleDelete = async (ejercicio) => {
+    try {
+      await eliminarEjercicio(id, ejercicio.id);
+      dispatch({ type: "DELETE_EJERCICIO", ejercicio });
+    } catch (error) {
+      console.error('Error eliminando ejercicio:', error);
+      toast.error('Error al eliminar el ejercicio');
+    }
   };
   return (
     <div className="container">
@@ -236,14 +248,14 @@ function FormularioEjercicios() {
               onClick={handleSubmit}
             />
           </div>
-          <div className="exercise-container"> 
+
           <div
             className="exercise-table-container"
             style={{
               maxHeight:
                 ejercicios.length > maxExercisesWithoutScroll
                   ? "300px"
-                  : "200px",
+                  : "auto",
               overflowY:
                 ejercicios.length > maxExercisesWithoutScroll
                   ? "auto"
@@ -266,7 +278,7 @@ function FormularioEjercicios() {
                         id="btn-cancelar"
                         type="button"
                         className="btn float-end"
-                        onClick={() => handleDelete(index)}
+                        onClick={() => handleDelete(exercise)}
                       >
                         <RiDeleteBinLine />
                       </button>
@@ -275,7 +287,6 @@ function FormularioEjercicios() {
                 ))}
               </tbody>
             </table>
-          </div>
           </div>
           <div className="mb-4 pt-2 text-center float-end">
             <BotonCrear

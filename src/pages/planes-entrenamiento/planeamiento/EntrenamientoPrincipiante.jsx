@@ -154,7 +154,6 @@ const EntrenamientoPrincipiante = () => {
                         <FiEdit2 />
                       </a>
                     </td>
-                {/* Añade botones u opciones para editar o eliminar si es necesario */}
               </tr>
             ))}
           </tbody>

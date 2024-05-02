@@ -37,15 +37,24 @@ export const usePlanes = () => {
   };
  
 // Obtenemos los ejercicios de un programa por su ID
-const getEjerciciosByProgramaId = async (programaId, page = 1) => {
+// Obtenemos los ejercicios de un programa por su ID
+const getEjerciciosByProgramaId = async (id,programaId, page = 1) => {
   setIsLoading(true);
-  const res = handleRequest(
-    async () =>
-      await api.get(`${DIR}/${programaId}${DIR}/items/page/${page}`)
-  );
-  setIsLoading(false);
-  return res;
+  try {
+    const res = await handleRequest(
+      async () =>
+        await api.get(`${DIR}/${id}/items/page/${page}`)
+    );
+    setIsLoading(false);
+    return res;
+  } catch (error) {
+    console.error("Error al obtener ejercicios del programa:", error);
+    setErrorMessage("Ha ocurrido un error al obtener los ejercicios.");
+    setIsLoading(false);
+    throw error;
+  }
 };
+
 
   //Obtenemos los programas
   const getProgramas = async (page = 1) => {
@@ -134,11 +143,15 @@ const getEjerciciosByProgramaId = async (programaId, page = 1) => {
       api.delete(`${DIR}/${id}`, params)
   );
   }
-  const eliminarEjercicio = async (idPrograma, idItem) =>{
-    return handleRequest(() =>
-      api.delete(`${DIR}/${idPrograma}/items/${idItem}`)
-  );
-}
+  const eliminarEjercicio = async (idPrograma, idItem) => {
+    try {
+      const response = await api.delete(`${DIR}/${idPrograma}/items/${idItem}`);
+      return response.items;
+    } catch (error) {
+      console.error('Error eliminando ejercicio:', error);
+      throw error;
+    }
+  };
   return {
     crearProgramas,
     eliminarEjercicio,
