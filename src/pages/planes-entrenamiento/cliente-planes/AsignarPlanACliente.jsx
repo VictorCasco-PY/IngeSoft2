@@ -16,12 +16,6 @@ const AsignarPlanACliente = () => {
     setShowModal(false);
   };
 
-  const handleAsignarPlan = async (programaId) => {
-    const response = api.post(`/programas/${programaId}/clientes`, {
-      clienteId: 1,
-      fechaEvaluacion: "2024-04-27",
-    });
-  };
   return (
     <>
       <div
