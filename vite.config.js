@@ -10,6 +10,9 @@ export default defineConfig({
       "referrer-policy": "same-origin", 
       "x-frame-options": "DENY",
       "permissions-policy": "geolocation=(self)", 
+      'content-security-policy': 'upgrade-insecure-requests',
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
     },
   },
 })
