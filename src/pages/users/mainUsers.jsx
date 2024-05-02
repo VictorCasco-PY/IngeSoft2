@@ -485,123 +485,123 @@ const MainUsers = () => {
           </div>
         </div>
 
-        <ModalBase
-          //Implementacion de Cesar.
-          open={showModal || showEditModal}
-          closeModal={handleCloseModal}
-          title={showModal ? "Crear Nuevo Usuario" : "Editar Usuario"}
-          // open={showModal}
-          // closeModal={() => setShowModal(false)}
-          // title="Registro de Usuario"
-        >
-          <form className="mb-3">
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="Nombre:" htmlFor="nombre" />
-                <span className="required">*</span>
-              </div>
-              <input
-                id="input-name"
-                style={{ width: "100%", height: "30px" }}
-                type="text"
-                name="nombre"
-                className="form-control"
-                value={userData.nombre}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="d-flex justify-content-between">
-              <div className="row ">
-                <div className="col-sm">
-                  <div className="label-container">
-                    <LabelBase label="Telefono:" htmlFor="telefono" />
-                    <span className="required">*</span>
-                  </div>
-                  <input
-                    style={{ width: "100%", height: "30px" }}
-                    type="text"
-                    id="input-phone"
-                    name="telefono"
-                    className="form-control"
-                    value={userData.telefono}
-                    onChange={handleInputChange}
-                    required
-                  />
+          <ModalBase
+            //Implementacion de Cesar.
+            open={showModal || showEditModal}
+            closeModal={handleCloseModal}
+            title={showModal ? "Crear Nuevo Usuario" : "Editar Usuario"}
+            // open={showModal}
+            // closeModal={() => setShowModal(false)}
+            // title="Registro de Usuario"
+          >
+            <form className="mb-3">
+              <div className="mb-2 block">
+                <div className="label-container">
+                  <LabelBase label="Nombre:" htmlFor="nombre" />
+                  <span className="required">*</span>
                 </div>
-                <div className="col-sm">
-                  <div className="label-container">
-                    <LabelBase label="Cedula:" htmlFor="cedula" />
-                    <span className="required">*</span>
+                <input
+                  id="input-name"
+                  style={{ width: "100%", height: "30px" }}
+                  type="text"
+                  name="nombre"
+                  className="form-control"
+                  value={userData.nombre}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="d-flex justify-content-between">
+                <div className="row ">
+                  <div className="col-sm">
+                    <div className="label-container">
+                      <LabelBase label="Telefono:" htmlFor="telefono" />
+                      <span className="required">*</span>
+                    </div>
+                    <input
+                      style={{ width: "100%", height: "30px" }}
+                      type="text"
+                      id="input-phone"
+                      name="telefono"
+                      className="form-control"
+                      value={userData.telefono}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
-                  <input
-                    style={{ width: "100%", height: "30px" }}
-                    type="text"
-                    id="input-cedula"
-                    name="cedula"
-                    className="form-control"
-                    value={userData.cedula}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  <div className="col-sm">
+                    <div className="label-container">
+                      <LabelBase label="Cedula:" htmlFor="cedula" />
+                      <span className="required">*</span>
+                    </div>
+                    <input
+                      style={{ width: "100%", height: "30px" }}
+                      type="text"
+                      id="input-cedula"
+                      name="cedula"
+                      className="form-control"
+                      value={userData.cedula}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="Direccion:" htmlFor="direccion" />
-                <span className="required">*</span>
+              <div className="mb-2 block">
+                <div className="label-container">
+                  <LabelBase label="Direccion:" htmlFor="direccion" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  style={{ width: "100%", height: "30px" }}
+                  type="text"
+                  id="input-direccion"
+                  name="direccion"
+                  className="form-control"
+                  value={userData.direccion}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-              <input
-                style={{ width: "100%", height: "30px" }}
-                type="text"
-                id="input-direccion"
-                name="direccion"
-                className="form-control"
-                value={userData.direccion}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="e-mail:" htmlFor="e-mail" />
-                <span className="required">*</span>
+              <div className="mb-2 block">
+                <div className="label-container">
+                  <LabelBase label="e-mail:" htmlFor="e-mail" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  type="text"
+                  style={{ width: "100%", height: "30px" }}
+                  id="input-email"
+                  name="email"
+                  className="form-control"
+                  value={userData.email}
+                  onChange={handleInputChange}
+                />
               </div>
-              <input
-                type="text"
-                style={{ width: "100%", height: "30px" }}
-                id="input-direccion"
-                name="email"
-                className="form-control"
-                value={userData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-2 block">
-              <div className="label-container">
-                <LabelBase label="Rol:" htmlFor="rol" />
-                <span className="required">*</span>
+              <div className="mb-2 block">
+                <div className="label-container">
+                  <LabelBase label="Rol:" htmlFor="rol" />
+                  <span className="required">*</span>
+                </div>
+                <select
+                  style={{ width: "100%", height: "40px" }}
+                  id="rol"
+                  name="rol"
+                  className="form-control form-select"
+                  value={userData.rol}
+                  onChange={handleInputChange}
+                >
+                  {roles.map((opcion) => (
+                    <option key={opcion.value} value={opcion.value}>
+                      {opcion.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <select
-                style={{ width: "100%", height: "40px" }}
-                id="rol"
-                name="rol"
-                className="form-control form-select"
-                value={userData.rol}
-                onChange={handleInputChange}
-              >
-                {roles.map((opcion) => (
-                  <option key={opcion.value} value={opcion.value}>
-                    {opcion.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="campo-obligatorio">
-              <span className="required">*</span>
-              <span className="message">Campo obligatorio</span>
-            </div>
+              <div className="campo-obligatorio">
+                <span className="required">*</span>
+                <span className="message">Campo obligatorio</span>
+              </div>
 
             <div className="d-flex justify-content-center align-items-center float-end">
               {/* <ButtonBasic text="Guardar" onClick={handleSubmit}>
@@ -629,57 +629,59 @@ const MainUsers = () => {
             <ErrorPagina
               mensaje=" ¡Ups! Parece que hubo un problema al cargar los usuarios. Por favor,
                           inténtalo de nuevo más tarde."
-            />
-          )}
-          {!error && filteredUsers.length === 0 && !searchResultsFound && (
-            <ElementoNoEncontrado mensaje="Usuario no encontrado!" />
-          )}
-          {!error && filteredUsers.length > 0 && (
-            <table className="custom-table">
-              <thead>
-                <tr>
-                  <th scope="col">Nombre del Usuario</th>
-                  <th scope="col">
-                    Rol <TbArrowDown />
-                  </th>
-                  <th scope="col">
-                    email <GoQuestion />
-                  </th>
-                  <th scope="col">Telefono</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.nombre}</td>
-                    <td>
-                      <div className="estadoIDUser">{rolByID(user.rol)}</div>
-                    </td>
-                    <td>{user.email}</td>
-                    <td>{user.telefono}</td>
-                    <td class="text-center">
-                      <a
-                        href="#"
-                        onClick={() => handleShowAlert(user)}
-                        style={{ fontSize: "1.2rem" }}
-                      >
-                        <RiDeleteBinLine />
-                      </a>
-                      <a
-                        href="#"
-                        onClick={() => handleEditarUsuario(user)}
-                        style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
-                      >
-                        <FiEdit2 />
-                      </a>
-                    </td>
+              />
+            )}
+            {!error && filteredUsers.length === 0 && !searchResultsFound && (
+              <ElementoNoEncontrado mensaje="Usuario no encontrado!" />
+            )}
+            {!error && filteredUsers.length > 0 && (
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre del Usuario</th>
+                    <th scope="col">
+                      Rol <TbArrowDown />
+                    </th>
+                    <th scope="col">
+                      email <GoQuestion />
+                    </th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.nombre}</td>
+                      <td>
+                        <div className="estadoIDUser">{rolByID(user.rol)}</div>
+                      </td>
+                      <td>{user.email}</td>
+                      <td>{user.telefono}</td>
+                      <td class="text-center">
+                        <a
+                        id="btn-delete"
+                          href="#"
+                          onClick={() => handleShowAlert(user)}
+                          style={{ fontSize: "1.2rem" }}
+                        >
+                          <RiDeleteBinLine />
+                        </a>
+                        <a
+                        id="btn-edit"
+                          href="#"
+                          onClick={() => handleEditarUsuario(user)}
+                          style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                        >
+                          <FiEdit2 />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
 
         <Pagination
           totalPages={totalPages}

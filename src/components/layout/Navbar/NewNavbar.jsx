@@ -76,6 +76,9 @@ export const NewNavbar = () => {
               <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
                 Reportes
               </NavBtn>
+              <NavBtn id="nav-planes" href="/planes-entrenamiento" roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}>
+                Planes
+              </NavBtn>
             </BoxStyled>
           </div>
 
