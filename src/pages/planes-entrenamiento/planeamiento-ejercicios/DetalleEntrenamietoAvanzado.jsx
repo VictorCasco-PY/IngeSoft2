@@ -9,6 +9,7 @@ import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const DetalleEntrenamientoAvanzado = () => {
   const { id } = useParams();
   const { getProgramasById } = usePlanes();
@@ -18,6 +19,7 @@ const DetalleEntrenamientoAvanzado = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchPrograma();
   }, [id]);
@@ -52,6 +54,10 @@ const DetalleEntrenamientoAvanzado = () => {
     fetchPrograma();
   };
 
+  const handleAgregarPlanACliente = () => {
+    navigate(`/planes-entrenamiento/${"avanzado"}/${id}/cliente/asignar`);
+  };
+
   return (
     <CartaPrincipal>
       {programa ? (
@@ -75,6 +81,15 @@ const DetalleEntrenamientoAvanzado = () => {
               <h2>{programa.titulo}</h2>
             </div>
             <div className="float-end">
+              <Btn
+                id="btn-ver-clientes"
+                type="secondary"
+                outline
+                style={{ marginTop: "-3.5rem", marginRight: "1rem" }}
+                onClick={handleAgregarPlanACliente}
+              >
+                Ver clientes
+              </Btn>
               <Btn
                 id="btn-nueva-venta"
                 type="primary"
