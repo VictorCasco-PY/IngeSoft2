@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Btn } from "../../../components/bottons/Button";
 import api from "../../../utils/api";
 import FlechaAtras from "../../../components/flechaAtras/FlechaAtras";
 import { Table } from "../../../components/table/Table";
 import AsignarPlanAClienteModal from "./AsignarPlanAClienteModal";
-
+import { useParams } from "react-router-dom";
+import Pagination from "../../../components/pagination/PaginationContainer";
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { id } = useParams();
+
+  const refreshClientesList = () => {
+    getClientes(currentPage);
+  };
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -16,13 +25,32 @@ const AsignarPlanACliente = () => {
     setShowModal(false);
   };
 
+  const getClientes = async (page) => {
+    try {
+      const response = await api.get(`/programas/${id}/clientes/page/${page}`);
+      setData(response.data.items);
+      console.log(response.data.items);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getClientes(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div
         className="d-flex align-items-center"
         style={{ marginTop: "1.5rem" }}
       >
-        <FlechaAtras ruta="/planes-entrenamiento" />
+        <FlechaAtras ruta={`/planes-entrenamiento/principiante/${id}`} />
         <h1 style={{ marginLeft: "3rem" }}>Clientes</h1>
       </div>
       <div className="row d-flex align-items-center mb-3">
@@ -58,16 +86,31 @@ const AsignarPlanACliente = () => {
       <Table
         headers={[
           "Nombre del cliente",
-          "Tipo de plan",
+          "Programa",
           "Fecha de inicio",
           "Acciones",
         ]}
         striped
-      ></Table>
+      >
+        {data.map((data, index) => (
+          <tr key={index}>
+            <td className="py-3">{data.nombreCliente}</td>
+            <td className="py-3">{data.programa}</td>
+            <td className="py-3">{data.fechaEvaluacion}</td>
+            <td className="py-3">-</td>
+          </tr>
+        ))}
+      </Table>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
       {/* Renderiza el modal si showModal es true */}
       <AsignarPlanAClienteModal
         open={showModal}
         closeModal={handleCloseModal}
+        refreshList={refreshClientesList}
       />
     </>
   );

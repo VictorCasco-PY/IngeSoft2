@@ -5,7 +5,7 @@ import api from "../../../utils/api";
 import { useParams } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 
-const AsignarPlanAClienteModal = ({ open, closeModal }) => {
+const AsignarPlanAClienteModal = ({ open, closeModal, ...props }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -55,6 +55,7 @@ const AsignarPlanAClienteModal = ({ open, closeModal }) => {
         fechaEvaluacion: fechaInicioPlan,
       });
       toast.success("Plan asignado correctamente");
+      props.refreshList();
       closeModal();
     } else {
       toast.error("No se ha seleccionado ningún cliente");
