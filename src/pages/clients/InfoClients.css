@@ -4,6 +4,11 @@
     padding-left: 18%;
 }
 
+.headerMi{
+    display: inline-block;
+    padding-left: 3%;
+    padding-top: 2% !important;
+}
 .cuadro-central {
     width: 100%;
     padding: 20% 1%;

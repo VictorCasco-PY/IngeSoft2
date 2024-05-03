@@ -66,7 +66,7 @@ const MainUsers = () => {
   const getRoleName = (id) => {
     if (id === 1) return "Administrador";
     if (id === 3) return "Cajero";
-    if (id === 4) return "Administrador";
+    if (id === 4) return "Entrenador";
   };
 
   const handlePageChange = (pageNumber) => {
@@ -172,6 +172,7 @@ const MainUsers = () => {
       const response = await api.get(
         `/empleados/searchByRol/${roleValue}/page/${currentPage}`
       );
+      console.log(response.items);
       setSelectedRole(roleValue);
 
       setFilteredUsers(response.data.items);
@@ -408,285 +409,289 @@ const MainUsers = () => {
       />
 
       <CartaPrincipal>
-          <div>
-            <h1>Usuarios</h1>
-            <div className="card-body d-flex align-items-center justify-content-between">
-              <form className="d-flex flex-grow-1 align-items-center">
-                <input
-                  id="input-search"
-                  className="form-control custom-input"
-                  type="text"
-                  placeholder="Buscar usuario"
-                  value={searchTerm}
-                  onChange={handleInputChan}
-                />
-                <ButtonBasic text="Buscar" onClick={handleSearchClick} />
-              </form>
-              <div className="dropdown contenedorFiltro">
-                <div>
-                  <button
-                    id="btn-search"
-                    type="button"
-                    className="btn btn-primary dropdown-toggle btn-filtrar"
-                    data-bs-toggle="dropdown"
-                  >
-                    {selectedRole ? getRoleName(selectedRole) : <IoCheckmark />}
-                    {selectedRole ? null : "Filtrar por rol..."}
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRoleChange(1)}
-                      >
-                        Administrador
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRoleChange(3)}
-                      >
-                        Cajero
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleRoleChange(4)}
-                      >
-                        Entrenador
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="outFilter">
-                  {selectedRole && (
-                    <button
-                      className="btn btn-sm btn-close justify-content-between x"
-                      onClick={handleCloseFilter}
-                    ></button>
-                  )}
-                </div>
-              </div>
-
-              {/* onClick={handleNuevoUsuario} */}
-              <button
-                id="btn-crearUser"
-                className="button-t"
-                onClick={() => setShowModal(true)}
-              >
-                + Nuevo Usuario
-              </button>
-            </div>
-          </div>
-
-          <ModalBase
-            //Implementacion de Cesar.
-            open={showModal || showEditModal}
-            closeModal={handleCloseModal}
-            title={showModal ? "Crear Nuevo Usuario" : "Editar Usuario"}
-            // open={showModal}
-            // closeModal={() => setShowModal(false)}
-            // title="Registro de Usuario"
-          >
-            <form className="mb-3">
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Nombre:" htmlFor="nombre" />
-                  <span className="required">*</span>
-                </div>
-                <input
-                  id="input-name"
-                  style={{ width: "100%", height: "30px" }}
-                  type="text"
-                  name="nombre"
-                  className="form-control"
-                  value={userData.nombre}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="d-flex justify-content-between">
-                <div className="row ">
-                  <div className="col-sm">
-                    <div className="label-container">
-                      <LabelBase label="Telefono:" htmlFor="telefono" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      style={{ width: "100%", height: "30px" }}
-                      type="text"
-                      id="input-phone"
-                      name="telefono"
-                      className="form-control"
-                      value={userData.telefono}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="col-sm">
-                    <div className="label-container">
-                      <LabelBase label="Cedula:" htmlFor="cedula" />
-                      <span className="required">*</span>
-                    </div>
-                    <input
-                      style={{ width: "100%", height: "30px" }}
-                      type="text"
-                      id="input-cedula"
-                      name="cedula"
-                      className="form-control"
-                      value={userData.cedula}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Direccion:" htmlFor="direccion" />
-                  <span className="required">*</span>
-                </div>
-                <input
-                  style={{ width: "100%", height: "30px" }}
-                  type="text"
-                  id="input-direccion"
-                  name="direccion"
-                  className="form-control"
-                  value={userData.direccion}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="e-mail:" htmlFor="e-mail" />
-                  <span className="required">*</span>
-                </div>
-                <input
-                  type="text"
-                  style={{ width: "100%", height: "30px" }}
-                  id="input-email"
-                  name="email"
-                  className="form-control"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="mb-2 block">
-                <div className="label-container">
-                  <LabelBase label="Rol:" htmlFor="rol" />
-                  <span className="required">*</span>
-                </div>
-                <select
-                  style={{ width: "100%", height: "40px" }}
-                  id="rol"
-                  name="rol"
-                  className="form-control form-select"
-                  value={userData.rol}
-                  onChange={handleInputChange}
+        <div>
+          <h1>Usuarios</h1>
+          <div className="card-body d-flex align-items-center justify-content-between">
+            <form className="d-flex flex-grow-1 align-items-center">
+              <input
+                id="input-search"
+                className="form-control custom-input"
+                type="text"
+                placeholder="Buscar usuario"
+                value={searchTerm}
+                onChange={handleInputChan}
+              />
+              <ButtonBasic text="Buscar" onClick={handleSearchClick} />
+            </form>
+            <div className="dropdown contenedorFiltro">
+              <div>
+                <button
+                  id="btn-search"
+                  type="button"
+                  className="btn btn-primary dropdown-toggle btn-filtrar"
+                  data-bs-toggle="dropdown"
                 >
-                  {roles.map((opcion) => (
-                    <option key={opcion.value} value={opcion.value}>
-                      {opcion.label}
-                    </option>
-                  ))}
-                </select>
+                  {selectedRole ? getRoleName(selectedRole) : <IoCheckmark />}
+                  {selectedRole ? null : "Filtrar por rol..."}
+                </button>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleRoleChange(1)}
+                    >
+                      Administrador
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleRoleChange(3)}
+                    >
+                      Cajero
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleRoleChange(4)}
+                    >
+                      Entrenador
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <div className="campo-obligatorio">
-                <span className="required">*</span>
-                <span className="message">Campo obligatorio</span>
+              <div className="outFilter">
+                {selectedRole && (
+                  <button
+                    className="btn btn-sm btn-close justify-content-between x"
+                    onClick={handleCloseFilter}
+                  ></button>
+                )}
               </div>
+            </div>
 
-              <div className="d-flex justify-content-center align-items-center float-end">
-                {/* <ButtonBasic text="Guardar" onClick={handleSubmit}>
+            {/* onClick={handleNuevoUsuario} */}
+            <button
+              id="btn-crearUser"
+              className="button-t"
+              onClick={() => setShowModal(true)}
+            >
+              + Nuevo Usuario
+            </button>
+          </div>
+        </div>
+
+        {filteredUsers.length === 0 && (
+          <ElementoNoEncontrado mensaje="No existen usuarios con ese rol" />
+        )}
+
+        <ModalBase
+          //Implementacion de Cesar.
+          open={showModal || showEditModal}
+          closeModal={handleCloseModal}
+          title={showModal ? "Crear Nuevo Usuario" : "Editar Usuario"}
+          // open={showModal}
+          // closeModal={() => setShowModal(false)}
+          // title="Registro de Usuario"
+        >
+          <form className="mb-3">
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Nombre:" htmlFor="nombre" />
+                <span className="required">*</span>
+              </div>
+              <input
+                id="input-name"
+                style={{ width: "100%", height: "30px" }}
+                type="text"
+                name="nombre"
+                className="form-control"
+                value={userData.nombre}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="d-flex justify-content-between">
+              <div className="row ">
+                <div className="col-sm">
+                  <div className="label-container">
+                    <LabelBase label="Telefono:" htmlFor="telefono" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    style={{ width: "100%", height: "30px" }}
+                    type="text"
+                    id="input-phone"
+                    name="telefono"
+                    className="form-control"
+                    value={userData.telefono}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="col-sm">
+                  <div className="label-container">
+                    <LabelBase label="Cedula:" htmlFor="cedula" />
+                    <span className="required">*</span>
+                  </div>
+                  <input
+                    style={{ width: "100%", height: "30px" }}
+                    type="text"
+                    id="input-cedula"
+                    name="cedula"
+                    className="form-control"
+                    value={userData.cedula}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Direccion:" htmlFor="direccion" />
+                <span className="required">*</span>
+              </div>
+              <input
+                style={{ width: "100%", height: "30px" }}
+                type="text"
+                id="input-direccion"
+                name="direccion"
+                className="form-control"
+                value={userData.direccion}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="e-mail:" htmlFor="e-mail" />
+                <span className="required">*</span>
+              </div>
+              <input
+                type="text"
+                style={{ width: "100%", height: "30px" }}
+                id="input-email"
+                name="email"
+                className="form-control"
+                value={userData.email}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Rol:" htmlFor="rol" />
+                <span className="required">*</span>
+              </div>
+              <select
+                style={{ width: "100%", height: "40px" }}
+                id="rol"
+                name="rol"
+                className="form-control form-select"
+                value={userData.rol}
+                onChange={handleInputChange}
+              >
+                {roles.map((opcion) => (
+                  <option key={opcion.value} value={opcion.value}>
+                    {opcion.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="campo-obligatorio">
+              <span className="required">*</span>
+              <span className="message">Campo obligatorio</span>
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center float-end">
+              {/* <ButtonBasic text="Guardar" onClick={handleSubmit}>
                   {loading ? "Cargando..." : "Agregar Usuario"}
                 </ButtonBasic> */}
-                <ButtonBasic
-                  id="btn-aceptar"
-                  text="Aceptar"
-                  onClick={handleAceptar}
-                />
-              </div>
-            </form>
-          </ModalBase>
-          {showAlert && userToDelete && (
-            <CustomAlert
-              message={`¿Estás seguro de eliminar a ${userToDelete.nombre}?`}
-              confirmText="Aceptar"
-              cancelText="Cancelar"
-              confirmAction={handleConfirmDelete}
-              cancelAction={handleCancelDelete}
+              <ButtonBasic
+                id="btn-aceptar"
+                text="Aceptar"
+                onClick={handleAceptar}
+              />
+            </div>
+          </form>
+        </ModalBase>
+        {showAlert && userToDelete && (
+          <CustomAlert
+            message={`¿Estás seguro de eliminar a ${userToDelete.nombre}?`}
+            confirmText="Aceptar"
+            cancelText="Cancelar"
+            confirmAction={handleConfirmDelete}
+            cancelAction={handleCancelDelete}
+          />
+        )}
+        <div class="table-container">
+          {error && (
+            <ErrorPagina
+              mensaje=" ¡Ups! Parece que hubo un problema al cargar los usuarios. Por favor,
+                          inténtalo de nuevo más tarde."
             />
           )}
-          <div class="table-container">
-            {error && (
-              <ErrorPagina
-                mensaje=" ¡Ups! Parece que hubo un problema al cargar los usuarios. Por favor,
-                          inténtalo de nuevo más tarde."
-              />
-            )}
-            {!error && filteredUsers.length === 0 && !searchResultsFound && (
-              <ElementoNoEncontrado mensaje="Usuario no encontrado!" />
-            )}
-            {!error && filteredUsers.length > 0 && (
-              <table className="custom-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Nombre del Usuario</th>
-                    <th scope="col">
-                      Rol <TbArrowDown />
-                    </th>
-                    <th scope="col">
-                      email <GoQuestion />
-                    </th>
-                    <th scope="col">Telefono</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((user) => (
-                    <tr key={user.id}>
-                      <td>{user.nombre}</td>
-                      <td>
-                        <div className="estadoIDUser">{rolByID(user.rol)}</div>
-                      </td>
-                      <td>{user.email}</td>
-                      <td>{user.telefono}</td>
-                      <td class="text-center">
-                        <a
+          {!error && filteredUsers.length === 0 && !searchResultsFound && (
+            <ElementoNoEncontrado mensaje="Usuario no encontrado!" />
+          )}
+          {!error && filteredUsers.length > 0 && (
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre del Usuario</th>
+                  <th scope="col">
+                    Rol <TbArrowDown />
+                  </th>
+                  <th scope="col">
+                    email <GoQuestion />
+                  </th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.nombre}</td>
+                    <td>
+                      <div className="estadoIDUser">{rolByID(user.rol)}</div>
+                    </td>
+                    <td>{user.email}</td>
+                    <td>{user.telefono}</td>
+                    <td class="text-center">
+                      <a
                         id="btn-delete"
-                          href="#"
-                          onClick={() => handleShowAlert(user)}
-                          style={{ fontSize: "1.2rem" }}
-                        >
-                          <RiDeleteBinLine />
-                        </a>
-                        <a
+                        href="#"
+                        onClick={() => handleShowAlert(user)}
+                        style={{ fontSize: "1.2rem" }}
+                      >
+                        <RiDeleteBinLine />
+                      </a>
+                      <a
                         id="btn-edit"
-                          href="#"
-                          onClick={() => handleEditarUsuario(user)}
-                          style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
-                        >
-                          <FiEdit2 />
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                        href="#"
+                        onClick={() => handleEditarUsuario(user)}
+                        style={{ marginLeft: "1.5em", fontSize: "1.2rem" }}
+                      >
+                        <FiEdit2 />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
 
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </CartaPrincipal>
     </>
   );
