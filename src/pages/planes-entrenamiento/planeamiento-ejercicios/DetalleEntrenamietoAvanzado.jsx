@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePlanes } from "../../../hooks/usePlanes";
 import ModalBase from "../../../components/modals/ModalBase";
 import "../../clients/InfoClients.css";
@@ -18,6 +18,7 @@ const DetalleEntrenamientoAvanzado = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchPrograma();
   }, [id]);
@@ -49,6 +50,10 @@ const DetalleEntrenamientoAvanzado = () => {
     handleCloseModal();
   };
 
+  const handleAgregarPlanACliente = () => {
+    navigate(`/planes-entrenamiento/${"avanzado"}/${id}/cliente/asignar`);
+  };
+
   return (
     <CartaPrincipal>
       {programa ? (
@@ -70,6 +75,15 @@ const DetalleEntrenamientoAvanzado = () => {
               <h2>{programa.titulo}</h2>
             </div>
             <div className="float-end">
+              <Btn
+                id="btn-ver-clientes"
+                type="secondary"
+                outline
+                style={{ marginTop: "-3.5rem", marginRight: "1rem" }}
+                onClick={handleAgregarPlanACliente}
+              >
+                Ver clientes
+              </Btn>
               <Btn
                 id="btn-nueva-venta"
                 type="primary"

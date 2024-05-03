@@ -14,6 +14,8 @@ const AsignarPlanACliente = () => {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [planName, setPlanName] = useState("");
+
   const { id } = useParams();
 
   const refreshClientesList = () => {
@@ -34,6 +36,7 @@ const AsignarPlanACliente = () => {
       setData(response.data.items);
       console.log(response.data.items);
       setTotalPages(response.data.totalPages);
+      setPlanName(response.data.items[0].programa);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +88,7 @@ const AsignarPlanACliente = () => {
         style={{ marginTop: "1.5rem" }}
       >
         <FlechaAtras ruta={`/planes-entrenamiento/principiante/${id}`} />
-        <h1 style={{ marginLeft: "3rem" }}>Clientes</h1>
+        <h1 style={{ marginLeft: "3rem" }}>Clientes {planName}</h1>
       </div>
       <div className="row d-flex align-items-center mb-3">
         <div className="col-4">
@@ -126,26 +129,34 @@ const AsignarPlanACliente = () => {
         ]}
         striped
       >
-        {data.map((data, index) => (
-          <tr key={index}>
-            <td className="py-3">{data.nombreCliente}</td>
-            <td className="py-3">{data.programa}</td>
-            <td className="py-3">{data.fechaEvaluacion}</td>
-            <td className="py-3">
-              <button
-                id="btn-borrar"
-                className="btn btn-link p-0"
-                style={{ fontSize: "1.2rem", color: "black" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleDeleteCliente(data.clienteId);
-                }}
-              >
-                <RiDeleteBinLine />
-              </button>
+        {data.length > 0 ? (
+          data.map((data, index) => (
+            <tr key={index}>
+              <td className="py-3">{data.nombreCliente}</td>
+              <td className="py-3">{data.programa}</td>
+              <td className="py-3">{data.fechaEvaluacion}</td>
+              <td className="py-3">
+                <button
+                  id="btn-borrar"
+                  className="btn btn-link p-0"
+                  style={{ fontSize: "1.2rem", color: "black" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDeleteCliente(data.clienteId);
+                  }}
+                >
+                  <RiDeleteBinLine />
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4" className="text-center">
+              No hay clientes con plan asignado.
             </td>
           </tr>
-        ))}
+        )}
       </Table>
       <Pagination
         totalPages={totalPages}

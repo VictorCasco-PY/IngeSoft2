@@ -51,7 +51,7 @@ const DetalleEntrenamiento = () => {
   };
 
   const handleAgregarPlanACliente = () => {
-    navigate(`/planes-entrenamiento/principiante/${id}/cliente/asignar`);
+    navigate(`/planes-entrenamiento/${"principiante"}/${id}/cliente/asignar`);
   };
 
   return (
