@@ -30,12 +30,15 @@ import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
+import  ReporteCliente  from "./pages/reportes/MainClientesReporte";
 import MainArqueoLista from "./pages/arqueo/MainArqueoLista";
 import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
 import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento/EntrenamientoPrincipiante";
 import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
 import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/EntrenamientoAvanzado";
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
+import CobrosPendientesProveedores from "./pages/caja/comprasProveedores/ListaComprasCobro";
+
 import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamientoIntermedio";
 import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 createRoot(document.getElementById("root")).render(
@@ -126,6 +129,14 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <CobrosPendientesVista />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/pendientes/cobros"
+              element={
+                <Layout>
+                  <CobrosPendientesProveedores />
                 </Layout>
               }
             />
@@ -246,6 +257,15 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <InfoServicios />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/reportes"
+              element={
+                <Layout>
+                  <ReporteCliente />
                 </Layout>
               }
             />

@@ -1,0 +1,23 @@
+
+.reporte-container {
+    margin: 20px;
+  }
+  
+  .reporte-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .fecha-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .fecha-container p {
+    margin: 10px;
+  }
+  .fecha-selector {
+    margin-right: 10px;
+  }
+  

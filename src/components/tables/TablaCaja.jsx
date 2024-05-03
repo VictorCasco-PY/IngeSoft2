@@ -5,11 +5,15 @@ import ErrorPagina from "../../components/errores/ErrorPagina";
 import { useComprasProveedores } from "../../hooks/useComprasProveedores";
 import Pagination from "../../components/pagination/PaginationContainer";
 import { ListaVacía } from "../errores/ListaVacía";
-
-const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
+import CobrarProveedores from "../../pages/caja/comprasProveedores/facturas_ventas/CobrarProveedoresPendiente"; 
+import { toast, Toaster } from 'react-hot-toast';
+const TablaCaja = ({ items, totalPages, currentPage, onPageChange, mostrarFiltro }) => {
   const { searchByNombreCliente, getFacturas } = useComprasProveedores();
   const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null); 
+  const [modalOpen, setModalOpen] = useState(false); 
+  const [cobroModalOpen, setCobroModalOpen] = useState(false); 
 
   const getData = async (page = 1) => {
     try {
@@ -52,12 +56,39 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
     }
   };
 
+  const handleRowClick = (factura) => {
+    if (!factura.pagado) {
+      setSelectedItem(factura); 
+      setCobroModalOpen(true); 
+    } else {
+      toast.error("Esta factura ya ha sido pagada");
+    }
+  };
+
   useEffect(() => {
     getData();
   }, []);
 
   return (
     <div>
+      <Toaster
+    position="top-right"
+    reverseOrder={false}
+    toastOptions={{
+        success: {
+            style: {
+                background: "#75B798",
+                color: "#0A3622",
+            },
+        },
+        error: {
+            style: {
+                background: "#FFDBD9",
+                color: "#D92D20",
+            },
+        },
+    }}
+/>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="card-body d-flex align-items-center ">
           <input
@@ -70,8 +101,16 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
           />
           <ButtonBasic id="btn-buscar" text="Buscar" onClick={handleSearch} />
         </div>
+        {mostrarFiltro && (
+          <div className="col">
+            <select className="form-select">
+              <option value="">Filtrar por</option>
+              <option value="pagado">Pagado</option>
+              <option value="pendiente">Pendiente</option>
+            </select>
+          </div>
+        )}
       </div>
-
       <table className="table">
         <thead>
           <tr>
@@ -87,7 +126,7 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
           {items.map((item, index) => {
             const factura = item.factura || item; // Usar item si item.factura no está definido
             return (
-              <tr key={index}>
+              <tr key={index} onClick={() => handleRowClick(factura)}>
                 <td style={{ color: "#6941C6" }}>{factura.nroFactura}</td>
                 <td>{factura.fecha}</td>
                 <td>{factura.nombreProveedor}</td>
@@ -107,6 +146,14 @@ const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
           onPageChange={handlePageChange}
         />
       </div>
+      {cobroModalOpen && selectedItem && (
+        <CobrarProveedores
+          factura={selectedItem} 
+          closeModal={() => setCobroModalOpen(false)} 
+          open={cobroModalOpen} 
+          toast={toast}
+        />
+      )}
     </div>
   );
 };

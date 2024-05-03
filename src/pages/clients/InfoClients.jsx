@@ -49,7 +49,9 @@ const InfoClients = () => {
   };
   const fetchMedicionesDesdeAPI = async () => {
     try {
-      const medicionesData = await api.get(`/mediciones/searchByClienteId/${id}/page/1`);
+      const medicionesData = await api.get(
+        `/mediciones/searchByClienteId/${id}/page/1`
+      );
       console.log(medicionesData.data);
       setMediciones(medicionesData.data.items);
     } catch (error) {
@@ -147,6 +149,24 @@ const InfoClients = () => {
         }}
       />
       <CartaPrincipal>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            success: {
+              style: {
+                background: "#75B798",
+                color: "#0A3622",
+              },
+            },
+            error: {
+              style: {
+                background: "#FFDBD9",
+                color: "#D92D20",
+              },
+            },
+          }}
+        />
         <div style={{ marginLeft: "3%" }}>
           <Link to="/clientes">
             <button className="custom-button">
@@ -242,7 +262,9 @@ const InfoClients = () => {
           {cliente && (
             <div className="datos-extras">
               <div>
-                <h4 style={{ fontSize: "30px", color: "#667085" }}>Plan Actual</h4>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>
+                  Plan Actuales
+                </h4>
                 <p style={{ fontSize: "20px", textAlign: "center" }}>Mensual</p>
               </div>
               <div>
@@ -250,8 +272,12 @@ const InfoClients = () => {
                 <p style={{ fontSize: "20px" }}>{cliente.ruc}</p>
               </div>
               <div>
-                <h4 style={{ fontSize: "30px", color: "#667085" }}>N° de Telefono</h4>
-                <p style={{ fontSize: "20px", textAlign: "center" }}>{cliente.telefono}</p>
+                <h4 style={{ fontSize: "30px", color: "#667085" }}>
+                  N° de Telefono
+                </h4>
+                <p style={{ fontSize: "20px", textAlign: "center" }}>
+                  {cliente.telefono}
+                </p>
               </div>
             </div>
           )}
@@ -292,7 +318,9 @@ const InfoClients = () => {
               </thead>
               <tbody>
                 <tr>
-                  <th style={{ color: "#6941C6" }} scope="row">11111</th>
+                  <th style={{ color: "#6941C6" }} scope="row">
+                    11111
+                  </th>
                   <td>Enero</td>
                   <td>
                     <EstadoPago estado="No pagado" />
@@ -300,7 +328,9 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{ color: "#6941C6" }} scope="row">2222</th>
+                  <th style={{ color: "#6941C6" }} scope="row">
+                    2222
+                  </th>
                   <td>Febrero</td>
                   <td>
                     <EstadoPago estado="Pagado" />
@@ -308,7 +338,9 @@ const InfoClients = () => {
                   {/*<td><button><IoPencilOutline /></button></td>*/}
                 </tr>
                 <tr>
-                  <th style={{ color: "#6941C6" }} scope="row">33333</th>
+                  <th style={{ color: "#6941C6" }} scope="row">
+                    33333
+                  </th>
                   <td>Marzo</td>
                   <td>
                     <EstadoPago estado="Pagado" />
