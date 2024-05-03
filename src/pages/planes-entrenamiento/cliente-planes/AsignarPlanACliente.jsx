@@ -6,6 +6,9 @@ import { Table } from "../../../components/table/Table";
 import AsignarPlanAClienteModal from "./AsignarPlanAClienteModal";
 import { useParams } from "react-router-dom";
 import Pagination from "../../../components/pagination/PaginationContainer";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { Toaster, toast } from "react-hot-toast";
+
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState([]);
@@ -36,6 +39,19 @@ const AsignarPlanACliente = () => {
     }
   };
 
+  const handleDeleteCliente = async (clienteId) => {
+    try {
+      const response = await api.delete(
+        `/programas/${id}/clientes/${clienteId}`
+      );
+
+      toast.success("Plan del cliente eliminado");
+      refreshClientesList();
+    } catch (error) {
+      toast.error("Error al eliminar el plan:");
+    }
+  };
+
   useEffect(() => {
     getClientes(currentPage);
   }, [currentPage]);
@@ -46,6 +62,24 @@ const AsignarPlanACliente = () => {
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
       <div
         className="d-flex align-items-center"
         style={{ marginTop: "1.5rem" }}
@@ -97,7 +131,19 @@ const AsignarPlanACliente = () => {
             <td className="py-3">{data.nombreCliente}</td>
             <td className="py-3">{data.programa}</td>
             <td className="py-3">{data.fechaEvaluacion}</td>
-            <td className="py-3">-</td>
+            <td className="py-3">
+              <button
+                id="btn-borrar"
+                className="btn btn-link p-0"
+                style={{ fontSize: "1.2rem", color: "black" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteCliente(data.clienteId);
+                }}
+              >
+                <RiDeleteBinLine />
+              </button>
+            </td>
           </tr>
         ))}
       </Table>
