@@ -132,7 +132,16 @@ const AsignarPlanACliente = () => {
         {data.length > 0 ? (
           data.map((data, index) => (
             <tr key={index}>
-              <td className="py-3">{data.nombreCliente}</td>
+              <td
+                className="py-3"
+                style={{
+                  color: "#7749F8",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                {data.nombreCliente}
+              </td>
               <td className="py-3">{data.programa}</td>
               <td className="py-3">{data.fechaEvaluacion}</td>
               <td className="py-3">
