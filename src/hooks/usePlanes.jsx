@@ -30,9 +30,9 @@ export const usePlanes = () => {
   };
 
   // Creamos un ejercicio en un programa
-  const crearEjercicios = async (programaId, ejercicio) => {
+  const crearEjercicios = async (id, ejercicio) => {
     return handleRequest(async () =>
-      api.post(`${DIR}/${programaId}/items`, ejercicio)
+      api.post(`${DIR}/${id}/items`, ejercicio)
     );
   };
  
@@ -152,6 +152,14 @@ const getEjerciciosByProgramaId = async (id,programaId, page = 1) => {
       throw error;
     }
   };
+  //Actualiza los nuevos valores del cliente
+  const actualizarPrograma = async(id, params) => {
+    return handleRequest(() => api.put(`${DIR}/${id}`, params))
+  }
+  //Actualiza los nuevos valores del cliente
+  const actualizarEjercicios = async(id, idItem) => {
+    return handleRequest(() => api.put(`${DIR}/${id}/items/${idItem}`))
+  }
   return {
     crearProgramas,
     eliminarEjercicio,
@@ -165,5 +173,7 @@ const getEjerciciosByProgramaId = async (id,programaId, page = 1) => {
     getProgramasAvanzado,
     getProgramasById,
     getProgramasByActividad,
+    actualizarPrograma,
+    actualizarEjercicios
   };
 };

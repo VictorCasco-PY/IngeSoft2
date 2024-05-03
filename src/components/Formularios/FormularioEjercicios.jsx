@@ -3,12 +3,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LabelBase from "../labels/LabelBase";
-import BotonCrear from "../bottons/ButtonCrear";
-import ButtonBasic from "../bottons/ButtonBasic";
-import { RiDeleteBinLine } from "react-icons/ri";
+
+import ButtonCrear from "../bottons/ButtonCrear";
 import { usePlanes } from "../../hooks/usePlanes";
 import { useParams } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const initialState = {
   ejercicios: [],
@@ -18,97 +18,113 @@ const ejercicioReducer = (state, action) => {
   switch (action.type) {
     case "ADD_EJERCICIO":
       return { ...state, ejercicios: [...state.ejercicios, action.ejercicio] };
-    case "DELETE_EJERCICIO":
-      return {
-        ...state,
-        ejercicios: state.ejercicios.filter((e) => e !== action.ejercicio),
-      };
     default:
       return state;
   }
 };
-function FormularioEjercicios() {
+
+function FormularioEjercicios({onTableRefresh }) {
   const [state, dispatch] = useReducer(ejercicioReducer, initialState);
   const { id } = useParams();
   const { crearEjercicios } = usePlanes();
   const [showModal, setShowModal] = useState(false);
-  const { ejercicios } = state;
-
-  const [maxExercisesWithoutScroll, setMaxExercisesWithoutScroll] = useState(2);
-  const [ejerciciosData, setEjerciciosData] = useState({
+  const [formValues, setFormValues] = useState({
     nombre: "",
-    descripcion: "",
-    tiempo: "",
-    peso: "",
     repeticiones: "",
+    peso: "",
+    tiempo: "",
+    descripcion: "",
   });
-  
+
   const validationSchema = Yup.object().shape({
     nombre: Yup.string()
       .max(30, "Nombre debe tener máximo 30 caracteres")
       .required("Nombre es obligatorio"),
     repeticiones: Yup.number()
       .max(100, "Máximo 100 repeticiones")
-      .min(1, "Las repeticiones no pueden ser negativas")
-      .required("Repeticiones es obligatorio"),
+      .min(1, "Las repeticiones no pueden ser negativas"),
+     
     peso: Yup.number()
       .max(300, "Peso máximo 300")
-      .min(1, "El peso no puede ser negativo")
-      .required("Peso es obligatorio"),
+      .min(1, "El peso no puede ser negativo"),
+      
     tiempo: Yup.number()
       .max(60, "Tiempo máximo 1 hora")
-      .min(1, "El tiempo no puede ser negativo")
-      .required("Tiempo es obligatorio"),
+      .min(1, "El tiempo no puede ser negativo"),
+      
     descripcion: Yup.string()
       .max(35, "Descripción debe tener máximo 35 caracteres")
       .required("Descripción es obligatorio"),
   });
 
-  const handleSubmit = async () => {
-    const ejercicio = {
-      active: true,
-      nombre: ejerciciosData.nombre,
-      descripcion: ejerciciosData.descripcion,
-      tiempo: parseInt(ejerciciosData.tiempo),
-      peso: parseFloat(ejerciciosData.peso),
-      repeticiones: parseInt(ejerciciosData.repeticiones),
-    };
-    dispatch({ type: "ADD_EJERCICIO", ejercicio });
-    console.log(ejercicio)
-  };
-
   const handleGuardar = async () => {
+    if (!formValues.nombre || !formValues.descripcion) {
+      toast.error("Nombre y descripción son campos obligatorios");
+      return;
+    }
     try {
-      for (const ejercicio of ejercicios) {
-        await crearEjercicios(id, ejercicio);
-        toast.success("Ejercicio creado con exito");
-      }
+      // Agregar el ejercicio al estado global
+      dispatch({ type: "ADD_EJERCICIO", ejercicio: formValues });
+      // Limpiar el formulario después de guardar
+      setFormValues({
+        nombre: "",
+        repeticiones: "",
+        peso: "",
+        tiempo: "",
+        descripcion: "",
+      });
+      await crearEjercicios(id, formValues);
+      toast.success("Ejercicios creados exitosamente");
+      setShowModal(false);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDelete = async (ejercicio) => {
-    try {
-      await eliminarEjercicio(id, ejercicio.id);
-      dispatch({ type: "DELETE_EJERCICIO", ejercicio });
-    } catch (error) {
-      console.error('Error eliminando ejercicio:', error);
-      toast.error('Error al eliminar el ejercicio');
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
+
   return (
+    
     <div className="container">
-      <Formik
-        initialValues={{
-          nombre: "",
-          repeticiones: "",
-          peso: "",
-          tiempo: "",
-          descripcion: "",
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
         }}
+      />
+      <Formik
+        initialValues={formValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values, { resetForm }) => {
+          const ejercicio = {
+            active: true,
+            nombre: values.nombre,
+            descripcion: values.descripcion,
+            tiempo: parseInt(values.tiempo),
+            peso: parseFloat(values.peso),
+            repeticiones: parseInt(values.repeticiones),
+          };
+          dispatch({ type: "ADD_EJERCICIO", ejercicio });
+          resetForm();
+        }}
       >
         <Form className="mb-3">
           <div className="mb-2 block">
@@ -116,15 +132,13 @@ function FormularioEjercicios() {
               <LabelBase label="Nombre de ejercicio:" htmlFor="nombre" />
               <span className="required">*</span>
             </div>
-            <Field
+            <input
               type="text"
               id="nombre"
               name="nombre"
+              value={formValues.nombre}
               className="form-control"
-              value={ejerciciosData.nombre} // Agregar esto
-              onChange={(e) =>
-                setEjerciciosData({ ...ejerciciosData, nombre: e.target.value })
-              }
+              onChange={handleChange}
             />
             <ErrorMessage
               name="nombre"
@@ -140,19 +154,13 @@ function FormularioEjercicios() {
                   <LabelBase label="Repeticiones:" htmlFor="repeticiones" />
                   <span className="required">*</span>
                 </div>
-                <Field
+                <input
                   type="number"
                   id="repeticiones"
                   name="repeticiones"
-                  className="form-control custom-input"
-                  value={ejerciciosData.repeticiones} // Agregar esto
-                  onChange={(e) =>
-                    setEjerciciosData({
-                      ...ejerciciosData,
-                      repeticiones: e.target.value,
-                    })
-                  }
-                  style={{ width: "100%" }}
+                  value={formValues.repeticiones}
+                  className="form-control"
+                  onChange={handleChange}
                 />
                 <ErrorMessage
                   name="repeticiones"
@@ -165,19 +173,14 @@ function FormularioEjercicios() {
                   <LabelBase label="Tiempo:" htmlFor="tiempo" />
                   <span className="required">*</span>
                 </div>
-                <Field
+                <input
                   type="number"
                   id="tiempo"
                   name="tiempo"
-                  className="form-control custom-input"
-                  value={ejerciciosData.tiempo} // Agregar esto
-                  onChange={(e) =>
-                    setEjerciciosData({
-                      ...ejerciciosData,
-                      tiempo: e.target.value,
-                    })
-                  }
-                  style={{ width: "243%" }}
+                  value={formValues.tiempo}
+                  className="form-control"
+                  style={{width:"245%"}}
+                  onChange={handleChange}
                 />
                 <ErrorMessage
                   name="tiempo"
@@ -191,19 +194,14 @@ function FormularioEjercicios() {
                   <LabelBase label="Descripción:" htmlFor="descripcion" />
                   <span className="required">*</span>
                 </div>
-                <Field
+                <input
                   type="text"
                   id="descripcion"
                   name="descripcion"
-                  className="form-control custom-input"
-                  value={ejerciciosData.descripcion} // Agregar esto
-                  onChange={(e) =>
-                    setEjerciciosData({
-                      ...ejerciciosData,
-                      descripcion: e.target.value,
-                    })
-                  }
-                  style={{ width: "243%" }}
+                  value={formValues.descripcion}
+                  className="form-control"
+                  style={{width:"245%"}}
+                  onChange={handleChange}
                 />
                 <ErrorMessage
                   name="descripcion"
@@ -218,19 +216,14 @@ function FormularioEjercicios() {
                   <LabelBase label="Peso:" htmlFor="peso" />
                   <span className="required">*</span>
                 </div>
-                <Field
+                <input
                   type="number"
                   id="peso"
                   name="peso"
-                  className="form-control custom-input"
-                  value={ejerciciosData.peso} // Agregar esto
-                  onChange={(e) =>
-                    setEjerciciosData({
-                      ...ejerciciosData,
-                      peso: e.target.value,
-                    })
-                  }
-                  style={{ width: "95%" }}
+                  value={formValues.peso}
+                  className="form-control"
+                  onChange={handleChange}
+                  
                 />
                 <ErrorMessage
                   name="peso"
@@ -240,59 +233,10 @@ function FormularioEjercicios() {
               </div>
             </div>
           </div>
-          <div className="mb-3 text-center float-end">
-            <ButtonBasic
-              id="btn-agregar"
-              text="Agregar Ejercicio"
-              type="button"
-              onClick={handleSubmit}
-            />
-          </div>
-
-          <div
-            className="exercise-table-container"
-            style={{
-              maxHeight:
-                ejercicios.length > maxExercisesWithoutScroll
-                  ? "300px"
-                  : "auto",
-              overflowY:
-                ejercicios.length > maxExercisesWithoutScroll
-                  ? "auto"
-                  : "visible",
-            }}
-          >
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Ejercicio</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {ejercicios.map((exercise, index) => (
-                  <tr key={index}>
-                    <td>{exercise.nombre}</td>
-                    <td>
-                      <button
-                        id="btn-cancelar"
-                        type="button"
-                        className="btn float-end"
-                        onClick={() => handleDelete(exercise)}
-                      >
-                        <RiDeleteBinLine />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mb-4 pt-2 text-center float-end">
-            <BotonCrear
+          <div className="mb-3 my-5 text-center float-end">
+            <ButtonCrear
               id="btn-crear"
-              text="Guardar"
-              type="button"
+              text="Crear Ejercicio"
               onClick={handleGuardar}
             />
           </div>

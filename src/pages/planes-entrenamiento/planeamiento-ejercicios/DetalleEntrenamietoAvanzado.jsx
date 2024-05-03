@@ -8,7 +8,7 @@ import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
-
+import toast from "react-hot-toast";
 const DetalleEntrenamientoAvanzado = () => {
   const { id } = useParams();
   const { getProgramasById } = usePlanes();
@@ -48,6 +48,9 @@ const DetalleEntrenamientoAvanzado = () => {
     setEjercicios([...ejercicios, nuevoEjercicio]);
     handleCloseModal();
   };
+  const actualizarTablaEjercicios = () => {
+    fetchPrograma();
+  };
 
   return (
     <CartaPrincipal>
@@ -56,11 +59,13 @@ const DetalleEntrenamientoAvanzado = () => {
           {/* Modal */}
           {showModal && (
             <ModalBase
-              open={showModal || showEditModal}
-              title={showModal ? "Crear Nuevo Ejercicio" : "Editar Ejercicio"}
+              open={showModal}
+              title={"Crear Nuevo Ejercicio"}
               closeModal={handleCloseModal}
             >
-              <FormularioEjercicios />
+              <FormularioEjercicios
+                onTableRefresh={actualizarTablaEjercicios}
+              />{" "}
             </ModalBase>
           )}
 
@@ -106,6 +111,8 @@ const DetalleEntrenamientoAvanzado = () => {
             page={currentPage}
             setParentTotalPages={setTotalPages}
             onPageChange={handlePageChange}
+            ejercicios={ejercicios} // Pasar los ejercicios como prop
+            actualizarTabla={actualizarTablaEjercicios} // Pasar la función de actualización
           />
         </>
       ) : (
