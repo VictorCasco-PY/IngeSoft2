@@ -8,7 +8,8 @@ import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
-const DetalleEntrenamiento = () => {
+import toast from "react-hot-toast";
+const DetalleEntrenamientoAvanzado = () => {
   const { id } = useParams();
   const { getProgramasById } = usePlanes();
   const [programa, setPrograma] = useState(null);
@@ -47,6 +48,9 @@ const DetalleEntrenamiento = () => {
     setEjercicios([...ejercicios, nuevoEjercicio]);
     handleCloseModal();
   };
+  const actualizarTablaEjercicios = () => {
+    fetchPrograma();
+  };
 
   return (
     <CartaPrincipal>
@@ -55,17 +59,19 @@ const DetalleEntrenamiento = () => {
           {/* Modal */}
           {showModal && (
             <ModalBase
-              open={showModal || showEditModal}
-              title={showModal ? "Crear Nuevo Ejercicio" : "Editar Ejercicio"}
+              open={showModal}
+              title={"Crear Nuevo Ejercicio"}
               closeModal={handleCloseModal}
             >
-              <FormularioEjercicios />
+              <FormularioEjercicios
+                onTableRefresh={actualizarTablaEjercicios}
+              />{" "}
             </ModalBase>
           )}
 
           <div className="info-programa">
             <div className="d-flex align-items-center gap-3">
-              <FlechaAtras ruta="/planes-entrenamiento/principiante" />
+              <FlechaAtras ruta="/planes-entrenamiento/avanzado" />
               <h2>{programa.titulo}</h2>
             </div>
             <div className="float-end">
@@ -105,6 +111,8 @@ const DetalleEntrenamiento = () => {
             page={currentPage}
             setParentTotalPages={setTotalPages}
             onPageChange={handlePageChange}
+            ejercicios={ejercicios} // Pasar los ejercicios como prop
+            actualizarTabla={actualizarTablaEjercicios} // Pasar la función de actualización
           />
         </>
       ) : (
@@ -118,4 +126,4 @@ const DetalleEntrenamiento = () => {
   );
 };
 
-export default DetalleEntrenamiento;
+export default DetalleEntrenamientoAvanzado;

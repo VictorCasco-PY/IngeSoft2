@@ -322,16 +322,12 @@ const FacturasFormCompras = () => {
               name="cantidad"
               className="form-control"
               value={producto.cantidad}
-              min={cantidadMaxima - cantidadMaxima + 1}
-              max={cantidadMaxima}
               onChange={(e) => {
                 const nuevaCantidad = parseInt(e.target.value);
-                if (nuevaCantidad <= cantidadMaxima) {
-                  setProducto({
-                    ...producto,
-                    cantidad: nuevaCantidad,
-                  });
-                }
+                setProducto({
+                  ...producto,
+                  cantidad: nuevaCantidad,
+                });
               }}
             />
           </div>

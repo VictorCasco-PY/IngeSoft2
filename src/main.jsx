@@ -39,6 +39,8 @@ import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/Ent
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
 import CobrosPendientesProveedores from "./pages/caja/comprasProveedores/ListaComprasCobro";
 
+import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamientoIntermedio";
+import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -301,10 +303,26 @@ createRoot(document.getElementById("root")).render(
             }
           />
            <Route
-            path="planes-entrenamiento/:slug"
+            path="planes-entrenamiento/principiante/:id"
             element={
               <Layout>
                 <DetalleEntrenamiento />
+              </Layout>
+            }
+          />
+            <Route
+            path="planes-entrenamiento/intermedio/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoIntermedio />
+              </Layout>
+            }
+          />
+            <Route
+            path="planes-entrenamiento/avanzado/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoAvanzado />
               </Layout>
             }
           />
