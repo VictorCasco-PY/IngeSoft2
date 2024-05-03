@@ -5,9 +5,9 @@ import './DatePicker.css'
 
 registerLocale("es", es);
 
-const BasicDatePicker = ({ selected, onChange, botonHoy = true, ...props }) => {
+const BasicDatePicker = ({ id,selected, onChange, botonHoy = true, ...props }) => {
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-        <button className="datePickerStyle" onClick={onClick} ref={ref}>
+        <button id={id} className="datePickerStyle" onClick={onClick} ref={ref}>
             {value}
         </button>
     ));
