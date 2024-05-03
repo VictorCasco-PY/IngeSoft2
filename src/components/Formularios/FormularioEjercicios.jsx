@@ -72,10 +72,12 @@ function FormularioEjercicios({onTableRefresh }) {
         peso: "",
         tiempo: "",
         descripcion: "",
+
       });
-      await crearEjercicios(id, formValues);
+      await crearEjercicios(id, { ...formValues, programaId: id });
       toast.success("Ejercicios creados exitosamente");
       setShowModal(false);
+      onTableRefresh();
     } catch (error) {
       console.error(error);
     }

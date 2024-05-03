@@ -51,9 +51,9 @@ const DetalleEntrenamientoAvanzado = () => {
     handleCloseModal();
   };
   const actualizarTablaEjercicios = () => {
-    fetchPrograma();
+    fetchPrograma(); // Llama a la función que obtiene los datos del programa nuevamente
   };
-
+  
   const handleAgregarPlanACliente = () => {
     navigate(`/planes-entrenamiento/${"avanzado"}/${id}/cliente/asignar`);
   };
@@ -71,7 +71,7 @@ const DetalleEntrenamientoAvanzado = () => {
             >
               <FormularioEjercicios
                 onTableRefresh={actualizarTablaEjercicios}
-              />{" "}
+              />
             </ModalBase>
           )}
 

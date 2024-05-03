@@ -49,6 +49,7 @@ const EntrenamientoAvanzado = () => {
     try {
       const res = await getProgramasAvanzado();
       setData(res);
+      
     } catch (error) {
       setError(error);
     } finally {
