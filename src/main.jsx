@@ -37,6 +37,7 @@ import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento
 import EntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento/EntrenamientoIntermedio";
 import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/EntrenamientoAvanzado";
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
+import CobrosPendientesProveedores from "./pages/caja/comprasProveedores/ListaComprasCobro";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -128,6 +129,14 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <CobrosPendientesVista />
+                </Layout>
+              }
+            />
+            <Route
+              path="/caja/pendientes/cobros"
+              element={
+                <Layout>
+                  <CobrosPendientesProveedores />
                 </Layout>
               }
             />

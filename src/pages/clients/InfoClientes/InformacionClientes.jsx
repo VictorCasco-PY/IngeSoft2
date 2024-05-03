@@ -24,9 +24,9 @@ import FormularioMedicion from "../../../components/Formularios/FormularioMedici
 
 import useClienteData from "../../../hooks/useClientesData";
 
-
 const InformacionClientes = () => {
   const { id } = useParams();
+  const [showModal, setShowModal] = useState(false);
   const {
     getClienteById,
     getMedicionClienteById,
@@ -70,7 +70,7 @@ const InformacionClientes = () => {
     cirPecho: "",
     clienteID: "",
   });
-
+  const [detailsVisible, setDetailsVisible] = useState(false);
   const fetchData = async (page) => {
     try {
       const clienteResponse = await getClienteById(id, page); // Obtenemos los datos del cliente
@@ -132,7 +132,28 @@ const InformacionClientes = () => {
   const initials = cliente ? getInitials(cliente.nombre) : "";
 
   const ButtonBasic2 = ({ initials }) => {
-    return <div className="circle initials">{initials}</div>;
+    const circleSize = 150; // Cambia el tamaño deseado
+    const fontSize = 60; // Cambia el tamaño de la fuente deseado
+    return (
+      <svg width={circleSize} height={circleSize}>
+        <circle
+          cx={circleSize / 2}
+          cy={circleSize / 2}
+          r={circleSize / 2 - 5}
+          fill="#F9F5FF"
+        />
+        <text
+          x="50%"
+          y="50%"
+          textAnchor="middle"
+          dy="0.35em"
+          fill="#7F56D9"
+          fontSize={fontSize}
+        >
+          {initials}
+        </text>
+      </svg>
+    );
   };
   // Función para manejar el cambio de pestaña
   const handleChange = (event, newValue) => {
@@ -247,6 +268,24 @@ const InformacionClientes = () => {
         }}
       />
       <CartaPrincipal>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            success: {
+              style: {
+                background: "#75B798",
+                color: "#0A3622",
+              },
+            },
+            error: {
+              style: {
+                background: "#FFDBD9",
+                color: "#D92D20",
+              },
+            },
+          }}
+        />
         <div style={{ marginLeft: "3%" }}>
           <Link to="/clientes">
             <button className="custom-button">
@@ -260,22 +299,10 @@ const InformacionClientes = () => {
               <div>
                 <ButtonBasic2 initials={initials} />
               </div>
-              <div style={{ marginLeft: "10%" }}>
-                <h3 style={{ color: "#667085" }}>{cliente.nombre}</h3>
-                {/*
-                <Alert
-                  variant="outlined"
-                  severity="error"
-                  style={{ borderRadius: "50px", backgroundColor: "#FFCFCF" }}
-                >
-                  Este cliente tiene 1 pago atrasado
-                </Alert>
-                 */}
+              <div className="headerMi col-5 pt-2">
+                <h1 style={{ color: "#667085" }}>{cliente.nombre}</h1>
               </div>
-              <div
-                className="d-flex justify-content-center mb-4"
-                style={{ marginLeft: "3%" }}
-              >
+              <div className="col-3 prueba text-center">
                 <ButtonBasic
                   icon={<IoPencilOutline />}
                   color="secondary"
@@ -309,27 +336,83 @@ const InformacionClientes = () => {
           </ModalBase>
           <hr />
           {cliente && (
-            <div className="datos-extras">
-              <div>
-                <h4 style={{ fontSize: "30px", color: "#667085" }}>
-                  Plan Actual
-                </h4>
-                <p style={{ fontSize: "20px", textAlign: "center" }}>Mensual</p>
+            <div
+              className="contenedorDetalles"
+              style={{ display: detailsVisible ? "block" : "none" }}
+            >
+              <div className="row">
+                <div className="col-4 text-center">
+                  <h4 style={{ fontSize: "30px", color: "#667085" }}>Plan</h4>
+                  <p style={{ fontSize: "20px" }}>Mensual</p>
+                </div>
+                <div className="col-4 text-center">
+                  <h4 style={{ fontSize: "30px", color: "#667085" }}>Teléfono</h4>
+                  <p style={{ fontSize: "20px" }}>{cliente.telefono}</p>
+                </div>
+                <div className="col-4 text-center">
+                  <h4 style={{ fontSize: "30px", color: "#667085" }}>RUC</h4>
+                  <p style={{ fontSize: "20px" }}>{cliente.ruc}</p>
+                </div>
               </div>
-              <div>
-                <h4 style={{ fontSize: "30px", color: "#667085" }}>RUC</h4>
-                <p style={{ fontSize: "20px" }}>{cliente.ruc}</p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: "30px", color: "#667085" }}>
-                  N° de Telefono
-                </h4>
-                <p style={{ fontSize: "20px", textAlign: "center" }}>
-                  {cliente.telefono}
-                </p>
-              </div>
+              <hr />
             </div>
           )}
+          <div className="text-center mt-3 ">
+            <button
+              className="btnDetalles"
+              onClick={() => setDetailsVisible(!detailsVisible)}
+              style={{}}
+            >
+              <span style={{ marginBottom: "5px" }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></svg>
+              </span>
+              {detailsVisible ? (
+                <>
+                  Cerrar detalles
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Mostrar detalles
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
           <div style={{ marginLeft: "73%" }}>
             <ButtonBasic
               icon={<IoAdd />}

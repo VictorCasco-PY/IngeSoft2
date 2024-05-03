@@ -41,6 +41,7 @@ const ListaCompras = () => {
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
+          mostrarFiltro={true}
         />
       </CartaPrincipal>
     </>
