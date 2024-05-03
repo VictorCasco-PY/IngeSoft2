@@ -30,7 +30,7 @@ import { MovimientosVista } from "./pages/caja/movimientos/MovimientosVista";
 import DashboardProvider from "./context/DashboardContext";
 import MainArqueo from "./pages/arqueo/MainArqueo";
 import { ArqueoProvider } from "./context/ArqueoContext";
-import  ReporteCliente  from "./pages/reportes/MainClientesReporte";
+import ReporteCliente from "./pages/reportes/MainClientesReporte";
 import MainArqueoLista from "./pages/arqueo/MainArqueoLista";
 import PlanesVista from "./pages/planes-entrenamiento/planes-vista";
 import EntrenamientoPrincipiante from "./pages/planes-entrenamiento/planeamiento/EntrenamientoPrincipiante";
@@ -39,6 +39,9 @@ import EntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento/Ent
 import DetalleEntrenamiento from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamiento";
 import CobrosPendientesProveedores from "./pages/caja/comprasProveedores/ListaComprasCobro";
 
+import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamientoIntermedio";
+import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
+import MainAsignarPlanACliente from "./pages/planes-entrenamiento/planes-cliente/MainAsignarPlanACliente";
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -238,6 +241,16 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
+
+          <Route
+            path="/planes-entrenamiento/:nivel/:id/cliente/asignar"
+            element={
+              <Layout>
+                <MainAsignarPlanACliente />
+              </Layout>
+            }
+          />
+
           <Route
             path="planes-entrenamiento"
             element={
@@ -270,11 +283,27 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
-           <Route
-            path="planes-entrenamiento/:slug"
+          <Route
+            path="planes-entrenamiento/principiante/:id"
             element={
               <Layout>
                 <DetalleEntrenamiento />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/intermedio/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoIntermedio />
+              </Layout>
+            }
+          />
+          <Route
+            path="planes-entrenamiento/avanzado/:id"
+            element={
+              <Layout>
+                <DetalleEntrenamientoAvanzado />
               </Layout>
             }
           />
