@@ -9,13 +9,17 @@ import Pagination from "../../../components/pagination/PaginationContainer";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Toaster, toast } from "react-hot-toast";
 import { formatFecha } from "../../../utils/Formatting";
+import ObjetivosClienteModal from "./ObjetivosClienteModal";
 
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showObjetivosModal, setObjetivosShowModal] = useState(false);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [planName, setPlanName] = useState("");
+  const [nombreCliente, setNombreCliente] = useState("");
+  const [idPrograma, setidPrograma] = useState(null);
 
   const { id } = useParams();
 
@@ -29,6 +33,15 @@ const AsignarPlanACliente = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleOpenObjetivosModal = (nombre) => {
+    setObjetivosShowModal(true);
+    setNombreCliente(nombre);
+  };
+
+  const handleCloseObjetivoModal = () => {
+    setObjetivosShowModal(false);
   };
 
   const getClientes = async (page) => {
@@ -119,7 +132,6 @@ const AsignarPlanACliente = () => {
           </Btn>
         </div>
       </div>
-
       <Table
         headers={[
           "Nombre del cliente",
@@ -139,6 +151,7 @@ const AsignarPlanACliente = () => {
                   fontWeight: "bold",
                   cursor: "pointer",
                 }}
+                onClick={() => handleOpenObjetivosModal(data.nombreCliente)}
               >
                 {data.nombreCliente}
               </td>
@@ -177,6 +190,13 @@ const AsignarPlanACliente = () => {
         open={showModal}
         closeModal={handleCloseModal}
         refreshList={refreshClientesList}
+      />
+      <ObjetivosClienteModal
+        open={showObjetivosModal}
+        closeModal={handleCloseObjetivoModal}
+        clienteNombre={nombreCliente}
+        planNombre={planName}
+        idPlan={id}
       />
     </>
   );
