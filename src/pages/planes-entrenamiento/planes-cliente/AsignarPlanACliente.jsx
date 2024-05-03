@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import Pagination from "../../../components/pagination/PaginationContainer";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Toaster, toast } from "react-hot-toast";
+import { formatFecha } from "../../../utils/Formatting";
 
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +35,6 @@ const AsignarPlanACliente = () => {
     try {
       const response = await api.get(`/programas/${id}/clientes/page/${page}`);
       setData(response.data.items);
-      console.log(response.data.items);
       setTotalPages(response.data.totalPages);
       setPlanName(response.data.items[0].programa);
     } catch (error) {
@@ -143,7 +143,7 @@ const AsignarPlanACliente = () => {
                 {data.nombreCliente}
               </td>
               <td className="py-3">{data.programa}</td>
-              <td className="py-3">{data.fechaEvaluacion}</td>
+              <td className="py-3">{formatFecha(data.fechaEvaluacion)}</td>
               <td className="py-3">
                 <button
                   id="btn-borrar"
