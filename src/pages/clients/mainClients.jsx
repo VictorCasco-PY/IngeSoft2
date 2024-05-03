@@ -52,6 +52,7 @@ const MainClients = () => {
 
   //estado
   const [filtroEstado, setFiltroEstado] = useState("");
+  const [filtroActivado, setFiltroActivado] = useState(false);
 
   const [clienteData, setClienteData] = useState({
     nombre: "",
@@ -81,6 +82,15 @@ const MainClients = () => {
   useEffect(() => {
     // Concatenar el apellido al nombre al cargar el componente
   }, [clienteDataExtra.apellido]);
+
+
+  useEffect(() => {
+    if (filtroActivado) {
+      searchClientes(searchTerm);
+      setFiltroActivado(false); 
+        }
+  }, [filtroEstado, searchTerm, filtroActivado]);
+
 
   useEffect(() => {
     // Calcula el total cuando hay cambios en selectedActivities o modalidad
@@ -467,7 +477,9 @@ const MainClients = () => {
 
   //estado de filtro
   const handleFiltrar = (filtro) => {
-    setFiltro(filtro);
+    console.log("Filtro seleccionado:", filtro);
+    setFiltroEstado(filtro);
+    setFiltroActivado(true); // Activa el estado
   };
 
   const handleSearchChange = () => {
