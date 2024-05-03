@@ -11,16 +11,20 @@ import Pagination from "../pagination/PaginationContainer";
 import CustomAlert from "../alert/CustomAlert";
 
 const TablaMedicionesCliente = ({ toast, clienteId }) => {
-  const { getMedicionClienteById, mediciones, setMediciones, isLoading, eliminarMedicion } =
-    useClienteData();
+  const {
+    getMedicionClienteById,
+    mediciones,
+    setMediciones,
+    isLoading,
+    eliminarMedicion,
+  } = useClienteData();
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showAlert, setShowAlert] = useState(false);
   const [medicionId, setMedicionId] = useState(null);
 
-
-  const getMediciones = async (page ) => {
+  const getMediciones = async (page) => {
     try {
       const res = await getMedicionClienteById(clienteId, page);
       setMediciones(res.items);
@@ -56,7 +60,10 @@ const TablaMedicionesCliente = ({ toast, clienteId }) => {
   const handleConfirmDelete = async () => {
     try {
       await eliminarMedicion(medicionId);
-      const medicionesResponse = await getMedicionClienteById(clienteId, currentPage);
+      const medicionesResponse = await getMedicionClienteById(
+        clienteId,
+        currentPage
+      );
       setMediciones(medicionesResponse.items);
       setShowAlert(false); // Oculta el mensaje de confirmación
       toast.success("Medición eliminada con éxito");
@@ -95,7 +102,7 @@ const TablaMedicionesCliente = ({ toast, clienteId }) => {
       );
 
     if (!mediciones || mediciones.length <= 0)
-      return <ListaVacía mensaje={errorMessage} />;
+      return <ListaVacía mensaje={"No existen mediciones para este cliente"} />;
 
     return (
       <>
@@ -126,9 +133,7 @@ const TablaMedicionesCliente = ({ toast, clienteId }) => {
                 <td>{medicion.cirCintura}</td>
                 <td>{medicion.cirPecho}</td>
                 <td>
-                  <a
-                    onClick={() => handleEliminarMedicion(medicion.id)}
-                  >
+                  <a onClick={() => handleEliminarMedicion(medicion.id)}>
                     <RiDeleteBinLine />
                   </a>
                 </td>
