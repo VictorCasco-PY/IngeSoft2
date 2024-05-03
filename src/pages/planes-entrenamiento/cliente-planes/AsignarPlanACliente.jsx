@@ -23,7 +23,7 @@ const AsignarPlanACliente = () => {
         style={{ marginTop: "1.5rem" }}
       >
         <FlechaAtras ruta="/planes-entrenamiento" />
-        <h1 style={{ marginLeft: "3rem" }}>Clientes de Cardio</h1>
+        <h1 style={{ marginLeft: "3rem" }}>Clientes</h1>
       </div>
       <div className="row d-flex align-items-center mb-3">
         <div className="col-4">
@@ -42,7 +42,9 @@ const AsignarPlanACliente = () => {
         <div className="col-1">
           <Btn id="btn-reset">Limpiar</Btn>
         </div>
-        <div className="col-2">
+        <div className="col-auto ms-auto">
+          {" "}
+          {/* Cambiado aquí */}
           <Btn
             type="primary"
             id="btn-asignar"
@@ -52,6 +54,7 @@ const AsignarPlanACliente = () => {
           </Btn>
         </div>
       </div>
+
       <Table
         headers={[
           "Nombre del cliente",

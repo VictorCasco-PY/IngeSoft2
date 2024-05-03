@@ -8,6 +8,7 @@ import CartaPrincipal from "../../../components/cartaPrincipal/CartaPrincipal";
 import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
+import { useNavigate } from "react-router-dom";
 const DetalleEntrenamiento = () => {
   const { id } = useParams();
   const { getProgramasById } = usePlanes();
@@ -17,6 +18,7 @@ const DetalleEntrenamiento = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchPrograma();
   }, [id]);
@@ -48,6 +50,10 @@ const DetalleEntrenamiento = () => {
     handleCloseModal();
   };
 
+  const handleAgregarPlanACliente = () => {
+    navigate(`/planes-entrenamiento/principiante/${id}/cliente/asignar`);
+  };
+
   return (
     <CartaPrincipal>
       {programa ? (
@@ -69,6 +75,15 @@ const DetalleEntrenamiento = () => {
               <h2>{programa.titulo}</h2>
             </div>
             <div className="float-end">
+              <Btn
+                id="btn-ver-clientes"
+                type="secondary"
+                outline
+                style={{ marginTop: "-3.5rem", marginRight: "1rem" }}
+                onClick={handleAgregarPlanACliente}
+              >
+                Ver clientes
+              </Btn>
               <Btn
                 id="btn-nueva-venta"
                 type="primary"

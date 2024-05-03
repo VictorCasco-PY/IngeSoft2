@@ -2,21 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Btn } from "../../../components/bottons/Button";
 import ModalBase from "../../../components/modals/ModalBase";
 import api from "../../../utils/api";
+import { useParams } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
 
 const AsignarPlanAClienteModal = ({ open, closeModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
+  const [fechaInicioPlan, setFechaInicioPlan] = useState("");
+  const { id } = useParams();
 
   useEffect(() => {
-    // Realizar la solicitud al endpoint solo si la longitud de la búsqueda es mayor o igual a 4
     if (searchQuery.length >= 4) {
       searchClients();
     }
   }, [searchQuery]);
 
   useEffect(() => {
-    // Limpiar el estado cuando se cierra el modal
     if (!open) {
       setSearchQuery("");
       setSearchResults([]);
@@ -31,42 +33,54 @@ const AsignarPlanAClienteModal = ({ open, closeModal }) => {
       );
       setSearchResults(response.data.items);
     } catch (error) {
-      console.error("Error al buscar clientes:", error);
+      toast.error("Error al buscar clientes:");
     }
   };
 
   const handleClientSelection = (client) => {
     setSelectedClient(client);
-    setSearchQuery(""); // Limpiar el input de búsqueda al seleccionar un cliente
+    setSearchQuery(""); // Limpiar la búsqueda para permitir una nueva búsqueda
+    setSearchResults([]); // Limpiar los resultados para que no interfieran con la visualización del cliente seleccionado
   };
 
   const handleClearSelection = () => {
     setSelectedClient(null);
+    setSearchQuery(""); // Restablecer la búsqueda para permitir una nueva selección
   };
 
-  const handleAssignPlan = () => {
-    // Aquí puedes manejar la lógica para guardar los datos del cliente seleccionado
+  const handleAsignarPlan = async (id) => {
     if (selectedClient) {
-      console.log("Cliente seleccionado:", {
+      const response = await api.post(`/programas/${id}/clientes`, {
         clienteId: selectedClient.id,
-        fechaEvaluacion: "2024-04-27",
+        fechaEvaluacion: fechaInicioPlan,
       });
+      toast.success("Plan asignado correctamente");
+      closeModal();
     } else {
-      console.error("No se ha seleccionado ningún cliente.");
+      toast.error("No se ha seleccionado ningún cliente");
     }
-    // Cerrar el modal después de guardar los datos del cliente
-    closeModal();
-  };
-
-  const handleAsignarPlan = async (programaId) => {
-    const response = api.post(`/programas/${programaId}/clientes`, {
-      clienteId: 1,
-      fechaEvaluacion: "2024-04-27",
-    });
   };
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
       <ModalBase title="Asignar plan" open={open} closeModal={closeModal}>
         <div>
           <div className="mb-2">
@@ -81,45 +95,71 @@ const AsignarPlanAClienteModal = ({ open, closeModal }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div>
-            {searchResults.map((client) => (
+          {selectedClient && (
+            <div
+              className="mb-2"
+              style={{
+                padding: "2px",
+                border: "1px solid green",
+                borderRadius: "10px",
+              }}
+            >
               <div
-                key={client.id}
-                className="client-data"
                 style={{
-                  cursor: "pointer",
-                  padding: "10px",
-                  border:
-                    selectedClient === client ? "1px solid green" : "none",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
-                onClick={() => handleClientSelection(client)}
               >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <span>{`${client.nombre} - ${client.cedula}`}</span>
-                  {selectedClient === client && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClearSelection();
-                      }}
-                      style={{ marginLeft: "5px", cursor: "pointer" }}
-                    >
-                      &times;
-                    </button>
-                  )}
-                </div>
+                <span>{`${selectedClient.nombre} - ${selectedClient.cedula}`}</span>
+                <button
+                  onClick={handleClearSelection}
+                  style={{
+                    cursor: "pointer",
+                    border: "none",
+                    background: "transparent",
+                    color: "red",
+                    fontSize: "24px",
+                  }}
+                >
+                  &times;
+                </button>
               </div>
-            ))}
+            </div>
+          )}
+          <div>
+            {searchResults.length > 0 &&
+              searchResults.map((client) => (
+                <div
+                  key={client.id}
+                  style={{
+                    cursor: "pointer",
+                    padding: "10px",
+                    border:
+                      selectedClient && selectedClient.id === client.id
+                        ? "1px solid green"
+                        : "none",
+                  }}
+                  onClick={() => handleClientSelection(client)}
+                >
+                  <span>{`${client.nombre} - ${client.cedula}`}</span>
+                </div>
+              ))}
           </div>
           <div className="mb-2">
             <label htmlFor="input_fecha" className="form-label">
               Fecha inicio del plan
             </label>
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fechaInicioPlan}
+              onChange={(e) => setFechaInicioPlan(e.target.value)}
+            />
           </div>
           <div className="d-flex justify-content-center align-items-center float-end mt-4 gap-3">
             <Btn onClick={closeModal}>Cerrar</Btn>
-            <Btn type="primary" onClick={handleAssignPlan}>
+            <Btn type="primary" onClick={() => handleAsignarPlan(id)}>
               Asignar
             </Btn>
           </div>

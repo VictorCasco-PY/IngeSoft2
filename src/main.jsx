@@ -112,7 +112,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
             <Route
-              path="/planes-entrenamiento/asignar"
+              path="/planes-entrenamiento/principiante/:id/cliente/asignar"
               element={
                 <Layout>
                   <MainAsignarPlanACliente />
