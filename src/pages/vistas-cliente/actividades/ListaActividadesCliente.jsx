@@ -1,6 +1,9 @@
 import React from "react";
 import useActividadesCliente from "../../../hooks/useActividadesCliente";
 import Pagination from "../../../components/pagination/PaginationContainer";
+import ActividadCard from "./ActividadCard";
+import ActividadModal from "./ActividadModal";
+import { CircularProgress } from "@mui/material";
 
 const ListaActividadesCliente = () => {
   const {
@@ -18,7 +21,7 @@ const ListaActividadesCliente = () => {
     <div className="container">
       {isLoading && (
         <div className="text-center">
-          <p>Cargando actividades...</p>
+          <CircularProgress />
         </div>
       )}
       {error && (
@@ -26,50 +29,21 @@ const ListaActividadesCliente = () => {
           {error}
         </div>
       )}
+      <h1>Lista de actividades</h1>
       <div className="row">
         {actividades.map((actividad) => (
-          <div
-            className="col-12 col-md-6 col-lg-4 mb-3"
+          <ActividadCard
             key={actividad.actividad.id}
-            onClick={() => handleActividadClick(actividad.actividad)}
-          >
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">{actividad.actividad.nombre}</h5>
-                <p className="card-text">
-                  {actividad.clientes} clientes inscritos
-                </p>
-              </div>
-            </div>
-          </div>
+            actividad={actividad.actividad}
+            onClick={handleActividadClick}
+          />
         ))}
       </div>
       {selectedActividad && (
-        <div className="modal show" style={{ display: "block" }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{selectedActividad.nombre}</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => handleActividadClick(null)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p>{selectedActividad.descripcion}</p>
-                <p>Costo mensual: {selectedActividad.costoMensual}</p>
-                <p>Costo semanal: {selectedActividad.costoSemanal}</p>
-                <p>
-                  Entrenadores:{" "}
-                  {selectedActividad.entrenadores.length > 0
-                    ? selectedActividad.entrenadores.join(", ")
-                    : "No asignados"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ActividadModal
+          actividad={selectedActividad}
+          onClose={() => handleActividadClick(null)}
+        />
       )}
       {totalPages > 1 && (
         <Pagination
