@@ -1,6 +1,6 @@
 import React from "react";
 
-const ActividadCard = ({ actividad, onClick }) => {
+const ActividadCard = ({ actividad, inscriptos, onClick }) => {
   return (
     <div
       className="col-12 col-md-6 col-lg-4 mb-3"
@@ -9,7 +9,7 @@ const ActividadCard = ({ actividad, onClick }) => {
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{actividad.nombre}</h5>
-          <p className="card-text">{actividad.clientes} inscritos</p>
+          <p className="card-text">{inscriptos} inscriptos</p>
         </div>
       </div>
     </div>

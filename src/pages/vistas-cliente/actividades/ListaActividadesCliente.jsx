@@ -35,6 +35,7 @@ const ListaActividadesCliente = () => {
           <ActividadCard
             key={actividad.actividad.id}
             actividad={actividad.actividad}
+            inscriptos={actividad.clientes}
             onClick={handleActividadClick}
           />
         ))}
