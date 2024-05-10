@@ -8,13 +8,18 @@ import { useParams } from "react-router-dom";
 import Pagination from "../../../components/pagination/PaginationContainer";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Toaster, toast } from "react-hot-toast";
+import { formatFecha } from "../../../utils/Formatting";
+import ObjetivosClienteModal from "./ObjetivosClienteModal";
 
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showObjetivosModal, setObjetivosShowModal] = useState(false);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [planName, setPlanName] = useState("");
+  const [nombreCliente, setNombreCliente] = useState("");
+  const [idPrograma, setidPrograma] = useState(null);
 
   const { id } = useParams();
 
@@ -30,11 +35,19 @@ const AsignarPlanACliente = () => {
     setShowModal(false);
   };
 
+  const handleOpenObjetivosModal = (nombre) => {
+    setObjetivosShowModal(true);
+    setNombreCliente(nombre);
+  };
+
+  const handleCloseObjetivoModal = () => {
+    setObjetivosShowModal(false);
+  };
+
   const getClientes = async (page) => {
     try {
       const response = await api.get(`/programas/${id}/clientes/page/${page}`);
       setData(response.data.items);
-      console.log(response.data.items);
       setTotalPages(response.data.totalPages);
       setPlanName(response.data.items[0].programa);
     } catch (error) {
@@ -119,7 +132,6 @@ const AsignarPlanACliente = () => {
           </Btn>
         </div>
       </div>
-
       <Table
         headers={[
           "Nombre del cliente",
@@ -139,11 +151,12 @@ const AsignarPlanACliente = () => {
                   fontWeight: "bold",
                   cursor: "pointer",
                 }}
+                onClick={() => handleOpenObjetivosModal(data.nombreCliente)}
               >
                 {data.nombreCliente}
               </td>
               <td className="py-3">{data.programa}</td>
-              <td className="py-3">{data.fechaEvaluacion}</td>
+              <td className="py-3">{formatFecha(data.fechaEvaluacion)}</td>
               <td className="py-3">
                 <button
                   id="btn-borrar"
@@ -177,6 +190,13 @@ const AsignarPlanACliente = () => {
         open={showModal}
         closeModal={handleCloseModal}
         refreshList={refreshClientesList}
+      />
+      <ObjetivosClienteModal
+        open={showObjetivosModal}
+        closeModal={handleCloseObjetivoModal}
+        clienteNombre={nombreCliente}
+        planNombre={planName}
+        idPlan={id}
       />
     </>
   );
