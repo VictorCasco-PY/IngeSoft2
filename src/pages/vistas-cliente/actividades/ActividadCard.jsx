@@ -9,7 +9,7 @@ const ActividadCard = ({ actividad, inscriptos, onClick }) => {
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{actividad.nombre}</h5>
-          <p className="card-text">{inscriptos} inscriptos</p>
+          <p className="card-text">{actividad.descripcion}</p>
         </div>
       </div>
     </div>

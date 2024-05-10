@@ -9,18 +9,28 @@ const useActividadesCliente = (initialPage = 1) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Función para cargar las actividades desde la API
   useEffect(() => {
     const fetchActividades = async () => {
       setIsLoading(true);
       setError(null);
       try {
         const response = await api.get(
-          `/actividades/count/clientes/page/${currentPage}`
+          `/actividades/entrenadores/page/${currentPage}`
         );
-        setActividades(response.data.items);
-        setTotalPages(response.data.totalPages);
-        setCurrentPage(response.data.currentPage);
+        if (response.data && response.data.items) {
+          const fetchedActividades = response.data.items.map((item) => ({
+            ...item.actividad,
+            entrenadoresNombres:
+              item.entrenadores?.map((ent) => ent.nombre).join(", ") ||
+              "No asignados",
+          }));
+          console.log("fetch ", fetchedActividades);
+          setActividades(fetchedActividades);
+          setTotalPages(response.data.totalPages);
+          setCurrentPage(response.data.currentPage);
+        } else {
+          setError("No se encontraron actividades.");
+        }
         setIsLoading(false);
       } catch (error) {
         setError("Error al cargar actividades: " + error.message);

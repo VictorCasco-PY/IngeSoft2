@@ -33,9 +33,8 @@ const ListaActividadesCliente = () => {
       <div className="row">
         {actividades.map((actividad) => (
           <ActividadCard
-            key={actividad.actividad.id}
-            actividad={actividad.actividad}
-            inscriptos={actividad.clientes}
+            key={actividad.id}
+            actividad={actividad}
             onClick={handleActividadClick}
           />
         ))}
