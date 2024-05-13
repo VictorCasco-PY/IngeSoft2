@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { precioHandler } from "../../../utils/precioHandler";
 import { Btn } from "../../../components/bottons/Button";
 import styles from "./ListaActividadesCliente.module.css";
+import SuscripcionModal from "./SuscripcionModal";
 
 const ActividadModal = ({ actividad, onClose }) => {
-  console.log("Actividad: ", actividad);
+  const [showSuscripcion, setShowSuscripcion] = useState(false);
+
+  const handleSuscripcionClick = () => {
+    setShowSuscripcion(true);
+  };
+
   return (
     <div className="modal show" style={{ display: "block" }}>
       <div
@@ -28,8 +34,16 @@ const ActividadModal = ({ actividad, onClose }) => {
             </p>
           </div>
           <div className="modal-footer">
-            <Btn type="primary">Suscribirse</Btn>
+            <Btn type="primary" onClick={handleSuscripcionClick}>
+              Suscribirse
+            </Btn>
           </div>
+          {showSuscripcion && (
+            <SuscripcionModal
+              actividad={actividad}
+              onClose={() => setShowSuscripcion(false)}
+            />
+          )}
         </div>
       </div>
     </div>
