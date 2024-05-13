@@ -18,13 +18,22 @@ const SuscripcionModal = ({ actividad, onClose }) => {
   };
 
   const handleSuscripcion = async () => {
+    // Verificar que la fecha de inicio haya sido ingresada
+    if (!fechaInicio) {
+      toast.error("Por favor, seleccione una fecha de inicio.");
+      return;
+    }
+
     try {
       const response = await api.post("/suscripciones", [suscripcionData]);
       toast.success("Suscripción exitosa!");
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (error) {
+      // Manejo de errores de axios
       if (axios.isAxiosError(error)) {
         const serverError = error.response?.data || error.message;
-        // Comprueba si el error tiene una estructura específica y utiliza su mensaje
         const errorMessage =
           serverError.message || "Error al realizar la suscripción.";
         toast.error(errorMessage);
@@ -34,8 +43,6 @@ const SuscripcionModal = ({ actividad, onClose }) => {
         toast.error("Error desconocido al realizar la suscripción.");
         console.error("Error al realizar la suscripción:", error);
       }
-    } finally {
-      //onClose();
     }
   };
 
