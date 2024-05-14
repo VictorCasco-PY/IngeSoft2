@@ -47,7 +47,7 @@ const Login = () => {
         //cambio de andy: guardar el usuario en el contexto
         contextLogin(response.data);
         if (response.data.rol == 2) {
-          navigate("/clientes/actividades");
+          navigate("/clientes/dashboard");
         } else {
           navigate("/clientes");
         }
