@@ -13,7 +13,7 @@ import { UserDropDown } from "./DropDown/UserDropDown";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import RolEnum from "../../../utils/RolEnum";
-import "../Layout.css"
+import "../Layout.css";
 
 const NavbarStyled = styled(AppBar)(AppBarStyle);
 const ToolbarStyled = styled(Toolbar)(ToolbarStyle);
@@ -26,7 +26,6 @@ export const NewNavbar = () => {
     <NavbarStyled position="static">
       <div className="nav-container">
         <ToolbarStyled>
-
           {/* Aca va el el burguer */}
           <div
             onMouseOver={() => setShowMenu(true)}
@@ -42,42 +41,79 @@ export const NewNavbar = () => {
               <MenuIcon />
             </NavBtn>
 
-            <NavBtn
-              id="nav-logo"
-              className="d-lg-inline-flex"
-              type="base"
-            >
+            <NavBtn id="nav-logo" className="d-lg-inline-flex" type="base">
               <img src={Logo} alt="Logo de la aplicación" />
             </NavBtn>
 
             {/* Aca va el menu*/}
             <BoxStyled
-              className={`${!showMenu && "d-none" || "d-block"
-                } d-lg-inline-block position-absolute position-lg-relative bg-white`}
+              className={`${
+                (!showMenu && "d-none") || "d-block"
+              } d-lg-inline-block position-absolute position-lg-relative bg-white`}
             >
-              <NavBtn id="nav-dashboard" href="/dashboard" roles={[RolEnum.ADMIN]}>
+              <NavBtn
+                id="nav-dashboard"
+                href="/dashboard"
+                roles={[RolEnum.ADMIN]}
+              >
                 Dashboard
               </NavBtn>
-              <NavBtn id="nav-clientes" href="/clientes" roles={[RolEnum.ADMIN,RolEnum.ENTRENADOR,RolEnum.CAJERO]}>
+              <NavBtn
+                id="nav-clientes"
+                href="/clientes"
+                roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR, RolEnum.CAJERO]}
+              >
                 Clientes
               </NavBtn>
               <NavBtn id="botonextra" roles={[RolEnum.ADMIN, RolEnum.CAJERO]}>
-                <ProveedoresDropdown />   
+                <ProveedoresDropdown />
               </NavBtn>
               <NavBtn id="nav-usuarios" href="/users" roles={[RolEnum.ADMIN]}>
                 Usuarios
               </NavBtn>
-              <NavBtn id="nav-servicios" href="/servicios" roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}>
+              <NavBtn
+                id="nav-servicios"
+                href="/servicios"
+                roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}
+              >
                 Servicios
               </NavBtn>
-              <NavBtn id="nav-caja" href="/caja" roles={[RolEnum.ADMIN, RolEnum.CAJERO]}>
+              <NavBtn
+                id="nav-caja"
+                href="/caja"
+                roles={[RolEnum.ADMIN, RolEnum.CAJERO]}
+              >
                 Caja
               </NavBtn>
-              <NavBtn id="nav-reportes" href="/reportes" roles={[RolEnum.ADMIN]}>
+              <NavBtn
+                id="nav-reportes"
+                href="/reportes"
+                roles={[RolEnum.ADMIN]}
+              >
                 Reportes
               </NavBtn>
-              <NavBtn id="nav-planes" href="/planes-entrenamiento" roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}>
+              <NavBtn
+                id="nav-planes"
+                href="/planes-entrenamiento"
+                roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}
+              >
                 Planes
+              </NavBtn>
+
+              {/* Navbar para clientes */}
+              <NavBtn
+                id="nav-dashboard-cliente"
+                href="/clientes/dashboard"
+                roles={[RolEnum.ADMIN, RolEnum.CLIENTE]}
+              >
+                Dashboard
+              </NavBtn>
+              <NavBtn
+                id="nav-actividades-cliente"
+                href="/clientes/actividades"
+                roles={[RolEnum.ADMIN, RolEnum.CLIENTE]}
+              >
+                Actividades
               </NavBtn>
             </BoxStyled>
           </div>
