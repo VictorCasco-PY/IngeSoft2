@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import RemoveIcon from '@mui/icons-material/Remove';
 import NewClientsENUM from '../../utils/NuevosClientesENUM';
 import CircularProgress from "@mui/material/CircularProgress";
 import { useDashboard } from '../../context/DashboardContext';
@@ -17,14 +17,19 @@ const NewClientsSection = () => {
     const [nuevosClientesDisplaying, setNuevosClientesDisplaying] = useState(NewClientsENUM.NUEVOS)
     const { getNewClients, isLoadingNewClients } = useDashboard();
 
+    const [isNuevosEmpty, setIsNuevosEmpty] = useState(false)
+    const [isLastMonthEmpty, setIsLastMonthEmpty] = useState(false)
+
     const ordenarDatos = async () => {
+        setIsNuevosEmpty(false)
+        setIsLastMonthEmpty(false)
         let data;
         if (!ReporteStorage.getNewClientsData()) {
             data = await getNewClients()
         } else {
             data = ReporteStorage.getNewClientsData();
         }
-        
+
         const presentClients = data.nuevosToday
         const lastMonthClients = data.nuevosLastMonth
         setNuevosClientesNumber(presentClients)
@@ -33,9 +38,16 @@ const NewClientsSection = () => {
         if (presentClients > lastMonthClients) { //mas nuevos este mes
             setNuevosClientesDisplaying(NewClientsENUM.NUEVOS)
         } else if (presentClients < lastMonthClients) { //menos nuevos este mes
-            setNuevosClientesDisplaying(NewClientsENUM.PERDIDOS)
+            setNuevosClientesDisplaying(NewClientsENUM.MENOS)
         } else { //iguales
             setNuevosClientesDisplaying(NewClientsENUM.RETENIDOS)
+        }
+
+        if (presentClients === 0) {
+            setIsNuevosEmpty(true)
+        }
+        if (lastMonthClients === 0) {
+            setIsLastMonthEmpty(true)
         }
     }
 
@@ -44,12 +56,12 @@ const NewClientsSection = () => {
     }, [isLoadingNewClients])
 
     const getArrowClassName = (nuevosClientesDisplaying, position) => {
-        if ((nuevosClientesDisplaying === NewClientsENUM.NUEVOS && position === 1) || (nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && position === 2)) {
+        if ((nuevosClientesDisplaying === NewClientsENUM.NUEVOS && position === 1) || (nuevosClientesDisplaying === NewClientsENUM.MENOS && position === 2)) {
+            return 'aLightGreen';
+        } else if ((nuevosClientesDisplaying === NewClientsENUM.NUEVOS && position === 2) || (nuevosClientesDisplaying === NewClientsENUM.MENOS && position === 1)) {
             return 'aGreen';
-        } else if ((nuevosClientesDisplaying === NewClientsENUM.NUEVOS && position === 2) || (nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && position === 1)) {
-            return 'aRed';
-        } else {
-            return 'aYellow';
+        } else { //fue otro estilo anteriormente
+            return 'aGreen';
         }
     };
 
@@ -59,19 +71,56 @@ const NewClientsSection = () => {
     return (
         <div className='d-flex flex-column gap-3'>
             <div className='d-flex gap-3'>
-                {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleUpIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
-                {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleDownIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
-                {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${firstArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<Skeleton style={{width:'40px'}} />) : (nuevosClientesNumber)}</nav>
+                {isNuevosEmpty ? (
+                    <RemoveIcon className={`arrowIndicator aYellow`} />
+                ) : (
+                    <>
+                        {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (
+                            <KeyboardDoubleArrowUpIcon className={`arrowIndicator ${firstArrowClassName}`} />
+                        )}
+                        {nuevosClientesDisplaying === NewClientsENUM.MENOS && (
+                            <KeyboardArrowUpIcon className={`arrowIndicator ${firstArrowClassName}`} />
+                        )}
+                        {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (
+                            <KeyboardArrowUpIcon className={`arrowIndicator ${firstArrowClassName}`} />
+                        )}
+                    </>
+                )}
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>
+                    {isLoadingNewClients ? (
+                        <Skeleton style={{ width: '40px' }} />
+                    ) : (
+                        nuevosClientesNumber
+                    )}
+                </nav>
             </div>
             <h3 className='m-0 p-0'>Mes pasado:</h3>
             <div className='d-flex gap-3'>
-                {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (<ArrowCircleDownIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
-                {nuevosClientesDisplaying === NewClientsENUM.PERDIDOS && (<ArrowCircleUpIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
-                {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (<RemoveCircleOutlineIcon className={`arrowIndicator ${secondArrowClassName}`} />)}
-                <nav style={{ fontSize: '2rem' }} className='notSelect'>{isLoadingNewClients ? (<Skeleton style={{width:'40px'}} />) : (nuevosClientesLastMonth)}</nav>
+                {isLastMonthEmpty ? (
+                    <RemoveIcon className={`arrowIndicator aYellow`} />
+                ) : (
+                    <>
+                        {nuevosClientesDisplaying === NewClientsENUM.NUEVOS && (
+                            <KeyboardArrowUpIcon className={`arrowIndicator ${secondArrowClassName}`} />
+                        )}
+                        {nuevosClientesDisplaying === NewClientsENUM.MENOS && (
+                            <KeyboardDoubleArrowUpIcon className={`arrowIndicator ${secondArrowClassName}`} />
+                        )}
+                        {nuevosClientesDisplaying === NewClientsENUM.RETENIDOS && (
+                            <KeyboardArrowUpIcon className={`arrowIndicator ${secondArrowClassName}`} />
+                        )}
+                    </>
+                )}
+                <nav style={{ fontSize: '2rem' }} className='notSelect'>
+                    {isLoadingNewClients ? (
+                        <Skeleton style={{ width: '40px' }} />
+                    ) : (
+                        nuevosClientesLastMonth
+                    )}
+                </nav>
             </div>
         </div>
+
     );
 }
 
