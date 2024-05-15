@@ -326,6 +326,14 @@ createRoot(document.getElementById("root")).render(
             />
           </Route>
           <Route
+            path="/clientes/actividades"
+            element={
+              <Layout>
+                <MainListaActividadesCliente />
+              </Layout>
+            }
+          />
+          <Route
             path="*"
             element={
               <Layout>
