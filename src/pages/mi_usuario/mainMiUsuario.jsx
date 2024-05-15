@@ -12,7 +12,6 @@ import LabelBase from "../../components/labels/LabelBase";
 import ModalBase from "../../components/modals/ModalBase";
 import Telefono from "./telefono.jsx";
 import Cedula from "./cedula.jsx";
-import ButtonCrear from "../../components/bottons/ButtonCrear";
 import { fetchUsers } from "../users/mainUsers.jsx";
 const MainMiUsuario = () => {
   const emptyUser = {
@@ -23,6 +22,12 @@ const MainMiUsuario = () => {
     email: "",
     rol: null,
   };
+  const newPassword = {
+    passActual: "",
+    nuevaPass: "",
+    confirmarPass: "",
+  };
+  const [password, setPassword] =  useState(newPassword);
   const [loading, setLoading] = useState(true);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [filteredUsersState, setFilteredUsersState] = useState(filteredUsers);
@@ -31,7 +36,6 @@ const MainMiUsuario = () => {
   const [userData, setUser] = useState(emptyUser);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showEditPasswordModal, setShowEditPasswordModal] = useState(false);
   const [modalMode, setModalMode] = useState("edit");
   const [error, setError] = useState(false);
   const [detailsVisible, setDetailsVisible] = useState(false); // Estado para controlar la visibilidad de los detalles
@@ -180,6 +184,14 @@ const MainMiUsuario = () => {
                     {getRoleName(userData.rol)}
                   </h3>
                 </div>
+                <div className="col-3 prueba text-center">
+                  <ButtonBasic
+                    icon={<IoPencilOutline />}
+                    color="secondary"
+                    text="Editar Mi Usuario"
+                    onClick={() => setShowModal(true)}
+                  />
+                </div>
               </div>
             </div>
             <div style={{ marginLeft: "10%" }}>
@@ -290,78 +302,11 @@ const MainMiUsuario = () => {
                   </ModalBase>
                 )}
               </div>
-              <div className="d-flex justify-content-center mb-4 float-end editMi">
-                {showEditPasswordModal && (
-                  <ModalBase
-                    title="Cambiar contraseña"
-                    open={showEditPasswordModal}
-                    closeModal={() => setShowEditPasswordModal(false)}
-                  >
-                    <div className="mb-3">
-                      <div className="label-container">
-                        <LabelBase
-                          label="Ingrese su contraseña actual:"
-                          htmlFor="actualPassword"
-                        />
-                        <span className="required">*</span>
-                      </div>
-                      <input
-                        id="input-actualpassword"
-                        style={{ width: "100%", height: "30px" }}
-                        type="text"
-                        name="actualPassword"
-                        className="form-control"
-                        value={userData.cedula}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <div className="label-container">
-                        <LabelBase
-                          label="Ingrese su nueva contraseña:"
-                          htmlFor="newPassword"
-                        />
-                        <span className="required">*</span>
-                      </div>
-                      <input
-                        id="input-newpassword"
-                        style={{ width: "100%", height: "30px" }}
-                        type="text"
-                        name="newPassword"
-                        className="form-control"
-                        // value={}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <div className="label-container">
-                        <LabelBase
-                          label="Repita su nueva contraseña actual:"
-                          htmlFor="repPassword"
-                        />
-                        <span className="required">*</span>
-                      </div>
-                      <input
-                        id="input-reppassword"
-                        style={{ width: "100%", height: "30px" }}
-                        type="text"
-                        name="repPassword"
-                        className="form-control"
-                        // value={}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <div className="d-flex justify-content-center align-items-center float-end">
-                        <ButtonBasic
-                          id="btn-aceptar"
-                          text="Aceptar"
-                          onClick={handleAceptar}
-                        />
-                      </div>
-                    </div>
-                  </ModalBase>
-                )}
-              </div>
             </div>
-            <div className="contenedorDetalles">
+            <div
+              className="contenedorDetalles"
+              style={{ display: detailsVisible ? "block" : "none" }}
+            >
               <hr className="liner" />
               <div className="row">
                 <div className="col-2"></div>
@@ -393,24 +338,89 @@ const MainMiUsuario = () => {
                 <div className="col-2"></div>
               </div>
             </div>
+            <div className="text-center mt-3 ">
+              <button
+                className="btnDetalles"
+                onClick={() => setDetailsVisible(!detailsVisible)}
+                style={{}}
+              >
+                <span style={{ marginBottom: "5px" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                  </svg>
+                </span>
+                {detailsVisible ? (
+                  <>
+                    Cerrar detalles
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    Mostrar detalles
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </>
+                )}
+              </button>
+            </div>
             <hr className="liner" />
-            <div className="contenedorBotones">
-              <div className="col-3 prueba text-center">
-                <ButtonBasic
-                  color="primary"
-                  text="Cambiar contraseña"
-                  onClick={() => setShowEditPasswordModal(true)}
-                />
-              </div>
-              <div className="col-3 prueba text-center">
-                <ButtonCrear
-                  id="btn-crear"
-                  text="Editar mi informacion"
-                  onClick={() => setShowModal(true)}
-                  icon={<IoPencilOutline />}
-                  color="secondary"
-                />
-              </div>
+            <div>
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre del Usuario</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">email</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td></td>
+                      <td><div className="estadoIDUser"></div>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-center">
+                        <a href="#"></a>
+                        <a href="#"></a>
+                      </td>
+                    </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         )}
