@@ -308,6 +308,23 @@ createRoot(document.getElementById("root")).render(
               </Layout>
             }
           />
+
+          {/**Rutas de clientes */}
+          <Route
+            exact
+            element={
+              <ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CLIENTE]} />
+            }
+          >
+            <Route
+              path="/clientes/actividades"
+              element={
+                <Layout>
+                  <MainListaActividadesCliente />
+                </Layout>
+              }
+            />
+          </Route>
           <Route
             path="/clientes/actividades"
             element={

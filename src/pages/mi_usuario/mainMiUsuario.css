@@ -17,6 +17,10 @@
 .prueba{
     padding-top: 5%;
 }
+.contenedorBotones{
+    display: flex;
+    justify-content: flex-end;
+}
 .linerSecundar{
     margin: 0% 100% 3% 10%;
 }

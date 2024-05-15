@@ -1,7 +1,10 @@
+/*
   X-Frame-Options: DENY
   Content-Security-Policy: upgrade-insecure-requests
-  strict-transport-security: max-age=86400; includeSubDomains
+  Strict-Transport-Security: max-age=86400
+  Strict-Transport-Security: includeSubDomains
   referrer-policy: same-origin 
   permissions-policy: geolocation=(self) 
   X-Content-Type-Options: nosniff
-  X-XSS-Protection: 1; mode=block
+  X-XSS-Protection: 1
+  X-XSS-Protection: mode=block
