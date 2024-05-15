@@ -243,7 +243,7 @@ const EntrenamientoAvanzado = () => {
     <CartaPrincipal>
       <div className="d-flex align-items-center gap-3">
         <FlechaAtras ruta="/planes-entrenamiento" />
-        <h1>Planes de Entrenamiento - Principiante</h1>
+        <h1>Planes de Entrenamiento - Avanzado</h1>
       </div>
       <div className=" d-flex align-items-center ">
         <form className="d-flex flex-grow-1 align-items-center">
