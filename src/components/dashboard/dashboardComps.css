@@ -74,6 +74,10 @@
     color: var(--success);
 }
 
+.aLightGreen {
+    color: var(--success-light);
+}
+
 .aYellow {
     color: var(--warning);
 }
