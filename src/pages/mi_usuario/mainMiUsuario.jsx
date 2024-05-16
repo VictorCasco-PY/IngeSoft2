@@ -209,13 +209,20 @@ const MainMiUsuario = () => {
           });
           return;
         }
+        let response;
 
-        const response = await api.put(`/empleados/${userData.id}`, userData);
-        console.log("Usuario editado:", response.data);
-        toast.success("Usuario actualizado satisfactoriamente");
-        setUser(response.data);
-        setShowModal(false);
-        setShowEditModal(false);
+if (user.rol === 2) {
+    response = await api.put(`/clientes/${userData.id}`, userData);
+} else {
+    response = await api.put(`/empleados/${userData.id}`, userData);
+}
+
+console.log("Usuario editado:", response.data);
+toast.success("Usuario actualizado satisfactoriamente");
+setUser(response.data);
+setShowModal(false);
+setShowEditModal(false);
+
       }
     } catch (error) {
       console.error("Error al procesar la solicitud:", error);
@@ -485,6 +492,7 @@ const MainMiUsuario = () => {
             <div className="contenedorBotones">
               <div className="col-3 prueba text-center">
                 <ButtonBasic
+                  id="btn-newPass"
                   color="primary"
                   text="Cambiar contraseña"
                   onClick={() => setShowEditPasswordModal(true)}
