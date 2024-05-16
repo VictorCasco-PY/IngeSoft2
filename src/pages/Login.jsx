@@ -22,7 +22,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const { login: contextLogin, userId } = useCurrentUser();
-  const {olvidarContrasenha} = useClientesData();
+  const { olvidarContrasenha } = useClientesData();
 
   const navigate = useNavigate();
 
@@ -93,7 +93,6 @@ const Login = () => {
     return <></>;
   }
 
-
   const handleMostrarModal = () => {
     setMostrarModal(true);
   };
@@ -109,10 +108,10 @@ const Login = () => {
       // Llama a la función olvidarContrasenha con el correo del usuario
       await olvidarContrasenha({ email: usuario.email });
 
-      console.log(usuario.email)
+      console.log(usuario.email);
       toast.success("Correo de recuperación enviado correctamente.");
       setMostrarModal(false);
-      navigate("/recuperar-contrasenha"); // Aquí agregamos el token a la URL
+      //navigate("/recuperar-contrasenha/"); // Aquí agregamos el token a la URL
     } catch (error) {
       console.error(error);
       toast.error("Error al enviar el correo de recuperación.");
@@ -161,7 +160,6 @@ const Login = () => {
               />
               <IoPeopleSharp className="input-icon" />
             </div>
-            
           </div>
           <div
             className={`form-password ${
@@ -195,7 +193,11 @@ const Login = () => {
               Mostrar contraseña
             </label>
             <div className="forgot-password">
-              <a type="button" className="forgot-password-link" onClick={handleMostrarModal}>
+              <a
+                type="button"
+                className="forgot-password-link"
+                onClick={handleMostrarModal}
+              >
                 ¿Has olvidado tu contraseña?
               </a>
             </div>
@@ -237,60 +239,65 @@ const Login = () => {
       </div>
       {/* Modal de recuperación de contraseña */}
       {mostrarModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCerrarModal}>&times;</span>
-            <h2>Recuperar Contraseña</h2>
-            <form onSubmit={handleSubmitRecuperarContraseña}>
-              <div className="form-email">
-                <div className="input-container">
-                  <input
-                    id="recuperar-email"
-                    name="email"
-                    value={usuario.email}
-                    className="form-input"
-                    type="email"
-                    placeholder="Correo Electronico"
-                    onChange={handleChange}
-                    required
-                  />
-                  <IoPeopleSharp className="input-icon" />
-                </div>
-                
-              </div>
-              <div className="form-buttom">
-                <button
-                  type="submit"
-                  className="login-button"
-                  disabled={loading}
-                  style={{ position: "relative" }}
-                >
-                  {loading ? (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                      }}
-                    >
-                      <ThreeDots
-                        visible={true}
-                        height="30"
-                        width="30"
-                        color="white"
-                        radius="9"
-                        ariaLabel="three-dots-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog modal-dialog-centered modal-dialog-square">
+            <div className="modal-content">
+              <div className="modal-header">
+                <span className="close" onClick={handleCerrarModal}>
+                  &times;
+                </span>
+                <h2>Recuperar Contraseña</h2>
+                <form onSubmit={handleSubmitRecuperarContraseña}>
+                  <div className="form-email">
+                    <div className="input-container">
+                      <input
+                        id="recuperar-email"
+                        name="email"
+                        value={usuario.email}
+                        className="form-input"
+                        type="email"
+                        placeholder="Correo Electronico"
+                        onChange={handleChange}
+                        required
                       />
+                      <IoPeopleSharp className="input-icon" />
                     </div>
-                  ) : (
-                    "Enviar Correo de Recuperación"
-                  )}
-                </button>
+                  </div>
+                  <div className="form-buttom">
+                    <button
+                      type="submit"
+                      className="login-button"
+                      disabled={loading}
+                      style={{ position: "relative" }}
+                    >
+                      {loading ? (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          <ThreeDots
+                            visible={true}
+                            height="30"
+                            width="30"
+                            color="white"
+                            radius="9"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        </div>
+                      ) : (
+                        "Enviar Correo de Recuperación"
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}

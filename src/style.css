@@ -102,15 +102,7 @@
   text-decoration: underline;
 }
 
-.modal-content {
-  margin-left: 35rem;
-  margin-top: 15rem;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  width: 50rem; /* Ancho del modal */
-  height: 30rem; /* Altura del modal */
-}
+
 
 .close {
   position: absolute;
