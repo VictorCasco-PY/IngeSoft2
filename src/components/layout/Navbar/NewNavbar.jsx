@@ -104,14 +104,14 @@ export const NewNavbar = () => {
               <NavBtn
                 id="nav-dashboard-cliente"
                 href="/clientes/dashboard"
-                roles={[RolEnum.ADMIN, RolEnum.CLIENTE]}
+                roles={[RolEnum.CLIENTE]}
               >
                 Dashboard
               </NavBtn>
               <NavBtn
                 id="nav-actividades-cliente"
                 href="/clientes/actividades"
-                roles={[RolEnum.ADMIN, RolEnum.CLIENTE]}
+                roles={[RolEnum.CLIENTE]}
               >
                 Actividades
               </NavBtn>
