@@ -268,6 +268,10 @@ const MainUsers = () => {
           toast.error("El email no es válido.");
           return;
         }
+        if (!userData.email.includes('@')) {
+          toast.error("El email debe contener el símbolo '@'.");
+          return;
+        }
         if (userData.email.length > 50) {
           toast.error("El email no debe tener más de 50 caracteres.");
           return;
