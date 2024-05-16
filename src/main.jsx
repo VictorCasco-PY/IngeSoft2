@@ -43,6 +43,8 @@ import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeam
 import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 import MainAsignarPlanACliente from "./pages/planes-entrenamiento/planes-cliente/MainAsignarPlanACliente";
 import MainListaActividadesCliente from "./pages/vistas-cliente/actividades/MainListaActividadesCliente";
+import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
+
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -343,6 +345,14 @@ createRoot(document.getElementById("root")).render(
             element={
               <Layout>
                 <MainListaActividadesCliente />
+              </Layout>
+            }
+          />
+           <Route
+            path="/recuperar-contrasenha/:token"
+            element={
+              <Layout>
+                <RecuperarContraseña />
               </Layout>
             }
           />
