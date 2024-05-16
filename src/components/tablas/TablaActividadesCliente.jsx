@@ -65,14 +65,14 @@ const TablaActividadesCliente = ({
   };
   const handleAnularSuscripcion = async (suscripcionId) => {
     try {
-      // Primero obtén la información de la actividad para verificar su estado
-      const actividad = actividades.items.find(act => act.id === actividad.id);
-
-      // Verifica si el estado de la actividad es "Pendiente"
-      if (actividad.estado === "Pendiente") {
-          toast.error("No se puede anular una suscripción pendiente de pago.");
-          console.log(actividad.estado);
-          return;
+      // Primero obtén la información de la suscripción para verificar su estado
+      const suscripcion = await api.get(`/suscripciones/${suscripcionId}`);
+  
+      // Verifica si el estado de la suscripción es "Pendiente"
+      if (suscripcion.estado === "Pendiente") {
+        toast.error("No se puede anular una suscripción pendiente de pago.");
+        console.log(suscripcion.estado)
+        return;
       }
   
       // Si el estado no es "Pendiente", procede a eliminar la suscripción
