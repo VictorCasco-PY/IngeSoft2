@@ -102,7 +102,7 @@ export const NewNavbar = () => {
               <NavBtn
                 id="nav-dashboard-entrenador"
                 href="/entrenador/dashbo"
-                roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}
+                roles={[ RolEnum.ENTRENADOR]}
               >
                 Dashboard Entrenador
               </NavBtn>
