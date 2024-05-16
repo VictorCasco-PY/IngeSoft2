@@ -1,0 +1,23 @@
+.MGrid {
+  display: flex;
+  width: 90%;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.left-section {
+  flex: 0 0 55%;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.right-section {
+  flex: 0 0 43%;
+  margin-bottom: 20px;
+}
+
+#seccion-progreso,
+#seccion-planes {
+  margin-bottom: 20px;
+  width: 100%;
+}

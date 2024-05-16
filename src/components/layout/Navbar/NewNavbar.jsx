@@ -99,15 +99,22 @@ export const NewNavbar = () => {
               >
                 Planes
               </NavBtn>
-
+              <NavBtn
+                id="nav-dashboard-entrenador"
+                href="/entrenador/dashbo"
+                roles={[RolEnum.ADMIN, RolEnum.ENTRENADOR]}
+              >
+                Dashboard Entrenador
+              </NavBtn>
               {/* Navbar para clientes */}
               <NavBtn
                 id="nav-dashboard-cliente"
                 href="/clientes/dashboard"
                 roles={[RolEnum.CLIENTE]}
               >
-                Dashboard
+                Dashboard cliente
               </NavBtn>
+              
               <NavBtn
                 id="nav-actividades-cliente"
                 href="/clientes/actividades"
