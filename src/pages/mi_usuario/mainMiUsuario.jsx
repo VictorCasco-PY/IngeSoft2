@@ -263,7 +263,7 @@ const MainMiUsuario = () => {
               <div className="d-flex justify-content-center mb-4 float-end editMi">
                 {showModal && (
                   <ModalBase
-                    title="Editar Mi Usuario"
+                    title="Editar Mi Usucario"
                     open={showModal}
                     closeModal={() => setShowModal(false)}
                   >
