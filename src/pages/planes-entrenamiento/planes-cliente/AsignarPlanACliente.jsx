@@ -8,13 +8,18 @@ import { useParams } from "react-router-dom";
 import Pagination from "../../../components/pagination/PaginationContainer";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Toaster, toast } from "react-hot-toast";
+import { formatFecha } from "../../../utils/Formatting";
+import ObjetivosClienteModal from "./ObjetivosClienteModal";
 
 const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showObjetivosModal, setObjetivosShowModal] = useState(false);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [planName, setPlanName] = useState("");
+  const [objetivoId, setObjetivoId] = useState(null);
+  const [clienteId, setclienteId] = useState(null);
 
   const { id } = useParams();
 
@@ -30,13 +35,23 @@ const AsignarPlanACliente = () => {
     setShowModal(false);
   };
 
+  const handleOpenObjetivosModal = (idObj, idCliente) => {
+    setObjetivosShowModal(true);
+    setObjetivoId(idObj);
+    setclienteId(idCliente);
+  };
+
+  const handleCloseObjetivoModal = () => {
+    setObjetivosShowModal(false);
+  };
+
   const getClientes = async (page) => {
     try {
       const response = await api.get(`/programas/${id}/clientes/page/${page}`);
       setData(response.data.items);
-      console.log(response.data.items);
       setTotalPages(response.data.totalPages);
       setPlanName(response.data.items[0].programa);
+      console.log("Data", response.data.items);
     } catch (error) {
       console.log(error);
     }
@@ -109,7 +124,6 @@ const AsignarPlanACliente = () => {
         </div>
         <div className="col-auto ms-auto">
           {" "}
-          {/* Cambiado aquí */}
           <Btn
             type="primary"
             id="btn-asignar"
@@ -119,7 +133,6 @@ const AsignarPlanACliente = () => {
           </Btn>
         </div>
       </div>
-
       <Table
         headers={[
           "Nombre del cliente",
@@ -139,11 +152,14 @@ const AsignarPlanACliente = () => {
                   fontWeight: "bold",
                   cursor: "pointer",
                 }}
+                onClick={() =>
+                  handleOpenObjetivosModal(data.id, data.clienteId)
+                } // Pasar solo el id del cliente
               >
                 {data.nombreCliente}
               </td>
               <td className="py-3">{data.programa}</td>
-              <td className="py-3">{data.fechaEvaluacion}</td>
+              <td className="py-3">{formatFecha(data.fechaEvaluacion)}</td>
               <td className="py-3">
                 <button
                   id="btn-borrar"
@@ -177,6 +193,12 @@ const AsignarPlanACliente = () => {
         open={showModal}
         closeModal={handleCloseModal}
         refreshList={refreshClientesList}
+      />
+      <ObjetivosClienteModal
+        open={showObjetivosModal}
+        closeModal={handleCloseObjetivoModal}
+        objetivoId={objetivoId} // Pasar solo el id del cliente al modal
+        clienteId={clienteId}
       />
     </>
   );

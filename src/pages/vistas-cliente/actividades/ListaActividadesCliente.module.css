@@ -1,0 +1,18 @@
+/* ListaActividadesCliente.module.css */
+.modalDialog {
+    max-width: 500px;
+    /* Tamaño por defecto más adecuado para pantallas de PC */
+    margin: 30px auto;
+}
+
+.modalContent {
+    padding: 20px;
+}
+
+/* Adaptaciones para pantallas más pequeñas (móviles) */
+@media (max-width: 576px) {
+    .modalDialog {
+        max-width: 90%;
+        /* Hace que el modal sea más grande en pantallas pequeñas */
+    }
+}
