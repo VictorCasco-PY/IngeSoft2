@@ -52,6 +52,7 @@ const AsignarPlanAClienteModal = ({ open, closeModal, ...props }) => {
     if (selectedClient) {
       const response = await api.post(`/programas/${id}/clientes`, {
         clienteId: selectedClient.id,
+        programaId: id,
         fechaEvaluacion: fechaInicioPlan,
       });
       toast.success("Plan asignado correctamente");
