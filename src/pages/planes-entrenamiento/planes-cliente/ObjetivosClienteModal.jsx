@@ -4,7 +4,7 @@ import api from "../../../utils/api";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { Btn } from "../../../components/bottons/Button";
 import { useParams } from "react-router-dom";
-
+import { Toaster, toast } from "react-hot-toast";
 const ObjetivosClienteModal = ({ open, closeModal, objetivoId, clienteId }) => {
   const [ejercicios, setEjercicios] = useState([]);
   const [porcentaje, setPorcentaje] = useState(0);
@@ -31,7 +31,7 @@ const ObjetivosClienteModal = ({ open, closeModal, objetivoId, clienteId }) => {
         setProgramaNombre(clienteData.programa);
         setClienteNombre(clienteData.nombreCliente);
       } catch (error) {
-        console.error("Error fetching exercises:", error);
+        toast.error("Error al listar objetivos");
       }
     };
 
@@ -64,120 +64,142 @@ const ObjetivosClienteModal = ({ open, closeModal, objetivoId, clienteId }) => {
         programa: programaNombre,
         clienteId: clienteId,
         nombreCliente: clienteNombre,
-        fechaEvaluacion: "2024-05-15",
         clienteProgramaItem: ejercicios,
       });
-      closeModal();
+      toast.success("Objetivos actualizados correctamente!");
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
     } catch (error) {
-      console.error("Error updating exercises:", error);
+      toast.error("Error al actualizar los objetivos");
     }
   };
 
   const progressPercentage = porcentaje;
 
   return (
-    <ModalBase
-      title={<h3>{`Cliente: ${clienteNombre}`}</h3>}
-      open={open}
-      closeModal={closeModal}
-    >
-      <div className="modal-body">
-        <div className="row mb-3">
-          <div className="col fw-bold" style={{ fontWeight: "600" }}>
-            Plan
-          </div>
-          <div className="col fw-bold" style={{ fontWeight: "600" }}>
-            Progreso
-          </div>
-        </div>
-        <div className="row align-items-center">
-          <div className="col">{programaNombre}</div>
-          <div className="col-8">
-            <div
-              className="progress"
-              style={{
-                height: "40px",
-                backgroundColor: "white",
-                border: "2px solid #6941C6",
-                width: "100%",
-              }}
-            >
-              <div
-                className="progress-bar"
-                style={{
-                  width: `${progressPercentage}%`,
-                  backgroundColor: "#6941C6",
-                  borderRadius: "0px",
-                }}
-                role="progressbar"
-                aria-valuenow={progressPercentage}
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <span style={{ color: "white" }}>
-                  {Math.round(progressPercentage)}%
-                </span>
-              </div>
+    <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
+      <ModalBase
+        title={<h3>{`Cliente: ${clienteNombre}`}</h3>}
+        open={open}
+        closeModal={closeModal}
+      >
+        <div className="modal-body">
+          <div className="row mb-3">
+            <div className="col fw-bold" style={{ fontWeight: "600" }}>
+              Plan
+            </div>
+            <div className="col fw-bold" style={{ fontWeight: "600" }}>
+              Progreso
             </div>
           </div>
-          <div className="col-1">
-            <button
-              type="button"
-              onClick={toggleTable}
-              className="btn"
-              style={{
-                background: "none",
-                color: "#6941C6",
-                border: "none",
-                padding: "0",
-                fontSize: "24px",
-              }}
-            >
-              {showTable ? <BsChevronUp /> : <BsChevronDown />}
-            </button>
+          <div className="row align-items-center">
+            <div className="col">{programaNombre}</div>
+            <div className="col-8">
+              <div
+                className="progress"
+                style={{
+                  height: "40px",
+                  backgroundColor: "white",
+                  border: "2px solid #6941C6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  className="progress-bar"
+                  style={{
+                    width: `${progressPercentage}%`,
+                    backgroundColor: "#6941C6",
+                    borderRadius: "0px",
+                  }}
+                  role="progressbar"
+                  aria-valuenow={progressPercentage}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <span style={{ color: "white" }}>
+                    {Math.round(progressPercentage)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col-1">
+              <button
+                type="button"
+                onClick={toggleTable}
+                className="btn"
+                style={{
+                  background: "none",
+                  color: "#6941C6",
+                  border: "none",
+                  padding: "0",
+                  fontSize: "24px",
+                }}
+              >
+                {showTable ? <BsChevronUp /> : <BsChevronDown />}
+              </button>
+            </div>
           </div>
-        </div>
-        {showTable && (
-          <div className="mt-4">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Tiempo</th>
-                  <th>Completado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ejercicios.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.programaItem.nombre}</td>
-                    <td>{item.programaItem.descripcion}</td>
-                    <td>{item.programaItem.tiempo}</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        checked={item.logrado || false}
-                        onChange={() => handleCheck(item.id)}
-                      />
-                    </td>
+          {showTable && (
+            <div className="mt-4">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Tiempo</th>
+                    <th>Completado</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-      <div className="d-flex justify-content-end">
-        <Btn type="secondary" onClick={closeModal}>
-          Cancelar
-        </Btn>
-        <Btn type="primary" onClick={handleSave}>
-          Guardar
-        </Btn>
-      </div>
-    </ModalBase>
+                </thead>
+                <tbody>
+                  {ejercicios.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.programaItem.nombre}</td>
+                      <td>{item.programaItem.descripcion}</td>
+                      <td>{item.programaItem.tiempo}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          checked={item.logrado || false}
+                          onChange={() => handleCheck(item.id)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+        <div className="d-flex justify-content-end">
+          <Btn type="secondary" onClick={closeModal}>
+            Cancelar
+          </Btn>
+          <Btn type="primary" onClick={handleSave}>
+            Guardar
+          </Btn>
+        </div>
+      </ModalBase>
+    </>
   );
 };
 
