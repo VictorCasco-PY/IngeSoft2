@@ -485,6 +485,7 @@ const MainMiUsuario = () => {
             <div className="contenedorBotones">
               <div className="col-3 prueba text-center">
                 <ButtonBasic
+                  id="btn-newPass"
                   color="primary"
                   text="Cambiar contraseña"
                   onClick={() => setShowEditPasswordModal(true)}
