@@ -3,17 +3,15 @@ import ModalBase from "../../../components/modals/ModalBase";
 import api from "../../../utils/api";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { Btn } from "../../../components/bottons/Button";
+import { useParams } from "react-router-dom";
 
-const ObjetivosClienteModal = ({
-  open,
-  closeModal,
-  clienteNombre,
-  planNombre,
-  idPlan,
-}) => {
+const ObjetivosClienteModal = ({ open, closeModal, objetivoId, clienteId }) => {
   const [ejercicios, setEjercicios] = useState([]);
-  const [completados, setCompletados] = useState(0); // Estado para manejar la cantidad de ejercicios completados
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [programaNombre, setProgramaNombre] = useState("");
+  const [clienteNombre, setClienteNombre] = useState("");
   const [showTable, setShowTable] = useState(false);
+  let { id } = useParams();
 
   const toggleTable = (event) => {
     event.preventDefault(); // Prevenir el comportamiento por defecto
@@ -24,33 +22,58 @@ const ObjetivosClienteModal = ({
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
-        const response = await api.get(`/programas/${idPlan}`);
-        setEjercicios(response.data.items);
-        setCompletados(
-          response.data.items.filter((item) => item.completed).length
+        const response = await api.get(
+          `/programas/${id}/clientes/${objetivoId}`
         );
+        const clienteData = response.data;
+        setEjercicios(clienteData.clienteProgramaItem);
+        setPorcentaje(clienteData.porcentaje);
+        setProgramaNombre(clienteData.programa);
+        setClienteNombre(clienteData.nombreCliente);
       } catch (error) {
         console.error("Error fetching exercises:", error);
       }
     };
 
-    if (open) {
+    if (open && objetivoId) {
       fetchEjercicios();
     }
-  }, [open, idPlan]);
+  }, [open, objetivoId]);
 
   const handleCheck = (id) => {
-    const updatedEjercicios = ejercicios.map((ejercicio) => {
-      if (ejercicio.id === id) {
-        return { ...ejercicio, completed: !ejercicio.completed };
+    const updatedEjercicios = ejercicios.map((item) => {
+      if (item.id === id) {
+        return { ...item, logrado: !item.logrado };
       }
-      return ejercicio;
+      return item;
     });
     setEjercicios(updatedEjercicios);
-    setCompletados(updatedEjercicios.filter((e) => e.completed).length);
+
+    const completados = updatedEjercicios.filter((item) => item.logrado).length;
+    const totalEjercicios = updatedEjercicios.length;
+    const nuevoPorcentaje = (completados / totalEjercicios) * 100;
+    setPorcentaje(nuevoPorcentaje);
   };
 
-  const progressPercentage = (completados / ejercicios.length) * 100;
+  const handleSave = async () => {
+    try {
+      await api.put(`/programas/${id}/clientes/${objetivoId}`, {
+        id: objetivoId,
+        active: true,
+        programaId: id,
+        programa: programaNombre,
+        clienteId: clienteId,
+        nombreCliente: clienteNombre,
+        fechaEvaluacion: "2024-05-15",
+        clienteProgramaItem: ejercicios,
+      });
+      closeModal();
+    } catch (error) {
+      console.error("Error updating exercises:", error);
+    }
+  };
+
+  const progressPercentage = porcentaje;
 
   return (
     <ModalBase
@@ -68,7 +91,7 @@ const ObjetivosClienteModal = ({
           </div>
         </div>
         <div className="row align-items-center">
-          <div className="col">{planNombre}</div>
+          <div className="col">{programaNombre}</div>
           <div className="col-8">
             <div
               className="progress"
@@ -126,17 +149,17 @@ const ObjetivosClienteModal = ({
                 </tr>
               </thead>
               <tbody>
-                {ejercicios.map((ejercicio) => (
-                  <tr key={ejercicio.id}>
-                    <td>{ejercicio.nombre}</td>
-                    <td>{ejercicio.descripcion}</td>
-                    <td>{ejercicio.tiempo}</td>
+                {ejercicios.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.programaItem.nombre}</td>
+                    <td>{item.programaItem.descripcion}</td>
+                    <td>{item.programaItem.tiempo}</td>
                     <td>
                       <input
                         type="checkbox"
                         className="form-check-input"
-                        checked={ejercicio.completed || false}
-                        onChange={() => handleCheck(ejercicio.id)}
+                        checked={item.logrado || false}
+                        onChange={() => handleCheck(item.id)}
                       />
                     </td>
                   </tr>
@@ -150,14 +173,7 @@ const ObjetivosClienteModal = ({
         <Btn type="secondary" onClick={closeModal}>
           Cancelar
         </Btn>
-        <Btn
-          type="primary"
-          onClick={() => {
-            // Logic to save the changes
-            console.log("Guardar cambios");
-            closeModal();
-          }}
-        >
+        <Btn type="primary" onClick={handleSave}>
           Guardar
         </Btn>
       </div>
