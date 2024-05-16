@@ -48,7 +48,6 @@ const MainMiUsuario = () => {
   const email = user.email;
   const passwordRegex = /^(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+[\]{};':"\\|,.<>\/?]{6,}$/;
 
-
   const handlePassword = (event) => {
     const { name, value } = event.target;
     setPasswords({
@@ -59,36 +58,34 @@ const MainMiUsuario = () => {
 
   const validatePassword = () => {
     const { passActual, nuevaPass, confirmarPass } = passwords;
-  
+
     // No se puede comprobar la contraseña actual dentro de esta función de validación, eso debe hacerse en el backend
-  
+
     if (passActual === nuevaPass) {
       toast.error("La nueva contraseña no puede ser igual a la contraseña actual");
       return false;
     }
-  
+
     const passwordRegex = /^(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+[\]{};':"\\|,.<>\/?]{6,}$/;
-  
+
     if (!passwordRegex.test(nuevaPass)) {
       toast.error("La nueva contraseña debe tener al menos 6 caracteres, al menos un carácter especial y al menos un número");
       return false;
     }
-  
+
     if (nuevaPass !== confirmarPass) {
       toast.error("La nueva contraseña y la confirmación no coinciden");
       return false;
     }
-  
+
     return true;
   };
-  
-  
 
   const handelAceptarPassword = async () => {
     if (!validatePassword()) {
       return;
     }
-  
+
     try {
       const response = await api.post('/password/change', passwords);
       toast.success("Nueva contraseña guardada");
@@ -102,11 +99,13 @@ const MainMiUsuario = () => {
       }
     }
   };
-  
-  
 
   useEffect(() => {
-    fetchEmpleado();
+    if (user.rol === 2) {
+      fetchCliente();
+    } else {
+      fetchEmpleado();
+    }
   }, []);
 
   const roles = [
@@ -125,6 +124,11 @@ const MainMiUsuario = () => {
 
   const fetchEmpleado = async () => {
     const response = await api.get(`/empleados/getByEmail/${email}`);
+    setUser(response.data);
+  };
+
+  const fetchCliente = async () => {
+    const response = await api.get(`/clientes/getByEmail/${email}`);
     setUser(response.data);
   };
 
@@ -219,7 +223,6 @@ const MainMiUsuario = () => {
       toast.error("Error al procesar la solicitud");
     }
   };
-
   return (
     <>
       <CartaPrincipal>
