@@ -43,6 +43,8 @@ import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeam
 import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 import MainAsignarPlanACliente from "./pages/planes-entrenamiento/planes-cliente/MainAsignarPlanACliente";
 import MainListaActividadesCliente from "./pages/vistas-cliente/actividades/MainListaActividadesCliente";
+import MainDashboardCliente from "./pages/dashboard/dashboardCliente/MainDashboardCliente";
+import MainDashboardEntrenador from "./pages/dashboard/dashboardEntrenador.jsx/MainDashboadEntrenador";
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
@@ -272,7 +274,14 @@ createRoot(document.getElementById("root")).render(
               }
             />
           </Route>
-
+          <Route
+              path="/entrenador/dashbo"
+              element={
+                <Layout>
+                  <MainDashboardEntrenador />
+                </Layout>
+              }
+            />
           <Route
             path="/planes-entrenamiento/:nivel/:id/cliente/asignar"
             element={
@@ -354,7 +363,17 @@ createRoot(document.getElementById("root")).render(
                 </Layout>
               }
             />
+            <Route
+              path="/clientes/dashboard"
+              element={
+                <Layout>
+                  <MainDashboardCliente />
+                </Layout>
+              }
+            />
+           
           </Route>
+          
           <Route
             path="*"
             element={
