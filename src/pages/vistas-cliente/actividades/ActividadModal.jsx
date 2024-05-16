@@ -34,7 +34,7 @@ const ActividadModal = ({ actividad, onClose }) => {
             </p>
           </div>
           <div className="modal-footer">
-            <Btn type="primary" onClick={handleSuscripcionClick}>
+            <Btn id="btn-suscribirse" type="primary" onClick={handleSuscripcionClick}>
               Suscribirse
             </Btn>
           </div>
