@@ -43,8 +43,7 @@ import DetalleEntrenamientoIntermedio from "./pages/planes-entrenamiento/planeam
 import DetalleEntrenamientoAvanzado from "./pages/planes-entrenamiento/planeamiento-ejercicios/DetalleEntrenamietoAvanzado";
 import MainAsignarPlanACliente from "./pages/planes-entrenamiento/planes-cliente/MainAsignarPlanACliente";
 import MainListaActividadesCliente from "./pages/vistas-cliente/actividades/MainListaActividadesCliente";
-import MainDashboardCliente from "./pages/dashboard/dashboardCliente/MainDashboardCliente";
-import MainDashboardEntrenador from "./pages/dashboard/dashboardEntrenador.jsx/MainDashboadEntrenador";
+
 import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
 
 createRoot(document.getElementById("root")).render(
