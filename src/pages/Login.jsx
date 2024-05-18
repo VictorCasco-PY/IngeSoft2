@@ -9,7 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import api from "../utils/api";
 import "../style.css";
 import { useCurrentUser } from "../context/UserContext";
-
+import useClienteData from "../hooks/useClientesData";
 
 const Login = () => {
   const [usuario, setUsuario] = useState({
@@ -22,7 +22,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const { login: contextLogin, userId } = useCurrentUser();
-  const { olvidarContrasenha } = useClientesData();
+
+  const {olvidarContrasenha } = useClienteData();
 
   const navigate = useNavigate();
 
