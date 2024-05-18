@@ -92,7 +92,7 @@ const AsignarPlanAClienteModal = ({ open, closeModal, ...props }) => {
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar..."
+              placeholder="Buscar por nombre del cliente..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
