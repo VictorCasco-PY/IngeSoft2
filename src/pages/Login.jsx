@@ -9,7 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import api from "../utils/api";
 import "../style.css";
 import { useCurrentUser } from "../context/UserContext";
-import useClientesData from "../hooks/useClientesData";
+
 
 const Login = () => {
   const [usuario, setUsuario] = useState({
@@ -48,7 +48,11 @@ const Login = () => {
       .then((response) => {
         //cambio de andy: guardar el usuario en el contexto
         contextLogin(response.data);
-        navigate("/clientes");
+        if (response.data.rol == 2) {
+          navigate("/clientes/dashboard");
+        } else {
+          navigate("/clientes");
+        }
       })
       .catch((error) => {
         console.log(error);

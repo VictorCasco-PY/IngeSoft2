@@ -3,17 +3,15 @@ import ModalBase from "../../../components/modals/ModalBase";
 import api from "../../../utils/api";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { Btn } from "../../../components/bottons/Button";
-
-const ObjetivosClienteModal = ({
-  open,
-  closeModal,
-  clienteNombre,
-  planNombre,
-  idPlan,
-}) => {
+import { useParams } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+const ObjetivosClienteModal = ({ open, closeModal, objetivoId, clienteId }) => {
   const [ejercicios, setEjercicios] = useState([]);
-  const [completados, setCompletados] = useState(0); // Estado para manejar la cantidad de ejercicios completados
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [programaNombre, setProgramaNombre] = useState("");
+  const [clienteNombre, setClienteNombre] = useState("");
   const [showTable, setShowTable] = useState(false);
+  let { id } = useParams();
 
   const toggleTable = (event) => {
     event.preventDefault(); // Prevenir el comportamiento por defecto
@@ -24,144 +22,184 @@ const ObjetivosClienteModal = ({
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
-        const response = await api.get(`/programas/${idPlan}`);
-        setEjercicios(response.data.items);
-        setCompletados(
-          response.data.items.filter((item) => item.completed).length
+        const response = await api.get(
+          `/programas/${id}/clientes/${objetivoId}`
         );
+        const clienteData = response.data;
+        setEjercicios(clienteData.clienteProgramaItem);
+        setPorcentaje(clienteData.porcentaje);
+        setProgramaNombre(clienteData.programa);
+        setClienteNombre(clienteData.nombreCliente);
       } catch (error) {
-        console.error("Error fetching exercises:", error);
+        toast.error("Error al listar objetivos");
       }
     };
 
-    if (open) {
+    if (open && objetivoId) {
       fetchEjercicios();
     }
-  }, [open, idPlan]);
+  }, [open, objetivoId]);
 
   const handleCheck = (id) => {
-    const updatedEjercicios = ejercicios.map((ejercicio) => {
-      if (ejercicio.id === id) {
-        return { ...ejercicio, completed: !ejercicio.completed };
+    const updatedEjercicios = ejercicios.map((item) => {
+      if (item.id === id) {
+        return { ...item, logrado: !item.logrado };
       }
-      return ejercicio;
+      return item;
     });
     setEjercicios(updatedEjercicios);
-    setCompletados(updatedEjercicios.filter((e) => e.completed).length);
+
+    const completados = updatedEjercicios.filter((item) => item.logrado).length;
+    const totalEjercicios = updatedEjercicios.length;
+    const nuevoPorcentaje = (completados / totalEjercicios) * 100;
+    setPorcentaje(nuevoPorcentaje);
   };
 
-  const progressPercentage = (completados / ejercicios.length) * 100;
+  const handleSave = async () => {
+    try {
+      await api.put(`/programas/${id}/clientes/${objetivoId}`, {
+        id: objetivoId,
+        active: true,
+        programaId: id,
+        programa: programaNombre,
+        clienteId: clienteId,
+        nombreCliente: clienteNombre,
+        clienteProgramaItem: ejercicios,
+      });
+      toast.success("Objetivos actualizados correctamente!");
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      toast.error("Error al actualizar los objetivos");
+    }
+  };
+
+  const progressPercentage = porcentaje;
 
   return (
-    <ModalBase
-      title={<h3>{`Cliente: ${clienteNombre}`}</h3>}
-      open={open}
-      closeModal={closeModal}
-    >
-      <div className="modal-body">
-        <div className="row mb-3">
-          <div className="col fw-bold" style={{ fontWeight: "600" }}>
-            Plan
-          </div>
-          <div className="col fw-bold" style={{ fontWeight: "600" }}>
-            Progreso
-          </div>
-        </div>
-        <div className="row align-items-center">
-          <div className="col">{planNombre}</div>
-          <div className="col-8">
-            <div
-              className="progress"
-              style={{
-                height: "40px",
-                backgroundColor: "white",
-                border: "2px solid #6941C6",
-                width: "100%",
-              }}
-            >
-              <div
-                className="progress-bar"
-                style={{
-                  width: `${progressPercentage}%`,
-                  backgroundColor: "#6941C6",
-                  borderRadius: "0px",
-                }}
-                role="progressbar"
-                aria-valuenow={progressPercentage}
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <span style={{ color: "white" }}>
-                  {Math.round(progressPercentage)}%
-                </span>
-              </div>
+    <>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              background: "#75B798",
+              color: "#0A3622",
+            },
+          },
+          error: {
+            style: {
+              background: "#FFDBD9",
+              color: "#D92D20",
+            },
+          },
+        }}
+      />
+      <ModalBase
+        title={<h3>{`Cliente: ${clienteNombre}`}</h3>}
+        open={open}
+        closeModal={closeModal}
+      >
+        <div className="modal-body">
+          <div className="row mb-3">
+            <div className="col fw-bold" style={{ fontWeight: "600" }}>
+              Plan
+            </div>
+            <div className="col fw-bold" style={{ fontWeight: "600" }}>
+              Progreso
             </div>
           </div>
-          <div className="col-1">
-            <button
-              type="button"
-              onClick={toggleTable}
-              className="btn"
-              style={{
-                background: "none",
-                color: "#6941C6",
-                border: "none",
-                padding: "0",
-                fontSize: "24px",
-              }}
-            >
-              {showTable ? <BsChevronUp /> : <BsChevronDown />}
-            </button>
+          <div className="row align-items-center">
+            <div className="col">{programaNombre}</div>
+            <div className="col-8">
+              <div
+                className="progress"
+                style={{
+                  height: "40px",
+                  backgroundColor: "white",
+                  border: "2px solid #6941C6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  className="progress-bar"
+                  style={{
+                    width: `${progressPercentage}%`,
+                    backgroundColor: "#6941C6",
+                    borderRadius: "0px",
+                  }}
+                  role="progressbar"
+                  aria-valuenow={progressPercentage}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <span style={{ color: "white" }}>
+                    {Math.round(progressPercentage)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col-1">
+              <button
+                type="button"
+                onClick={toggleTable}
+                className="btn"
+                style={{
+                  background: "none",
+                  color: "#6941C6",
+                  border: "none",
+                  padding: "0",
+                  fontSize: "24px",
+                }}
+              >
+                {showTable ? <BsChevronUp /> : <BsChevronDown />}
+              </button>
+            </div>
           </div>
-        </div>
-        {showTable && (
-          <div className="mt-4">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Tiempo</th>
-                  <th>Completado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ejercicios.map((ejercicio) => (
-                  <tr key={ejercicio.id}>
-                    <td>{ejercicio.nombre}</td>
-                    <td>{ejercicio.descripcion}</td>
-                    <td>{ejercicio.tiempo}</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        checked={ejercicio.completed || false}
-                        onChange={() => handleCheck(ejercicio.id)}
-                      />
-                    </td>
+          {showTable && (
+            <div className="mt-4">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Tiempo</th>
+                    <th>Completado</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-      <div className="d-flex justify-content-end">
-        <Btn type="secondary" onClick={closeModal}>
-          Cancelar
-        </Btn>
-        <Btn
-          type="primary"
-          onClick={() => {
-            // Logic to save the changes
-            console.log("Guardar cambios");
-            closeModal();
-          }}
-        >
-          Guardar
-        </Btn>
-      </div>
-    </ModalBase>
+                </thead>
+                <tbody>
+                  {ejercicios.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.programaItem.nombre}</td>
+                      <td>{item.programaItem.descripcion}</td>
+                      <td>{item.programaItem.tiempo}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          checked={item.logrado || false}
+                          onChange={() => handleCheck(item.id)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+        <div className="d-flex justify-content-end">
+          <Btn type="secondary" onClick={closeModal}>
+            Cancelar
+          </Btn>
+          <Btn type="primary" onClick={handleSave}>
+            Guardar
+          </Btn>
+        </div>
+      </ModalBase>
+    </>
   );
 };
 

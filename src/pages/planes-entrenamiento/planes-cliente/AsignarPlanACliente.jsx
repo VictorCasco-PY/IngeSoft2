@@ -18,8 +18,8 @@ const AsignarPlanACliente = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [planName, setPlanName] = useState("");
-  const [nombreCliente, setNombreCliente] = useState("");
-  const [idPrograma, setidPrograma] = useState(null);
+  const [objetivoId, setObjetivoId] = useState(null);
+  const [clienteId, setclienteId] = useState(null);
 
   const { id } = useParams();
 
@@ -35,9 +35,10 @@ const AsignarPlanACliente = () => {
     setShowModal(false);
   };
 
-  const handleOpenObjetivosModal = (nombre) => {
+  const handleOpenObjetivosModal = (idObj, idCliente) => {
     setObjetivosShowModal(true);
-    setNombreCliente(nombre);
+    setObjetivoId(idObj);
+    setclienteId(idCliente);
   };
 
   const handleCloseObjetivoModal = () => {
@@ -50,6 +51,7 @@ const AsignarPlanACliente = () => {
       setData(response.data.items);
       setTotalPages(response.data.totalPages);
       setPlanName(response.data.items[0].programa);
+      console.log("Data", response.data.items);
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +124,6 @@ const AsignarPlanACliente = () => {
         </div>
         <div className="col-auto ms-auto">
           {" "}
-          {/* Cambiado aquí */}
           <Btn
             type="primary"
             id="btn-asignar"
@@ -151,7 +152,9 @@ const AsignarPlanACliente = () => {
                   fontWeight: "bold",
                   cursor: "pointer",
                 }}
-                onClick={() => handleOpenObjetivosModal(data.nombreCliente)}
+                onClick={() =>
+                  handleOpenObjetivosModal(data.id, data.clienteId)
+                } // Pasar solo el id del cliente
               >
                 {data.nombreCliente}
               </td>
@@ -194,9 +197,8 @@ const AsignarPlanACliente = () => {
       <ObjetivosClienteModal
         open={showObjetivosModal}
         closeModal={handleCloseObjetivoModal}
-        clienteNombre={nombreCliente}
-        planNombre={planName}
-        idPlan={id}
+        objetivoId={objetivoId} // Pasar solo el id del cliente al modal
+        clienteId={clienteId}
       />
     </>
   );
