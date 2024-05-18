@@ -47,7 +47,7 @@ const MainUsers = () => {
   const nameRegex = /^[a-zA-ZÁáÉéÍíÓóÚúÑñ ]{2,}$/;
   const cedulaRegex = /^[0-9A-Za-z]+$/;
   const telefonoRegex = /^\d+$/;
-  const direccionRegex = /^[a-zA-Z0-9\s]+$/;
+  const direccionRegex = /^[\w\sáéíóúÁÉÍÓÚñÑ.,#'\-\+&]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [error, setError] = useState(false);
 
@@ -243,8 +243,8 @@ const MainUsers = () => {
           toast.error("El teléfono solo puede contener números.");
           return;
         }
-        if (userData.telefono.length < 7 || userData.telefono.length > 15) {
-          toast.error("El teléfono debe tener entre 7 y 15 caracteres.");
+        if (userData.telefono.length < 7 || userData.telefono.length > 12) {
+          toast.error("El teléfono debe tener entre 7 y 12 caracteres.");
           return;
         }
         const direccionExists = users.some(
