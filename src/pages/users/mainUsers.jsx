@@ -47,7 +47,7 @@ const MainUsers = () => {
   const nameRegex = /^[a-zA-ZÁáÉéÍíÓóÚúÑñ ]{2,}$/;
   const cedulaRegex = /^[0-9A-Za-z]+$/;
   const telefonoRegex = /^\d+$/;
-  const direccionRegex = /^[\w\sáéíóúÁÉÍÓÚñÑ.,#'\-\+&]+$/;
+  const direccionRegex = /^[\w\sáéíóúÁÉÍÓÚñÑ.,#'\-\+&ª]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [error, setError] = useState(false);
 
