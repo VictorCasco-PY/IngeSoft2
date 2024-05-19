@@ -52,6 +52,7 @@ const AsignarPlanAClienteModal = ({ open, closeModal, ...props }) => {
     if (selectedClient) {
       const response = await api.post(`/programas/${id}/clientes`, {
         clienteId: selectedClient.id,
+        programaId: id,
         fechaEvaluacion: fechaInicioPlan,
       });
       toast.success("Plan asignado correctamente");
@@ -91,7 +92,7 @@ const AsignarPlanAClienteModal = ({ open, closeModal, ...props }) => {
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar..."
+              placeholder="Buscar por nombre del cliente..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
