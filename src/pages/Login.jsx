@@ -45,8 +45,11 @@ const Login = () => {
       .post("/auth/login", usuario)
       .then((response) => {
         //cambio de andy: guardar el usuario en el contexto
+
         contextLogin(response.data);
-        if (response.data.rol == 2) {
+        if(!response.data.passChanged){
+          navigate("/cambiar-contrasena");
+        } else if (response.data.rol == 2) {
           navigate("/clientes/dashboard");
         } else {
           navigate("/clientes");
