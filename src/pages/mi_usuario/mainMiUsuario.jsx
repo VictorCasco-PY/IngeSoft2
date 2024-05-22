@@ -70,7 +70,7 @@ const MainMiUsuario = () => {
     const passwordRegex = passRegex;
 
     if (!passwordRegex.test(nuevaPass)) {
-      toast.error("La nueva contraseña debe tener al menos 6 caracteres, al menos un carácter especial y al menos un número");
+      toast.error("La nueva contraseña debe tener al menos 6 caracteres, al menos una mayúscula, una minúscula, un número y un caracter especial");
       return false;
     }
 
