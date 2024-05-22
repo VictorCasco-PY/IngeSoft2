@@ -1,45 +1,145 @@
 
-import { LottieComp } from "../../components/animations/LottieComp"
-import passwordAnimation from "../../assets/lotties/password-animation.json"
-import { Btn } from "../../components/bottons/Button"
-import { Input } from "../../components/input/input"
 import "./sugerirCambioPassword.css"
+import { useCurrentUser } from "../../context/UserContext"
+import RolEnum from "../../utils/RolEnum"
+import { useNavigate } from "react-router-dom"
+import { usePassword } from "../../hooks/usePassword"
+import { useEffect, useState } from "react"
+import { Loader } from "../../components/layout/Loader"
+import toast, { Toaster } from "react-hot-toast";
+import { passRegex } from "../../utils/passRegex"
+import { SugerirForm } from "./SugerirForm"
+
 
 export const SugerirCambioPassword = () => {
-    return (
-        <div className="sugestion-container mx-auto">
-            <div className="p-4 mx-auto">
 
-                <div className="rounded-3 d-flex justify-content-end w-100 mx-auto p-2">
+    const navigate = useNavigate();
+    const { rol } = useCurrentUser();
+    const { needChange, changePassword } = usePassword();
+    const [stayHere, setStayHere] = useState(false);
+    const [redirect, setRedirect] = useState(false);
+    const [passData, setPassData] = useState({ passActual: "", nuevaPass: "", confirmarPass: "" })
+
+    const handleChangePassword = async () => {
+
+        if (!passRegex.test(passData.nuevaPass)) {
+            toast.error("La nueva contraseña debe tener al menos 6 caracteres, al menos una mayúscula, una minúscula, un número y un caracter especial");
+            return
+        }
+
+        if (passData.nuevaPass !== passData.confirmarPass) {
+            toast.error("Las contraseñas no coinciden");
+            console.log(passData);
+            return
+        }
+
+        try {
+            await changePassword(passData);
+            toast.success("Contraseña cambiada con éxito");
+            setRedirect(true)
+            setTimeout(() => {
+                redirectToMain()
+            }, 3000);
+        } catch (error) {
+            toast.error("Hubo un error al cambiar la contraseña, por favor intente nuevamente.")
+        }
+
+    }
+
+    const redirectToMain = () => {
+
+        if (rol == RolEnum.CLIENTE) {
+            navigate("/clientes/dashboard");
+            return
+        }
+
+        navigate("/clientes");
+    }
+
+    const stayHereOrRedirect = async () => {
+        const stayHere = await needChange();
+        if (!stayHere) {
+            redirectToMain()
+            return;
+        }
+        setStayHere(true)
+    }
+
+    const handleChangeActualPasswordInput = (e) => {
+        const value = e.target.value;
+        setPassData({ ...passData, passActual: value });
+    }
+
+    const handleChangeNuevaPasswordInput = (e) => {
+        const value = e.target.value;
+        setPassData({ ...passData, nuevaPass: value });
+    }
+
+    const handleChangeConfirmPasswordInput = (e) => {
+        const value = e.target.value;
+        setPassData({ ...passData, confirmarPass: value });
+    }
+
+    useEffect(
+        () => {
+            stayHereOrRedirect()
+        }, [])
+
+
+    const content = () => {
+
+        if (!stayHere)
+            return (<div className="suggestion-card bg-white rounded-3 shadow-lg p-5">
+                <div className=" justify-content-center align-items-middle d-flex">
+                    <Loader />
+                </div>
+            </div>)
+
+        if (redirect)
+            return <>
+                <div className="suggestion-card bg-white rounded-3 shadow-lg p-5 d-grid gap-5">
                     <div>
-                        <Btn type="secondary">Omitir</Btn>
+                        <h3 className="text-secondary text-center">Será redirigido automáticamente a su página principal...</h3>
                     </div>
+                    <Loader msg="Redirigiendo..." />
                 </div>
+            </>
 
-                <div className="suggestion-card sbg-white rounded-3 shadow-lg d-md-flex justify-content-between">
-                    <div className="order-2 p-0 p-md-3 p-xl-5">
-                        <LottieComp animation={passwordAnimation} className="mx-auto" />
-                        </div>
-                    <div className="order-1 p-0 p-md-5 p-xl-5 mt-sm-0 mt-md-5 mt-xl-5 d-flex flex-column justify-content-around">
-                        <div>
-                            <h1 className="p-0">La contraseña que estás utilizando es insegura.</h1>
-                        </div>
+        return <SugerirForm
+            redirectToMain={redirectToMain}
+            handleChangeActualPasswordInput={handleChangeActualPasswordInput}
+            handleChangeNuevaPasswordInput={handleChangeNuevaPasswordInput}
+            handleChangeConfirmPasswordInput={handleChangeConfirmPasswordInput}
+            handleChangePassword={handleChangePassword} />
+    }
 
-                        <div className="d-grid gap-3 m-xl-5">
-                            <h4>Te recomendamos cambiarla por una más segura.</h4>
-                            <Input type="password" placeholder="Contraseña actual" />
-                            <Input type="password" placeholder="Nueva contraseña" />
-                            <Btn type="primary">Cambiar contraseña</Btn>
-                        </div>
-
-                        <p>Si tienes alguna duda, por favor contáctanos.<br />
-                            Gracias, el equipo de <b><u>PowerFit</u></b>.
-                        </p>
-                    </div>
-                </div>
+    return (<>
+        <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+                success: {
+                    style: {
+                        background: "#75B798",
+                        color: "#0A3622",
+                    },
+                },
+                error: {
+                    style: {
+                        background: "#FFDBD9",
+                        color: "#D92D20",
+                    },
+                },
+            }}
+        />
+        <div className="suggestion-container mx-auto">
+            <div className="p-4 mx-auto">
+                {content()}
 
             </div>
 
         </div>
+
+    </>
     )
 }
