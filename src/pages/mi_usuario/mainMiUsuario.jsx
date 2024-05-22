@@ -15,6 +15,7 @@ import Cedula from "./cedula.jsx";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import { fetchUsers } from "../users/mainUsers.jsx";
 import { Password } from "@mui/icons-material";
+import { passRegex } from "../../utils/passRegex.js";
 
 const MainMiUsuario = () => {
   const emptyUser = {
@@ -66,7 +67,7 @@ const MainMiUsuario = () => {
       return false;
     }
 
-    const passwordRegex = /^(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+[\]{};':"\\|,.<>\/?]{6,}$/;
+    const passwordRegex = passRegex;
 
     if (!passwordRegex.test(nuevaPass)) {
       toast.error("La nueva contraseña debe tener al menos 6 caracteres, al menos un carácter especial y al menos un número");
