@@ -9,7 +9,7 @@ export const SugerirForm = ({redirectToMain, handleChangeActualPasswordInput, ha
     return (<>
         <div className="rounded-3 d-flex justify-content-end w-100 mx-auto p-2">
             <div>
-                <Btn type="secondary" onClick={() => redirectToMain()}>Omitir</Btn>
+                <Btn type="secondary" id="boton-omitir" onClick={() => redirectToMain()}>Omitir</Btn>
             </div>
         </div>
 
