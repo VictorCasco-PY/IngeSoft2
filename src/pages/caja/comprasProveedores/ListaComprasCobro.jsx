@@ -66,7 +66,7 @@ const ListaCompras = () => {
       <CartaPrincipal>
         <div className="d-flex align-items-center" style={{ marginTop: '1.5rem' }}>
           <FlechaAtras ruta="/caja" />
-          <h2 style={{ marginLeft: '3rem' }}>Lista de cobros a proveedores</h2>
+          <h2 style={{ marginLeft: '3rem' }}>Lista de pagos a proveedores</h2>
         </div>
         <TablaCaja
           items={facturas}

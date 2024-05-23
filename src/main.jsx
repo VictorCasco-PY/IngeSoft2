@@ -45,12 +45,18 @@ import MainAsignarPlanACliente from "./pages/planes-entrenamiento/planes-cliente
 import MainListaActividadesCliente from "./pages/vistas-cliente/actividades/MainListaActividadesCliente";
 import MainDashboardCliente from "./pages/dashboard/dashboardCliente/MainDashboardCliente";
 import MainDashboardEntrenador from "./pages/dashboard/dashboardEntrenador.jsx/MainDashboadEntrenador";
+import { SugerirCambioPassword } from "./pages/sugerir-cambio-contraseña/SugerirCambioPassword";
+import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
+
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
       <CurrentUserProvider>
         <Routes>
           <Route path="/" element={<Login />} />
+          
+          <Route path="/cambiar-contrasena" element={<SugerirCambioPassword />} />
+
           <Route exact element={<ProtectedRoute roles={[RolEnum.ADMIN, RolEnum.CAJERO, RolEnum.ENTRENADOR]} />}>
           <Route
               path="/clientes"
@@ -349,6 +355,14 @@ createRoot(document.getElementById("root")).render(
             element={
               <Layout>
                 <MainListaActividadesCliente />
+              </Layout>
+            }
+          />
+           <Route
+            path="/recuperar-contrasenha/:token"
+            element={
+              <Layout>
+                <RecuperarContraseña />
               </Layout>
             }
           />
