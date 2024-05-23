@@ -25,10 +25,10 @@ export const SugerirForm = ({redirectToMain, handleChangeActualPasswordInput, ha
 
                 <div className="d-grid gap-3 m-xl-5 border-top mt-4 pt-4">
                     <h5 className="m-0 text-black-50"><span className="text-danger">*</span> Completa los siguientes campos para cambiar tu contraseña.</h5>
-                    <Input type="password" placeholder="Contraseña actual" onChange={(e) => handleChangeActualPasswordInput(e)} />
-                    <Input type="password" placeholder="Nueva contraseña" onChange={(e) => handleChangeNuevaPasswordInput(e)} />
-                    <Input type="password" placeholder="Confirmar contraseña" onChange={(e) => handleChangeConfirmPasswordInput(e)} />
-                    <Btn type="primary" onClick={handleChangePassword} loading={loading}>Cambiar contraseña</Btn>
+                    <Input type="password" placeholder="Contraseña actual" id="actual-password" onChange={(e) => handleChangeActualPasswordInput(e)} />
+                    <Input type="password" placeholder="Nueva contraseña" id="new-password" onChange={(e) => handleChangeNuevaPasswordInput(e)} />
+                    <Input type="password" placeholder="Confirmar contraseña" id="new-confirm-password" onChange={(e) => handleChangeConfirmPasswordInput(e)} />
+                    <Btn type="primary" id="boton-cambiar" onClick={handleChangePassword} loading={loading}>Cambiar contraseña</Btn>
                     <p className="text-black-50 m-0"><b className="text-danger">*</b> Tu nueva contraseña debe contener por lo menos una letra minúscula, una letra mayúscula, un número y un caracter especial.</p>
                 </div>
 
