@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import Logo from "../assets/logo.png";
@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import api from "../utils/api";
 import "../style.css";
 import { useCurrentUser } from "../context/UserContext";
+import useClienteData from "../hooks/useClientesData";
 
 const Login = () => {
   const [usuario, setUsuario] = useState({
@@ -19,8 +20,10 @@ const Login = () => {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [mostrarModal, setMostrarModal] = useState(false);
   const { login: contextLogin, userId } = useCurrentUser();
+
+  const {olvidarContrasenha } = useClienteData();
 
   const navigate = useNavigate();
 
@@ -98,6 +101,33 @@ const Login = () => {
     return <></>;
   }
 
+  const handleMostrarModal = () => {
+    setMostrarModal(true);
+  };
+
+  const handleCerrarModal = () => {
+    setMostrarModal(false);
+  };
+
+  const handleSubmitRecuperarContraseña = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      // Llama a la función olvidarContrasenha con el correo del usuario
+      await olvidarContrasenha({ email: usuario.email });
+
+      console.log(usuario.email);
+      toast.success("Correo de recuperación enviado correctamente.");
+      setMostrarModal(false);
+      //navigate("/recuperar-contrasenha/"); // Aquí agregamos el token a la URL
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al enviar el correo de recuperación.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-container">
       <Toaster
@@ -129,7 +159,7 @@ const Login = () => {
                 value={usuario.email}
                 className="form-input"
                 type="text"
-                placeholder=" "
+                placeholder="Usuario"
                 onChange={handleChange}
                 onFocus={handleEmailFocus}
                 onBlur={handleEmailBlur}
@@ -138,7 +168,6 @@ const Login = () => {
               />
               <IoPeopleSharp className="input-icon" />
             </div>
-            <label className="placehold">Usuario</label>
           </div>
           <div
             className={`form-password ${
@@ -152,7 +181,7 @@ const Login = () => {
                 value={usuario.password}
                 className="form-input"
                 type={mostrarPassword ? "text" : "password"}
-                placeholder=" "
+                placeholder="Contraseña"
                 onChange={handleChange}
                 onFocus={handlePasswordFocus}
                 onBlur={handlePasswordBlur}
@@ -160,7 +189,6 @@ const Login = () => {
               />
               <RiLockPasswordFill className="input-icon" />
             </div>
-            <label className="placehold">Contraseña</label>
           </div>
           <div className="form-checkbox">
             <label>
@@ -172,6 +200,15 @@ const Login = () => {
               />{" "}
               Mostrar contraseña
             </label>
+            <div className="forgot-password">
+              <a
+                type="button"
+                className="forgot-password-link"
+                onClick={handleMostrarModal}
+              >
+                ¿Has olvidado tu contraseña?
+              </a>
+            </div>
           </div>
           <div className="form-buttom">
             <button
@@ -208,6 +245,70 @@ const Login = () => {
           </div>
         </form>
       </div>
+      {/* Modal de recuperación de contraseña */}
+      {mostrarModal && (
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog modal-dialog-centered modal-dialog-square">
+            <div className="modal-content">
+              <div className="modal-header">
+                <span className="close" onClick={handleCerrarModal}>
+                  &times;
+                </span>
+                <h2>Recuperar Contraseña</h2>
+                <form onSubmit={handleSubmitRecuperarContraseña}>
+                  <div className="form-email">
+                    <div className="input-container">
+                      <input
+                        id="recuperar-email"
+                        name="email"
+                        value={usuario.email}
+                        className="form-input"
+                        type="email"
+                        placeholder="Correo Electronico"
+                        onChange={handleChange}
+                        required
+                      />
+                      <IoPeopleSharp className="input-icon" />
+                    </div>
+                  </div>
+                  <div className="form-buttom">
+                    <button
+                      type="submit"
+                      className="login-button"
+                      disabled={loading}
+                      style={{ position: "relative" }}
+                    >
+                      {loading ? (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                          }}
+                        >
+                          <ThreeDots
+                            visible={true}
+                            height="30"
+                            width="30"
+                            color="white"
+                            radius="9"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                          />
+                        </div>
+                      ) : (
+                        "Enviar Correo de Recuperación"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

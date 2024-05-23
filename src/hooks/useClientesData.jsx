@@ -4,6 +4,7 @@ import api from "../utils/api";
 const useClienteData = (id) => {
   const InfoClientes_URL = "/clientes"; //URL del endpoint
   const Mediciones_URL = "/mediciones";
+  const Correo = "/password/forgot";
 
   const [cliente, setCliente] = useState(null);
   const [actualizar, setActualizarCliente] = useState(null);
@@ -69,7 +70,9 @@ const getPagosClienteById = async (id, page = 1, params) => {
   );
 };
 
-
+const olvidarContrasenha = async (data) => {
+  return handleRequest(() => api.post(`${Correo}`, data));
+}
   return {
     cliente,
     mediciones,
@@ -88,6 +91,7 @@ const getPagosClienteById = async (id, page = 1, params) => {
     noClientesError,
     isLoading,
     actualizarCliente,
+    olvidarContrasenha,
   };
 };
 
