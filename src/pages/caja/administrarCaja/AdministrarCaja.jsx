@@ -306,7 +306,7 @@ const AdministrarCaja = ({ setSesionAbierta }) => {
               onClick={goToListarCobrosPendientes}
               disabled={disabledCerrarCaja}
             >
-              Listar Cobros a Proveedores
+              Listar Pagos a Proveedores
             </Btn>
           </div>
         </div>
