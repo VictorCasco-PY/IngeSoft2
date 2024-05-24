@@ -11,15 +11,13 @@ import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
 import CustomAlert from "../../components/alert/CustomAlert";
-import Indicator from "../../components/ManejoStock/IndicadorClientes";
-import { IoCheckmark } from "react-icons/io5";
 import api from "../../utils/api";
 import toast, { Toaster } from "react-hot-toast";
-import IndicadorClientes from "../../components/ManejoStock/IndicadorClientes";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import { IoArrowBackSharp } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import { Btn } from "../../components/bottons/Button";
 
 const InfoServicios = () => {
   const { id } = useParams();
@@ -32,11 +30,9 @@ const InfoServicios = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenEdit, setModalOpenEdit] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState(null);
-  const [clientes, setClientes] = useState([]);
   const [selectedCliente, setSelectedCliente] = useState("");
   const [modalidad, setModalidad] = useState("MENSUAL");
   const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [servicioToDelete, setServicioToDelete] = useState(null);
@@ -208,10 +204,6 @@ const InfoServicios = () => {
       console.error("Error al eliminar la suscripción:", error);
       toast.error("Error al eliminar la suscripción");
     }
-  };
-  const handleShowAlert = (servicio) => {
-    setServicioToDelete(servicio);
-    setShowAlert(true);
   };
 
   const handleCancelDelete = () => {
@@ -404,12 +396,17 @@ const InfoServicios = () => {
               {suscripcionesFiltradas.map((suscripcion) => (
                 <tr key={suscripcion.id}>
                   <td>
-                    <Link id={`infoActividad${suscripcion.clienteDto.id}`} to={`/clientesinfo/${suscripcion.clienteDto.id}`}>
+                    <Link
+                      id={`infoActividad${suscripcion.clienteDto.id}`}
+                      to={`/clientesinfo/${suscripcion.clienteDto.id}`}
+                    >
                       {suscripcion.clienteDto.nombre}
                     </Link>
                   </td>
                   <td>
-                    <EstadoPago estado={suscripcion.suscripcionDto.estado.toLowerCase()} />
+                    <EstadoPago
+                      estado={suscripcion.suscripcionDto.estado.toLowerCase()}
+                    />
                   </td>
                   <td>{suscripcion.suscripcionDto.modalidad}</td>
                   <td>{suscripcion.clienteDto.email}</td>
@@ -420,9 +417,7 @@ const InfoServicios = () => {
                       style={{ marginRight: "15%" }}
                       id={`eliminar-${suscripcion.suscripcionDto.id}`}
                       onClick={() =>
-                        handleEliminarSuscripcion(
-                          suscripcion.suscripcionDto.id
-                        )
+                        handleEliminarSuscripcion(suscripcion.suscripcionDto.id)
                       }
                     >
                       <RiDeleteBinLine />
@@ -453,7 +448,7 @@ const InfoServicios = () => {
       </CartaPrincipal>
       <ModalBase
         id="ModalAgregar"
-        title="Agrgar Cliente"
+        title="Registrar Clientes"
         open={modalOpen}
         closeModal={() => {
           setModalOpen(false);
@@ -465,82 +460,106 @@ const InfoServicios = () => {
       >
         <form onSubmit={handleSubmitSuscripcion}>
           <div>
-            <div className="label-container">
-              <LabelBase label="Modalidad de membresia:" htmlFor="modalidad" />
-              <span className="required">*</span>
-            </div>
-            <select
-              id="modalidad"
-              className="select"
-              value={modalidad}
-              onChange={(e) => setModalidad(e.target.value)}
-            >
-              <option id="mensual" value="MENSUAL">Mensual</option>
-              <option id="semanal" value="SEMANAL">Semanal</option>
-            </select>
-          </div>
-          <div>
-            <div className="label-container">
-              <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
-              <span className="required">*</span>
-            </div>
-            <input
-              id="fecha"
-              className="select-activity"
-              type="date"
-              value={fechaInicio}
-              onChange={(e) => setFechaInicio(e.target.value)}
-            />
-          </div>
-
-          <div>
+            <h5>Datos de suscripcion</h5>
             <div className="label-container">
               <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
               <span className="required">*</span>
             </div>
-            <div className="input-container">
-              <input
-                id="cedula"
-                type="text"
-                className="select"
-                placeholder="Ingrese el Nº CI completo del cliente"
-                value={searchCedulaTerm}
-                onChange={handleSearchCedulaChange}
-              />
-              {/* Botón para buscar clientes por cédula */}
-              <ButtonBasic id="btn-buscarCI" text="Agregar" onClick={searchByCedula} style={{ width: '2cm', height: '0.87cm' }} />
+            <input
+              id="cedula"
+              type="text"
+              className="form-select"
+              placeholder="Ingrese el Nº CI completo del cliente"
+              value={searchCedulaTerm}
+              onChange={handleSearchCedulaChange}
+            />
+            <div className="row justify-content-between">
+              <div className="col-4 my-2">
+                <div className="label-container">
+                  <LabelBase label="Modalidad" htmlFor="modalidad" />
+                  <span className="required">*</span>
+                </div>
+                <select
+                  id="modalidad"
+                  className="form-select"
+                  value={modalidad}
+                  onChange={(e) => setModalidad(e.target.value)}
+                >
+                  <option id="mensual" value="MENSUAL">
+                    Mensual
+                  </option>
+                  <option id="semanal" value="SEMANAL">
+                    Semanal
+                  </option>
+                </select>
+              </div>
+              <div className="col-4 my-2">
+                <div className="label-container">
+                  <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  id="fecha"
+                  className="form-control"
+                  type="date"
+                  value={fechaInicio}
+                  onChange={(e) => setFechaInicio(e.target.value)}
+                />
+              </div>
+              <div className="col-4" style={{ marginTop: "42px" }}>
+                {/* Botón para buscar clientes por cédula */}
+                <Btn
+                  id="btn-buscarCI"
+                  type="secondary"
+                  outline
+                  onClick={searchByCedula}
+                >
+                  Agregar cliente
+                </Btn>
+              </div>
             </div>
-            <ul>
-              {searchCedulaResults.map((cliente) => (
-                <li key={cliente.id}>
-                  <button id={`btn-cliente-${cliente.id}`} onClick={() => handleSelectCliente(cliente)}>
-                    {cliente.nombre} - CI: {cliente.cedula}
-                  </button>
-                </li>
-              ))}
-            </ul>
           </div>
 
-          {/* Mostrar el cliente seleccionado */}
-          {selectedCliente && (
-            <p>
-              <strong>Seleccionado:</strong> {selectedCliente.nombre} CI:{" "}
-              {selectedCliente.cedula}
-            </p>
-          )}
           <div className="campo-obligatorio">
             <span className="required">*</span>
             <span className="message">Campo obligatorio</span>
           </div>
+          <div>
+            <table className="table mt-4">
+              <thead>
+                <th>Cliente</th>
+                <th>Modalidad</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Victor Casco</td>
+                  <td>MENSUAL</td>
+                  <td>24-05-2024</td>
+                  <td>Borrar</td>
+                </tr>
+                <tr>
+                  <td>Victor Casco</td>
+                  <td>MENSUAL</td>
+                  <td>24-05-2024</td>
+                </tr>
+                <tr>
+                  <td>Victor Casco</td>
+                  <td>MENSUAL</td>
+                  <td>24-05-2024</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div className="d-flex justify-content-center align-items-center float-end">
-            <ButtonBasic
-              id="btn-guardar"
-              text="Guardar"
-              type="submit"
+            <Btn
+              id="btn-guardad"
+              type="primary"
               onClick={handleSubmitSuscripcion}
             >
-              {loading ? "Cargando..." : "Guardar Cambios"}
-            </ButtonBasic>
+              Guardar
+            </Btn>
           </div>
         </form>
       </ModalBase>
@@ -576,8 +595,12 @@ const InfoServicios = () => {
                   })
                 }
               >
-                <option id="mensual" value="MENSUAL">Mensual</option>
-                <option id="semanal" value="SEMANAL">Semanal</option>
+                <option id="mensual" value="MENSUAL">
+                  Mensual
+                </option>
+                <option id="semanal" value="SEMANAL">
+                  Semanal
+                </option>
               </select>
             </div>
             <div>
