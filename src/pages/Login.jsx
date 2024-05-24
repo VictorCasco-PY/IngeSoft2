@@ -205,6 +205,7 @@ const Login = () => {
                 type="button"
                 className="forgot-password-link"
                 onClick={handleMostrarModal}
+                id="link-forgot-pass"
               >
                 ¿Has olvidado tu contraseña?
               </a>
@@ -267,6 +268,7 @@ const Login = () => {
                         placeholder="Correo Electronico"
                         onChange={handleChange}
                         required
+                        id="input-recover-email"
                       />
                       <IoPeopleSharp className="input-icon" />
                     </div>
@@ -277,6 +279,7 @@ const Login = () => {
                       className="login-button"
                       disabled={loading}
                       style={{ position: "relative" }}
+                      id="boton-send-recover-pass"
                     >
                       {loading ? (
                         <div
