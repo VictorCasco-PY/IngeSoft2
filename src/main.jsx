@@ -50,7 +50,6 @@ import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContras
 import { VerifyToken } from "./utils/VerifyToken";
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <Router>
       <CurrentUserProvider>
         <Routes>
@@ -396,5 +395,4 @@ createRoot(document.getElementById("root")).render(
         <VerifyToken />
       </CurrentUserProvider>
     </Router>
-  </React.StrictMode>
 );
