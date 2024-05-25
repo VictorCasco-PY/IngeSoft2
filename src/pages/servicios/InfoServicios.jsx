@@ -38,15 +38,11 @@ const InfoServicios = () => {
   const [servicioToDelete, setServicioToDelete] = useState(null);
   const [searchCedulaTerm, setSearchCedulaTerm] = useState("");
   const [searchCedulaResults, setSearchCedulaResults] = useState([]);
+  const [listaSuscripciones, setListaSuscripciones] = useState([]);
 
   useEffect(() => {
     fetchSuscripciones(id, currentPage);
   }, [id, currentPage]);
-
-  useEffect(() => {
-    if (modalOpen) {
-    }
-  }, [modalOpen]);
 
   useEffect(() => {
     const fetchActividadNombre = async () => {
@@ -73,9 +69,10 @@ const InfoServicios = () => {
     }
   };
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = (event, pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const handleFiltrar = (filtro) => {
     setFiltro(filtro);
   };
@@ -107,34 +104,38 @@ const InfoServicios = () => {
     setSuscripciones(filtered);
   };
 
-  const handleSubmitSuscripcion = async (event) => {
+  const handleAddSuscripcion = () => {
+    if (!fechaInicio || !selectedCliente) {
+      toast.error(
+        "Falta llenar campos. Ingresa una fecha de inicio y un cliente."
+      );
+      return;
+    }
+
+    const nuevaSuscripcion = {
+      clienteId: selectedCliente.id,
+      clienteNombre: selectedCliente.nombre,
+      actividadId: id,
+      modalidad: modalidad,
+      estado: "PENDIENTE",
+      fechaInicio: fechaInicio,
+    };
+
+    setListaSuscripciones([...listaSuscripciones, nuevaSuscripcion]);
+    setSelectedCliente("");
+    setSearchCedulaTerm("");
+    setModalidad("MENSUAL");
+    setFechaInicio("");
+  };
+
+  const handleSubmitSuscripciones = async (event) => {
     event.preventDefault();
-
-    if (!fechaInicio) {
-      toast.error("Falta llenar campos. Ingresa una fecha de inicio.");
-      return;
-    }
-
-    if (!selectedCliente) {
-      toast.error("Falta llenar campos. Ingresa un cliente.");
-      return;
-    }
-
     try {
-      const suscripcionData = {
-        clienteId: selectedCliente.id,
-        actividadId: id,
-        modalidad: modalidad,
-        estado: "PENDIENTE",
-        fechaInicio: fechaInicio,
-      };
-      const response = await api.post("/suscripciones", [suscripcionData]);
+      const response = await api.post("/suscripciones", listaSuscripciones);
       console.log("Suscripciones agregadas:", response.data);
-      toast.success("Suscripción agregada exitosamente");
+      toast.success("Suscripciones agregadas exitosamente");
       setModalOpen(false);
-      setSelectedCliente("");
-      setModalidad("MENSUAL");
-      setFechaInicio("");
+      setListaSuscripciones([]);
 
       fetchSuscripciones(id, currentPage);
     } catch (error) {
@@ -176,7 +177,7 @@ const InfoServicios = () => {
     event.preventDefault();
     try {
       console.log(editingSubscription.suscripcionDto.id);
-      setLoading(true); // Establecer el estado de carga a true
+      setLoading(true);
       console.log(editingSubscription);
       await api.put(
         `/suscripciones/${editingSubscription.suscripcionDto.id}`,
@@ -190,16 +191,15 @@ const InfoServicios = () => {
       console.error("Error al actualizar la suscripción:", error);
       toast.error("Error al actualizar la suscripción");
     } finally {
-      setLoading(false); // Establecer el estado de carga a false después de que se complete la solicitud
+      setLoading(false);
     }
   };
 
-  // eliminar una suscripcion
   const handleEliminarSuscripcion = async (suscripcionId) => {
     try {
       await api.delete(`/suscripciones/${suscripcionId}`);
       toast.success("Suscripción eliminada exitosamente");
-      fetchSuscripciones(id, currentPage); // Actualiza la lista de suscripciones después de eliminar
+      fetchSuscripciones(id, currentPage);
     } catch (error) {
       console.error("Error al eliminar la suscripción:", error);
       toast.error("Error al eliminar la suscripción");
@@ -222,7 +222,6 @@ const InfoServicios = () => {
     }
   };
 
-  // manejar la cedula del cliente
   const searchByCedula = async () => {
     try {
       const response = await api.get(
@@ -242,45 +241,10 @@ const InfoServicios = () => {
     }
   };
 
-  const handleSearchCedulaChange = (event) => {
-    const term = event.target.value;
-    setSearchCedulaTerm(term);
-
-    // buscar si mayor o igual a 3 caracteres
-    if (term.length >= 3) {
-      if (event.key === "Enter") {
-        searchByCedula();
-      } else {
-        setSearchCedulaResults([]);
-      }
-    }
-  };
-
   const handleSelectCliente = (cliente) => {
     setSelectedCliente(cliente);
     setSearchCedulaTerm(""); // Limpiar el término de búsqueda
     setSearchCedulaResults([]);
-  };
-
-  //buscador mejorado
-  const handleInputChange = (event) => {
-    const term = event.target.value;
-    setSearchTerm(term);
-
-    if (term === "") {
-      // Si el input de búsqueda está vacío, vuelve a la primera página
-      setCurrentPage(1);
-      fetchSuscripciones(id, 1);
-    }
-  };
-
-  const handleSearchChange = () => {
-    console.log(searchTerm);
-    if (searchTerm.length >= 4) {
-      searchServicios(searchTerm);
-    } else {
-      fetchSuscripciones(id, currentPage);
-    }
   };
 
   return (
@@ -319,13 +283,13 @@ const InfoServicios = () => {
                 type="text"
                 placeholder="Search"
                 value={searchTerm}
-                onChange={handleInputChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <ButtonBasic
                 id="btn-buscar"
                 text="Buscar"
-                onClick={handleSearchChange}
-              />{" "}
+                onClick={() => searchServicios(searchTerm)}
+              />
             </form>
             <div className="dropdown">
               <button
@@ -427,8 +391,6 @@ const InfoServicios = () => {
                       id={`editar-${suscripcion.suscripcionDto.id}`}
                       onClick={() => handleEditSubscription(suscripcion)}
                     >
-                      {" "}
-                      {/* Agregar onClick para editar */}
                       <FiEdit2 />
                     </a>
                   </td>
@@ -441,8 +403,8 @@ const InfoServicios = () => {
           <Pagination
             id="paginacion"
             count={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+            page={currentPage}
+            onChange={handlePageChange}
           />
         </div>
       </CartaPrincipal>
@@ -452,13 +414,12 @@ const InfoServicios = () => {
         open={modalOpen}
         closeModal={() => {
           setModalOpen(false);
-          // Limpiar los campos
           setSelectedCliente("");
           setModalidad("MENSUAL");
           setFechaInicio("");
         }}
       >
-        <form onSubmit={handleSubmitSuscripcion}>
+        <form onSubmit={handleSubmitSuscripciones}>
           <div>
             <h5>Datos de suscripcion</h5>
             <div className="label-container">
@@ -471,9 +432,22 @@ const InfoServicios = () => {
               className="form-select"
               placeholder="Ingrese el Nº CI completo del cliente"
               value={searchCedulaTerm}
-              onChange={handleSearchCedulaChange}
+              onChange={(e) => setSearchCedulaTerm(e.target.value)}
             />
-            <div className="row justify-content-between">
+            <Btn
+              id="btn-buscarCI"
+              type="secondary"
+              outline
+              onClick={searchByCedula}
+            >
+              Buscar cliente
+            </Btn>
+            {selectedCliente && (
+              <div className="mt-3">
+                <span>Cliente seleccionado: {selectedCliente.nombre}</span>
+              </div>
+            )}
+            <div className="row justify-content-between mt-3">
               <div className="col-4 my-2">
                 <div className="label-container">
                   <LabelBase label="Modalidad" htmlFor="modalidad" />
@@ -495,11 +469,11 @@ const InfoServicios = () => {
               </div>
               <div className="col-4 my-2">
                 <div className="label-container">
-                  <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
+                  <LabelBase label="Fecha de inicio:" htmlFor="fechaInicio" />
                   <span className="required">*</span>
                 </div>
                 <input
-                  id="fecha"
+                  id="fechaInicio"
                   className="form-control"
                   type="date"
                   value={fechaInicio}
@@ -507,56 +481,59 @@ const InfoServicios = () => {
                 />
               </div>
               <div className="col-4" style={{ marginTop: "42px" }}>
-                {/* Botón para buscar clientes por cédula */}
                 <Btn
-                  id="btn-buscarCI"
+                  id="btn-agregar"
                   type="secondary"
-                  outline
-                  onClick={searchByCedula}
+                  onClick={handleAddSuscripcion}
                 >
-                  Agregar cliente
+                  Agregar Suscripción
                 </Btn>
               </div>
             </div>
           </div>
 
-          <div className="campo-obligatorio">
+          <div className="campo-obligatorio mt-3">
             <span className="required">*</span>
             <span className="message">Campo obligatorio</span>
           </div>
           <div>
             <table className="table mt-4">
               <thead>
-                <th>Cliente</th>
-                <th>Modalidad</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Modalidad</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Victor Casco</td>
-                  <td>MENSUAL</td>
-                  <td>24-05-2024</td>
-                  <td>Borrar</td>
-                </tr>
-                <tr>
-                  <td>Victor Casco</td>
-                  <td>MENSUAL</td>
-                  <td>24-05-2024</td>
-                </tr>
-                <tr>
-                  <td>Victor Casco</td>
-                  <td>MENSUAL</td>
-                  <td>24-05-2024</td>
-                </tr>
+                {listaSuscripciones.map((suscripcion, index) => (
+                  <tr key={index}>
+                    <td>{suscripcion.clienteNombre}</td>
+                    <td>{suscripcion.modalidad}</td>
+                    <td>{suscripcion.fechaInicio}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setListaSuscripciones(
+                            listaSuscripciones.filter((_, i) => i !== index)
+                          )
+                        }
+                      >
+                        Borrar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-          <div className="d-flex justify-content-center align-items-center float-end">
+          <div className="d-flex justify-content-center align-items-center float-end mt-3">
             <Btn
-              id="btn-guardad"
+              id="btn-guardar"
               type="primary"
-              onClick={handleSubmitSuscripcion}
+              onClick={handleSubmitSuscripciones}
             >
               Guardar
             </Btn>
@@ -630,7 +607,7 @@ const InfoServicios = () => {
                 <span className="required">*</span>
               </div>
               <input
-                id="fecha-InicioEdit"
+                id="fecha-FinEdit"
                 className="select-activity"
                 type="date"
                 value={editingSubscription.suscripcionDto.fechaFin}
@@ -651,7 +628,7 @@ const InfoServicios = () => {
                 <span className="required">*</span>
               </div>
               <input
-                id="id-actividad"
+                id="nombre-cliente"
                 className="select-activity"
                 type="text"
                 value={editingSubscription.clienteDto.nombre}
