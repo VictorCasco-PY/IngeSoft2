@@ -6,11 +6,13 @@ import toast from "react-hot-toast";
 
 const ModalEntrenamiento = ({ children, nivel, onClose, onCreate }) => {
   const [actividades, setActividades] = useState([]);
+  const [entrenadores, setEntrenadores] = useState([]); // Nuevo estado para eentrenadores
   const [selectedActividad, setSelectedActividad] = useState("");
+  const [selectedEntrenadores, setSelectedEntrenadores] = useState(""); 
   const [nombreEntrenamiento, setNombreEntrenamiento] = useState("");
   const [sexo, setSexo] = useState("");
   const [errors, setErrors] = useState({});
-  const { getActividades } = usePlanes();
+  const { getActividades, getEmpleados } = usePlanes(); 
 
   useEffect(() => {
     const fetchActividades = async () => {
@@ -21,7 +23,18 @@ const ModalEntrenamiento = ({ children, nivel, onClose, onCreate }) => {
         console.error("Error al obtener las actividades:", error);
       }
     };
+
+    const fetchEntrenadores = async () => {
+      try {
+        const res = await getEmpleados();
+        setEntrenadores(res.items);
+      } catch (error) {
+        console.error("Error al obtener los entrenadores:", error);
+      }
+    };
+
     fetchActividades();
+    fetchEntrenadores(); 
   }, []);
 
   const handleAceptar = async () => {
@@ -41,6 +54,10 @@ const ModalEntrenamiento = ({ children, nivel, onClose, onCreate }) => {
       newErrors.actividad = "El campo actividad es obligatorio";
     }
 
+    if (!selectedEntrenadores) {
+      newErrors.empleado = "El campo entrenador es obligatorio"; 
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       toast.error("Todos los campos son obligatorios");
@@ -53,7 +70,7 @@ const ModalEntrenamiento = ({ children, nivel, onClose, onCreate }) => {
       nivel: nivel.toUpperCase(),
       sexo: sexo.toUpperCase(),
       actividad: selectedActividad,
-      empleado: 1
+      empleado: selectedEntrenadores 
     };
 
     // Llama a la función para crear el programa y pasa los datos del nuevo programa
@@ -116,6 +133,28 @@ const ModalEntrenamiento = ({ children, nivel, onClose, onCreate }) => {
                 </select>
                 {errors.actividad && (
                   <div style={{ color: "red" }}>{errors.actividad}</div>
+                )}
+              </div>
+              <div className="mb-3 block">
+                <div className="label-container">
+                  <LabelBase label="Entrenador:" htmlFor="entrenador" /> 
+                  <span className="required">*</span>
+                </div>
+                <select
+                  className="form-select"
+                  id="entrenador"
+                  value={selectedEntrenadores}
+                  onChange={(e) => setSelectedEntrenadores(e.target.value)}
+                >
+                  <option value="">Seleccionar entrenador</option>
+                  {entrenadores.map((empleado) => (
+                    <option key={empleado.id} value={empleado.id}>
+                      {empleado.nombre}
+                    </option>
+                  ))}
+                </select>
+                {errors.empleado && (
+                  <div style={{ color: "red" }}>{errors.empleado}</div>
                 )}
               </div>
               <div className="mb-3 block">
