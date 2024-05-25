@@ -18,6 +18,7 @@ import { IoArrowBackSharp } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
 import { Btn } from "../../components/bottons/Button";
+import { formatFecha } from "../../utils/Formatting";
 
 const InfoServicios = () => {
   const { id } = useParams();
@@ -422,26 +423,32 @@ const InfoServicios = () => {
         <form onSubmit={handleSubmitSuscripciones}>
           <div>
             <h5>Datos de suscripcion</h5>
-            <div className="label-container">
-              <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
-              <span className="required">*</span>
+            <div className="row">
+              <div className="col">
+                <div className="label-container">
+                  <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  id="cedula"
+                  type="text"
+                  className="form-control"
+                  placeholder="Ingrese el Nº CI"
+                  value={searchCedulaTerm}
+                  onChange={(e) => setSearchCedulaTerm(e.target.value)}
+                />
+              </div>
+              <div className="col" style={{ marginTop: "32px" }}>
+                <Btn
+                  id="btn-buscarCI"
+                  type="secondary"
+                  outline
+                  onClick={searchByCedula}
+                >
+                  Buscar cliente
+                </Btn>
+              </div>
             </div>
-            <input
-              id="cedula"
-              type="text"
-              className="form-select"
-              placeholder="Ingrese el Nº CI completo del cliente"
-              value={searchCedulaTerm}
-              onChange={(e) => setSearchCedulaTerm(e.target.value)}
-            />
-            <Btn
-              id="btn-buscarCI"
-              type="secondary"
-              outline
-              onClick={searchByCedula}
-            >
-              Buscar cliente
-            </Btn>
             {selectedCliente && (
               <div className="mt-3">
                 <span>Cliente seleccionado: {selectedCliente.nombre}</span>
@@ -511,17 +518,18 @@ const InfoServicios = () => {
                   <tr key={index}>
                     <td>{suscripcion.clienteNombre}</td>
                     <td>{suscripcion.modalidad}</td>
-                    <td>{suscripcion.fechaInicio}</td>
+                    <td>{formatFecha(suscripcion.fechaInicio)}</td>
                     <td>
                       <button
                         type="button"
+                        className="btn btn-danger"
                         onClick={() =>
                           setListaSuscripciones(
                             listaSuscripciones.filter((_, i) => i !== index)
                           )
                         }
                       >
-                        Borrar
+                        <RiDeleteBinLine />
                       </button>
                     </td>
                   </tr>
