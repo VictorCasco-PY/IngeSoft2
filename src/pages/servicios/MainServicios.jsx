@@ -413,6 +413,7 @@ const MainServicios = () => {
                   type="text"
                   className="form-control"
                   placeholder="Buscar por nombre del entrenador..."
+                  id="input-entrenador"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -454,6 +455,7 @@ const MainServicios = () => {
                   searchResults.map((entrenador) => (
                     <div
                       key={entrenador.id}
+                       id={`entrenador-${entrenador.id}`}
                       style={{
                         cursor: "pointer",
                         padding: "10px",
