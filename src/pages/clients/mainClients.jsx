@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./mainClients.css";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
-import { BsSearch } from "react-icons/bs";
 import { IoAdd, IoClose } from "react-icons/io5";
 import { PiUserCircleLight } from "react-icons/pi";
 import { TbArrowDown } from "react-icons/tb";
@@ -16,12 +15,9 @@ import ButtonBasic from "../../components/bottons/ButtonBasic";
 import CustomAlert from "../../components/alert/CustomAlert";
 import Pagination from "../../components/pagination/PaginationContainer";
 import toast, { Toaster } from "react-hot-toast";
-import { IoAddOutline } from "react-icons/io5";
-import { IoCheckmark } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
-import ReporteStorage from "../../utils/ReportesStorage";
 import CBadge from "../../components/labels/CBadge";
 import useReporteClientes from "../../hooks/useReporteClientes";
 
@@ -67,7 +63,7 @@ const MainClients = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // Define la cantidad de elementos por página
+
 
   useEffect(() => {
     fetchClientes();
@@ -112,7 +108,7 @@ const MainClients = () => {
   const fetchClientes = async () => {
     try {
       const response = await api.get(
-        `/clientes/lista/page/${currentPage}?perPage=${itemsPerPage}`
+        `/clientes/lista/page/${currentPage}`
       );
       setClientes(response.data.items);
       setFilteredClientes(response.data.items);
@@ -122,7 +118,7 @@ const MainClients = () => {
       toast.error("Error al actualizar cliente ");
     }
   };
-  const handlePageChange = (event, page) => {
+  const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   const searchClientes = (term) => {
@@ -204,15 +200,26 @@ const MainClients = () => {
     }
     setShowModal(false);
   };
+  const validateFields = () => {
+    if (!editingClient.nombre) return toast.error("El nombre no puede estar en blanco.");
+    if (!editingClient.email) return toast.error("El email no puede estar en blanco.");
+    if (!editingClient.telefono) return toast.error("El telefono no puede estar en blanco.");
+    if (!editingClient.ruc) return toast.error("El ruc no puede estar en blanco.");
+    if (!editingClient.direccion) return toast.error("La dirección no puede estar en blanco.");
+    if (!editingClient.cedula) return toast.error("La cedula no puede estar en blanco.");
+  };
   // Funcion para guardar los cambios realizados en el cliente
   const handleGuardarCambios = async () => {
+    if (!validateFields()) {
+      toast.error("Por favor, completa todos los campos requeridos");
+      return;
+    }
     try {
       await api.put(`/clientes/${editingClient.id}`, editingClient); // Actualiza el cliente con los datos editados
       setModalOpen(false); // Cierra el modal
       fetchClientes();
-      toast.success("Usuario editado satisfactoriamente");
+      toast.success("Usuario actualizado satisfactoriamente");
     } catch (error) {
-      console.error("Error al actualizar cliente:", error);
       toast.error("Error al actualizar cliente ");
     }
   };
