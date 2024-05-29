@@ -49,9 +49,9 @@ import { SugerirCambioPassword } from "./pages/sugerir-cambio-contraseña/Sugeri
 import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
 import ReporteVentas from "./pages/reporte/ReporteVentas"
 import ReporteCompras from "./pages/reporte/ReporteCompras";
+import { VerifyToken } from "./utils/VerifyToken";
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <Router>
       <CurrentUserProvider>
         <Routes>
@@ -410,7 +410,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
         </Routes>
+        <VerifyToken />
       </CurrentUserProvider>
     </Router>
-  </React.StrictMode>
 );
