@@ -35,7 +35,7 @@ const EntrenamientoPrincipiante = () => {
     getProgramasByActividad,
     getActividades,
     eliminarPrograma,
-    actualizarPrograma
+    actualizarPrograma,
   } = usePlanes(); // Agrega la función eliminarPrograma
 
   useEffect(() => {
@@ -194,7 +194,14 @@ const EntrenamientoPrincipiante = () => {
             {data.items?.map((programa) => (
               <tr key={programa.id}>
                 {/*Pongo en cada item, para poder darle click en cualquier parte, porque si pongo en el id, no puedo eliminar */}
-                <td onClick={() => handleProgramaClick(programa)}>
+                <td
+                  style={{
+                    color: "#7749F8",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleProgramaClick(programa)}
+                >
                   {programa.titulo}
                 </td>
                 <td onClick={() => handleProgramaClick(programa)}>
@@ -273,10 +280,10 @@ const EntrenamientoPrincipiante = () => {
           closeModal={handleCloseModal}
         >
           <EditarProgramaForm
-           programa={programaToEdit}
-           onUpdate={handleUpdatePrograma}
-           onClose={handleCloseModal}
-           actualizarPrograma={actualizarPrograma}
+            programa={programaToEdit}
+            onUpdate={handleUpdatePrograma}
+            onClose={handleCloseModal}
+            actualizarPrograma={actualizarPrograma}
           />
         </ModalBase>
       )}
