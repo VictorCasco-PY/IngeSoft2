@@ -5,7 +5,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { TbArrowDown } from "react-icons/tb";
 import { GoQuestion } from "react-icons/go";
-import Pagination from "../../components/pagination/PaginationContainer";
+import Pagination from "../../components/pagination/PaginationContainer"; //cambio
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
