@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from "react";
-import ButtonBasic from "../bottons/ButtonBasic";
 import { useComprasProveedores } from "../../hooks/useComprasProveedores";
 import Pagination from "../../components/pagination/PaginationContainer";
 import { ListaVacía } from "../errores/ListaVacía";
 import CobrarProveedores from "../../pages/caja/comprasProveedores/facturas_ventas/CobrarProveedoresPendiente";
 import { toast, Toaster } from "react-hot-toast";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatFecha } from "../../utils/Formatting";
 import { precioHandler } from "../../utils/precioHandler";
 import { Btn } from "../bottons/Button";
 
-const TablaCaja = ({
-  items,
-  totalPages,
-  currentPage,
-  onPageChange,
-  mostrarFiltro,
-}) => {
+const TablaCaja = ({ items, totalPages, currentPage, onPageChange }) => {
   const {
     getFacturas,
     searchByRuc,
     searchByNombreProveedor,
     searchByFecha,
+    searchByEstado,
     clearFilters,
     notFound,
   } = useComprasProveedores();
@@ -32,6 +25,7 @@ const TablaCaja = ({
   const [cobroModalOpen, setCobroModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [estado, setEstado] = useState("");
 
   const getData = async (page = 1) => {
     try {
@@ -70,10 +64,20 @@ const TablaCaja = ({
     }
   };
 
+  const handleEstadoChange = (e) => {
+    setEstado(e.target.value);
+    if (e.target.value === "") {
+      getData();
+    } else {
+      searchByEstado(e.target.value);
+    }
+  };
+
   const handleClearFilters = async () => {
     setSearch("");
     setStartDate(null);
     setEndDate(null);
+    setEstado("");
     await clearFilters();
   };
 
@@ -113,6 +117,7 @@ const TablaCaja = ({
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="d-flex flex-grow-1 gap-2">
           <input
+            id="input_inicio"
             type="date"
             className="form-control "
             value={startDate ? startDate : ""}
@@ -120,6 +125,7 @@ const TablaCaja = ({
             placeholder="Desde..."
           />
           <input
+            id="input_fin"
             type="date"
             className="form-control "
             value={endDate ? endDate : ""}
@@ -127,22 +133,30 @@ const TablaCaja = ({
             placeholder="Hasta..."
           />
           <input
+            id="input_ruc_nombre"
             type="text"
             className="form-control "
             placeholder="Buscar por nombre o RUC..."
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
-          <select className="form-select me-3">
+          <select
+            id="select_estado"
+            className="form-select me-3"
+            value={estado}
+            onChange={handleEstadoChange}
+          >
             <option value="">Estado...</option>
             <option value="pagado">Pagado</option>
             <option value="pendiente">Pendiente</option>
           </select>
         </div>
-        <Btn type="secondary" outline onClick={handleSearch}>
+        <Btn id="btn_buscar" type="secondary" outline onClick={handleSearch}>
           Buscar
         </Btn>
-        <Btn onClick={handleClearFilters}>Limpiar</Btn>
+        <Btn id="btn_limpiar" onClick={handleClearFilters}>
+          Limpiar
+        </Btn>
       </div>
       <table className="table">
         <thead>

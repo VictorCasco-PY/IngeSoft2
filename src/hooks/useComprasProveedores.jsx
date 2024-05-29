@@ -56,6 +56,12 @@ export const useComprasProveedores = () => {
     );
   };
 
+  const searchByEstado = async (estado, page = 1) => {
+    return handleRequest(
+      async () => await api.get(`${DIR}/estado/${estado}/page/${page}`)
+    );
+  };
+
   const clearFilters = async (page = 1) => {
     return getFacturas(page);
   };
@@ -66,6 +72,7 @@ export const useComprasProveedores = () => {
     searchByFecha,
     searchByRuc,
     getFacturas,
+    searchByEstado,
     clearFilters,
     isLoading,
     error,
