@@ -10,6 +10,7 @@ import api from "../utils/api";
 import "../style.css";
 import { useCurrentUser } from "../context/UserContext";
 import useClienteData from "../hooks/useClientesData";
+import RolEnum from "../utils/RolEnum";
 
 const Login = () => {
   const [usuario, setUsuario] = useState({
@@ -21,17 +22,21 @@ const Login = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const { login: contextLogin, userId } = useCurrentUser();
+  const { login: contextLogin, rol } = useCurrentUser();
 
   const {olvidarContrasenha } = useClienteData();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userId) {
+    if (rol) {
+      if (rol === RolEnum.CLIENTE){
+        navigate("/clientes/dashboard");
+        return;
+      }
       navigate("/clientes");
     }
-  }, [userId]);
+  }, [rol]);
 
   const handleChange = (event) => {
     setUsuario({
@@ -97,7 +102,7 @@ const Login = () => {
     }
   };
 
-  if (userId) {
+  if (rol) {
     return <></>;
   }
 
