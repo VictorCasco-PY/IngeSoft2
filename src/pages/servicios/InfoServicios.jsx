@@ -6,7 +6,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { TbArrowDown } from "react-icons/tb";
 import { GoQuestion } from "react-icons/go";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "../../components/pagination/PaginationContainer";
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
@@ -400,12 +400,12 @@ const InfoServicios = () => {
             </tbody>
           </table>
         </div>
-        <div className="pagination-container">
+        <div className="align-self-center">
           <Pagination
             id="paginacion"
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </CartaPrincipal>
