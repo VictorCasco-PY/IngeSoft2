@@ -15,11 +15,13 @@ const AsignarPlanACliente = () => {
   const [showModal, setShowModal] = useState(false);
   const [showObjetivosModal, setObjetivosShowModal] = useState(false);
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [planName, setPlanName] = useState("");
   const [objetivoId, setObjetivoId] = useState(null);
   const [clienteId, setclienteId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { id } = useParams();
 
@@ -49,8 +51,9 @@ const AsignarPlanACliente = () => {
     try {
       const response = await api.get(`/programas/${id}/clientes/page/${page}`);
       setData(response.data.items);
+      setFilteredData(response.data.items);
       setTotalPages(response.data.totalPages);
-      setPlanName(response.data.items[0].programa);
+      setPlanName(response.data.items.length > 0 ? response.data.items[0].programa : "");
       console.log("Data", response.data.items);
     } catch (error) {
       console.log(error);
@@ -76,6 +79,23 @@ const AsignarPlanACliente = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() === "") {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter((cliente) =>
+        cliente.nombreCliente.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  };
+
+  const handleResetSearch = () => {
+    setSearchTerm("");
+    setFilteredData(data);
   };
 
   return (
@@ -112,23 +132,22 @@ const AsignarPlanACliente = () => {
             type="text"
             className="form-control"
             placeholder="Buscar cliente..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="col-1">
-          <Btn id="btn-buscar" outline>
+          <Btn id="btn-buscar" outline onClick={handleSearch}>
             Buscar
           </Btn>
         </div>
         <div className="col-1">
-          <Btn id="btn-reset">Limpiar</Btn>
+          <Btn id="btn-reset" onClick={handleResetSearch}>
+            Limpiar
+          </Btn>
         </div>
         <div className="col-auto ms-auto">
-          {" "}
-          <Btn
-            type="primary"
-            id="btn-asignar"
-            onClick={() => handleOpenModal()}
-          >
+          <Btn type="primary" id="btn-asignar" onClick={() => handleOpenModal()}>
             Asignar cliente
           </Btn>
         </div>
@@ -142,8 +161,8 @@ const AsignarPlanACliente = () => {
         ]}
         striped
       >
-        {data.length > 0 ? (
-          data.map((data, index) => (
+        {filteredData.length > 0 ? (
+          filteredData.map((data, index) => (
             <tr key={index}>
               <td
                 className="py-3"
@@ -159,7 +178,7 @@ const AsignarPlanACliente = () => {
                 {data.nombreCliente}
               </td>
               <td className="py-3">{data.programa}</td>
-              <td className="py-3">{formatFecha(data.fechaEvaluacion)}</td>
+              <td className="py-3">{data.fechaEvaluacion ? formatFecha(data.fechaEvaluacion) : "Fecha no disponible"}</td>
               <td className="py-3">
                 <button
                   id="btn-borrar"

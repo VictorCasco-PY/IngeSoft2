@@ -28,6 +28,12 @@ class UserStorage {
     static removeUser() {
         localStorage.removeItem(USER_LABEL);
     }
+
+    static getToken() {
+        const user = this.getUser();
+        return user ? user.token : null;
+    }
+
 }
 
 export default UserStorage;
