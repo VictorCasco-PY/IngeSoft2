@@ -4,6 +4,7 @@ import api from "../utils/api";
 export const usePlanes = () => {
   const DIR = "/programas";
   const Actividades = "/actividades";
+  const Empleados = "/empleados/searchByRol/4"; 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -160,6 +161,11 @@ const getEjerciciosByProgramaId = async (id,programaId, page = 1) => {
   const actualizarEjercicios = async(id, idItem) => {
     return handleRequest(() => api.put(`${DIR}/${id}/items/${idItem}`))
   }
+
+  const getEmpleados = async (page = 1) => {
+    return handleRequest(async () => await api.get(`${Empleados}/page/${page}`));
+  }
+
   return {
     crearProgramas,
     eliminarEjercicio,
@@ -174,6 +180,7 @@ const getEjerciciosByProgramaId = async (id,programaId, page = 1) => {
     getProgramasById,
     getProgramasByActividad,
     actualizarPrograma,
-    actualizarEjercicios
+    actualizarEjercicios,
+    getEmpleados
   };
 };

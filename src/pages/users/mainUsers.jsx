@@ -286,19 +286,27 @@ const MainUsers = () => {
         setFilteredUsers([...filteredUsers, response.data]);
       } else if (modalMode === "edit") {
         // Verificar si se realizaron cambios
-        const editedUsuarios = users.find((user) => user.id === userData.id);
+        const originalUser = users.find((user) => user.id === userData.id);
         if (
-          editedUsuarios.nombre === userData.nombre &&
-          editedUsuarios.cedula === userData.cedula
+          originalUser.nombre === userData.nombre &&
+          originalUser.cedula === userData.cedula &&
+          originalUser.telefono === userData.telefono &&
+          originalUser.direccion === userData.direccion &&
+          originalUser.email === userData.email &&
+          originalUser.rol === userData.rol
         ) {
           toast.promise(new Promise((resolve) => resolve()), {
             loading: "Guardando...",
-            success: "No se realizo ningun cambio en el user.",
+            success: "No se realizó ningún cambio en el usuario.",
             error: "Hubo un error al guardar los cambios.",
           });
+          setUserData(emptyUser);
+          setShowModal(false);
+          setShowEditModal(false);
           return;
         }
-        response = await api.put(`/empleados/${userData.id}`, userData);
+  
+        const response = await api.put(`/empleados/${userData.id}`, userData);
         console.log("Usuario editado:", response.data);
         toast.success("Usuario actualizado satisfactoriamente");
       }
@@ -311,7 +319,6 @@ const MainUsers = () => {
       toast.error("Error al procesar la solicitud");
     }
   };
-
   const handleInputChan = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
