@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./Reporte.css";
 
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import api from "../../utils/api";
@@ -175,6 +174,7 @@ const ReporteVentas = () => {
                   type="button"
                   className="btn btn-primary dropdown-toggle btn-filtrar"
                   data-bs-toggle="dropdown"
+                  style={{marginLeft: '2rem'}}
                 >
                   {estado ? getEstadoName(estado) : <IoCheckmark />}
                   {estado ? null : "Filtrar por estado..."}
