@@ -48,6 +48,7 @@ import MainDashboardEntrenador from "./pages/dashboard/dashboardEntrenador.jsx/M
 import { SugerirCambioPassword } from "./pages/sugerir-cambio-contraseña/SugerirCambioPassword";
 import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
 import ReporteVentas from "./pages/reporte/ReporteVentas"
+import ReporteCompras from "./pages/reporte/ReporteCompras";
 import { VerifyToken } from "./utils/VerifyToken";
 
 createRoot(document.getElementById("root")).render(
@@ -104,6 +105,14 @@ createRoot(document.getElementById("root")).render(
               element={
                 <Layout>
                   <ReporteVentas />
+                </Layout>
+              }
+            />
+            <Route
+              path="/reportes-compras"
+              element={
+                <Layout>
+                  <ReporteCompras />
                 </Layout>
               }
             />

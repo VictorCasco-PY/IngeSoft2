@@ -8,7 +8,7 @@ export const ReporteDropdown = () => {
   const [isSelected , setIsSelected] = useState(false)
 
     useEffect(() => {
-        setIsSelected(location.pathname ==="/reportes" || location.pathname ==="/reportes-ventas")
+        setIsSelected(location.pathname ==="/reportes" || location.pathname ==="/reportes-ventas" || location.pathname ==="/reportes-compras")
     }, [])
 
   return (
@@ -18,6 +18,9 @@ export const ReporteDropdown = () => {
       </NavBtn>
       <NavBtn type="dropdownItem" href="/reportes-ventas">
        Reporte Ventas
+      </NavBtn>
+      <NavBtn type="dropdownItem" href="/reportes-compras">
+       Reporte Compras
       </NavBtn>
     </NavDropdown>
   );
