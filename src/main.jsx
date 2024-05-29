@@ -47,9 +47,9 @@ import MainDashboardCliente from "./pages/dashboard/dashboardCliente/MainDashboa
 import MainDashboardEntrenador from "./pages/dashboard/dashboardEntrenador.jsx/MainDashboadEntrenador";
 import { SugerirCambioPassword } from "./pages/sugerir-cambio-contraseña/SugerirCambioPassword";
 import RecuperarContraseña from "./pages/recuperar-contraseña/RecuperarContrasenha";
+import { VerifyToken } from "./utils/VerifyToken";
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <Router>
       <CurrentUserProvider>
         <Routes>
@@ -392,7 +392,7 @@ createRoot(document.getElementById("root")).render(
               }
             />
         </Routes>
+        <VerifyToken />
       </CurrentUserProvider>
     </Router>
-  </React.StrictMode>
 );
