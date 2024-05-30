@@ -5,7 +5,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { TbArrowDown } from "react-icons/tb";
 import { GoQuestion } from "react-icons/go";
-import Pagination from "../../components/pagination/PaginationContainer";
+import Pagination from "../../components/pagination/PaginationContainer"; //cambio
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
@@ -253,19 +253,16 @@ const MainServicios = () => {
   };
 
   const handleSearchChange = () => {
-    if (searchTerm.length >= 4) {
+    if (searchTerm.length > 0) {
       searchServicios(searchTerm);
     } else {
       setFilteredServicios(servicios);
     }
   };
 
-  const searchServicios = (term) => {
-    const filtered = servicios.filter((servicio) => {
-      const nombre = servicio.actividad.nombre.toLowerCase();
-      return nombre.includes(term.toLowerCase());
-    });
-    setFilteredServicios(filtered);
+  const searchServicios = async (term) => {
+    const searchResult = await api.get(`/actividades/count/clientes/nombre/${term}/page/${currentPage}`);
+    setFilteredServicios(searchResult.data.items);
   };
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

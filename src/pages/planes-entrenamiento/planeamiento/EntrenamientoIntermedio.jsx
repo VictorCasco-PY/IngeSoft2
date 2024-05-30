@@ -191,7 +191,14 @@ const EntrenamientoIntermedio = () => {
             {data.items?.map((programa) => (
               <tr key={programa.id}>
                 {/*Pongo en cada item, para poder darle click en cualquier parte, porque si pongo en el id, no puedo eliminar */}
-                <td onClick={() => handleProgramaClick(programa)}>
+                <td
+                  style={{
+                    color: "#7749F8",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleProgramaClick(programa)}
+                >
                   {programa.titulo}
                 </td>
                 <td onClick={() => handleProgramaClick(programa)}>

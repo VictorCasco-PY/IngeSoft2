@@ -36,7 +36,7 @@ const EntrenamientoAvanzado = () => {
     getProgramasByActividad,
     getActividades,
     eliminarPrograma,
-    actualizarPrograma
+    actualizarPrograma,
   } = usePlanes(); // Agrega la función eliminarPrograma
 
   useEffect(() => {
@@ -49,7 +49,6 @@ const EntrenamientoAvanzado = () => {
     try {
       const res = await getProgramasAvanzado();
       setData(res);
-      
     } catch (error) {
       setError(error);
     } finally {
@@ -124,10 +123,7 @@ const EntrenamientoAvanzado = () => {
   const handleFilter = async (actividad) => {
     setIsLoading(true);
     try {
-      const res = await getProgramasByActividad(
-        "Avanzado",
-        actividad.nombre
-      );
+      const res = await getProgramasByActividad("Avanzado", actividad.nombre);
       setData(res);
     } catch (error) {
       setError(error);
@@ -196,7 +192,14 @@ const EntrenamientoAvanzado = () => {
             {data.items?.map((programa) => (
               <tr key={programa.id}>
                 {/*Pongo en cada item, para poder darle click en cualquier parte, porque si pongo en el id, no puedo eliminar */}
-                <td onClick={() => handleProgramaClick(programa)}>
+                <td
+                  style={{
+                    color: "#7749F8",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleProgramaClick(programa)}
+                >
                   {programa.titulo}
                 </td>
                 <td onClick={() => handleProgramaClick(programa)}>
@@ -275,10 +278,10 @@ const EntrenamientoAvanzado = () => {
           closeModal={handleCloseModal}
         >
           <EditarProgramaForm
-           programa={programaToEdit}
-           onUpdate={handleUpdatePrograma}
-           onClose={handleCloseModal}
-           actualizarPrograma={actualizarPrograma}
+            programa={programaToEdit}
+            onUpdate={handleUpdatePrograma}
+            onClose={handleCloseModal}
+            actualizarPrograma={actualizarPrograma}
           />
         </ModalBase>
       )}
