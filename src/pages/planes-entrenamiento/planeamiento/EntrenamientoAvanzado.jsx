@@ -14,7 +14,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
 import { usePlanes } from "../../../hooks/usePlanes";
 import { useNavigate } from "react-router-dom";
-import CustomAlert from "../../../components/alert/CustomAlert"; // Importa el componente CustomAlert
+import CustomAlert from "../../../components/alert/CustomAlert";
 import toast from "react-hot-toast";
 import EditarProgramaForm from "../../../components/Formularios/EditarProgramaForm";
 
@@ -22,8 +22,8 @@ const EntrenamientoAvanzado = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [programaToEdit, setProgramaToEdit] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false); // Nuevo estado para mostrar la confirmación
-  const [programaToDelete, setProgramaToDelete] = useState(null); // Nuevo estado para almacenar el ID del programa a eliminar
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [programaToDelete, setProgramaToDelete] = useState(null);
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [actividades, setActividades] = useState([]);
@@ -37,7 +37,7 @@ const EntrenamientoAvanzado = () => {
     getActividades,
     eliminarPrograma,
     actualizarPrograma,
-  } = usePlanes(); // Agrega la función eliminarPrograma
+  } = usePlanes();
 
   useEffect(() => {
     fetchData();
@@ -49,6 +49,11 @@ const EntrenamientoAvanzado = () => {
     try {
       const res = await getProgramasAvanzado();
       setData(res);
+      if (res.items.length === 0) {
+        setNotFound(true);
+      } else {
+        setNotFound(false);
+      }
     } catch (error) {
       setError(error);
     } finally {
@@ -98,14 +103,12 @@ const EntrenamientoAvanzado = () => {
     }
   };
 
-  // Función para abrir el modal de edición con los datos del programa seleccionado
   const handleEditarPrograma = (programa) => {
-    setProgramaToEdit(programa); // Guarda los datos del programa seleccionado en el estado
-    setShowModal(true); // Abre el modal de edición
+    setProgramaToEdit(programa);
+    setShowModal(true);
     console.log(programa);
   };
 
-  // Función para actualizar el programa después de editarlo
   const handleUpdatePrograma = async (values) => {
     try {
       await actualizarPrograma(programaToEdit.id, values);
@@ -125,6 +128,11 @@ const EntrenamientoAvanzado = () => {
     try {
       const res = await getProgramasByActividad("Avanzado", actividad.nombre);
       setData(res);
+      if (res.items.length === 0) {
+        setNotFound(true);
+      } else {
+        setNotFound(false);
+      }
     } catch (error) {
       setError(error);
     } finally {
@@ -157,7 +165,7 @@ const EntrenamientoAvanzado = () => {
         await eliminarPrograma(programaToDelete);
         setShowConfirmation(false);
         toast.success("Programa eliminado satisfactoriamente");
-        fetchData(); // Vuelve a cargar los datos después de eliminar el programa
+        fetchData();
       } catch (error) {
         console.error("Error al eliminar el programa:", error);
         toast.error(
@@ -171,10 +179,13 @@ const EntrenamientoAvanzado = () => {
     if (isLoading) return <Loader />;
 
     if (notFound)
-      return <ListaVacía mensaje="No hay entrenamientos con ese nombre." />;
+      return <ListaVacía mensaje="No hay entrenamientos disponibles." />;
 
     if (error)
       return <ErrorPagina mensaje="Ha ocurrido un error cargando los datos." />;
+
+    if (data.items.length === 0)
+      return <ListaVacía mensaje="No hay entrenamientos disponibles." />;
 
     return (
       <>
@@ -191,7 +202,6 @@ const EntrenamientoAvanzado = () => {
           <tbody>
             {data.items?.map((programa) => (
               <tr key={programa.id}>
-                {/*Pongo en cada item, para poder darle click en cualquier parte, porque si pongo en el id, no puedo eliminar */}
                 <td
                   style={{
                     color: "#7749F8",
@@ -211,11 +221,11 @@ const EntrenamientoAvanzado = () => {
                 <td onClick={() => handleProgramaClick(programa)}>
                   {programa.sexo}
                 </td>
-                <td class="text-center">
+                <td className="text-center">
                   <a
                     id={`btn-eliminar-programa-${programa.id}`}
                     href="#"
-                    onClick={() => handleShowAlert(programa.id)} // Llama a la función handleShowAlert en lugar de handleDelete directamente
+                    onClick={() => handleShowAlert(programa.id)}
                     style={{ fontSize: "1.2rem" }}
                   >
                     <RiDeleteBinLine />
@@ -262,7 +272,7 @@ const EntrenamientoAvanzado = () => {
       </div>
       {switchRender()}
       {showConfirmation &&
-        programaToDelete && ( // Muestra la alerta de confirmación si showConfirmation es true
+        programaToDelete && (
           <CustomAlert
             message={`¿Estás seguro de eliminar este programa?`}
             confirmText="Aceptar"
