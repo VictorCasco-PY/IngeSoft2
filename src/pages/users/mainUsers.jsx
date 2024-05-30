@@ -432,7 +432,7 @@ const MainUsers = () => {
                 value={searchTerm}
                 onChange={handleInputChan}
               />
-              <ButtonBasic text="Buscar" onClick={handleSearchClick} />
+              <ButtonBasic text="Buscar" onClick={handleSearchClick} id="btn-search-employee"/>
             </form>
             <div className="dropdown contenedorFiltro">
               <div>
