@@ -104,7 +104,7 @@ const SuscripcionModal = ({ actividad, onClose }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <Btn type="primary" onClick={handleSuscripcion}>
+              <Btn type="primary" onClick={handleSuscripcion} id="btn-confirm-suscription-finish">
                 Confirmar Suscripción
               </Btn>
             </div>
