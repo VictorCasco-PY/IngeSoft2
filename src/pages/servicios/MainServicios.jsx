@@ -5,12 +5,11 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { TbArrowDown } from "react-icons/tb";
 import { GoQuestion } from "react-icons/go";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "../../components/pagination/PaginationContainer"; //cambio
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
 import CustomAlert from "../../components/alert/CustomAlert";
-import Indicator from "../../components/ManejoStock/IndicadorClientes";
 import { IoCheckmark } from "react-icons/io5";
 import api from "../../utils/api";
 import toast, { Toaster } from "react-hot-toast";
@@ -29,14 +28,59 @@ const MainServicios = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredServicios, setFilteredServicios] = useState([]);
   const [modalMode, setModalMode] = useState("create");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedEntrenador, setSelectedEntrenador] = useState(null);
+  const [page, setPage] = useState(1);
+
   const [servicioData, setServicioData] = useState({
-    id: null,
+    id: 0,
+    active: true,
     nombre: "",
     descripcion: "",
-    costoMensual: "",
-    costoSemanal: "",
-    entrenadores:[],
+    costoMensual: 0,
+    costoSemanal: 0,
+    entrenadores: [],
   });
+
+  useEffect(() => {
+    if (searchQuery.length >= 4) {
+      searchEmployees();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery, page]);
+
+  const searchEmployees = async () => {
+    try {
+      const response = await api.get(
+        `/empleados/searchEntrenadores/${searchQuery}/page/${page}`
+      );
+      setSearchResults(response.data.items);
+    } catch (error) {
+      toast.error("Error al buscar empleados:");
+    }
+  };
+
+  const handleClientSelection = (entrenador) => {
+    setSelectedEntrenador(entrenador);
+    setServicioData((prevData) => ({
+      ...prevData,
+      entrenadores: [entrenador.id],
+    }));
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  const handleClearSelection = () => {
+    setSelectedEntrenador(null);
+    setServicioData((prevData) => ({
+      ...prevData,
+      entrenadores: [],
+    }));
+    setSearchQuery("");
+  };
 
   useEffect(() => {
     fetchServicios(currentPage);
@@ -55,31 +99,54 @@ const MainServicios = () => {
     }
   };
 
+
   const handleNuevoServicio = () => {
     setModalMode("create");
     setServicioData({
-      id: null,
+      id: 0,
+      active: true,
       nombre: "",
       descripcion: "",
-      costoMensual: "",
-      costoSemanal: "",
-      entrenadores:[],
+      costoMensual: 0,
+      costoSemanal: 0,
+      entrenadores: [],
     });
+    setSelectedEntrenador(null);
     setShowModal(true);
   };
 
-  const handleEditarServicio = (servicio) => {
+  const handleEditarServicio = async (servicio) => {
     setModalMode("edit");
     setServicioData({
       id: servicio.actividad.id,
+      active: servicio.actividad.active,
       nombre: servicio.actividad.nombre,
       descripcion: servicio.actividad.descripcion,
       costoMensual: servicio.actividad.costoMensual,
       costoSemanal: servicio.actividad.costoSemanal,
-      entrenadores: servicio.actividad.entrenadores,
+      entrenadores: servicio.actividad.entrenadores, 
     });
+  
+    // Solo si hay entrenadores
+    if (servicio.actividad.entrenadores.length > 0) {
+      try {
+        const entrenadorId = servicio.actividad.entrenadores[0]; 
+        const response = await api.get(`/empleados/${entrenadorId}`);
+        const nombreEntrenador = response.data.nombre;
+        const cedulaEntrenador = response.data.cedula;
+  
+        setSelectedEntrenador({ id: entrenadorId, nombre: nombreEntrenador,cedula: cedulaEntrenador });
+      } catch (error) {
+        console.error("Error al obtener el nombre del entrenador:", error);
+        setSelectedEntrenador(null);
+      }
+    } else {
+      setSelectedEntrenador(null); 
+    }
+  
     setShowEditModal(true);
   };
+  
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -93,9 +160,10 @@ const MainServicios = () => {
       [name]: value,
     }));
   };
+
   const handleAceptar = async () => {
     try {
-      // Validar que ningún campo esté vacío
+      // Validar que ningun campo este vacio 
       if (
         !servicioData.nombre.trim() ||
         !servicioData.costoMensual ||
@@ -185,21 +253,20 @@ const MainServicios = () => {
   };
 
   const handleSearchChange = () => {
-    if (searchTerm.length >= 4) {
+    if (searchTerm.length > 0) {
       searchServicios(searchTerm);
     } else {
       setFilteredServicios(servicios);
     }
   };
 
-  const searchServicios = (term) => {
-    const filtered = servicios.filter((servicio) => {
-      const nombre = servicio.actividad.nombre.toLowerCase();
-      return nombre.includes(term.toLowerCase());
-    });
-    setFilteredServicios(filtered);
+  const searchServicios = async (term) => {
+    const searchResult = await api.get(`/actividades/count/clientes/nombre/${term}/page/${currentPage}`);
+    setFilteredServicios(searchResult.data.items);
   };
-
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
     <>
       <Toaster
@@ -238,7 +305,7 @@ const MainServicios = () => {
               <ButtonBasic
                 id="btn-buscar"
                 text="Buscar"
-                onClick={handleSearchChange} // Mantén el onClick para llamar a la función handleSearchChange
+                onClick={handleSearchChange} 
               />
             </form>
 
@@ -334,6 +401,77 @@ const MainServicios = () => {
                 </div>
               </div>
             </div>
+            
+            <div className="mb-2 block">
+              <div className="label-container">
+                <LabelBase label="Entrenador" htmlFor="entrenador" />
+              </div>         
+              <div className="mb-2">
+                
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Buscar por nombre del entrenador..."
+                  id="input-entrenador"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              {selectedEntrenador && (
+            <div
+              className="mb-2"
+              style={{
+                padding: "2px",
+                border: "1px solid green",
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span>{`${selectedEntrenador.nombre} - ${selectedEntrenador.cedula}`}</span>
+                <button
+                  onClick={handleClearSelection}
+                  style={{
+                    cursor: "pointer",
+                    border: "none",
+                    background: "transparent",
+                    color: "red",
+                    fontSize: "24px",
+                  }}
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+          )}
+              <div>
+                {searchResults.length > 0 &&
+                  searchResults.map((entrenador) => (
+                    <div
+                      key={entrenador.id}
+                       id={`entrenador-${entrenador.id}`}
+                      style={{
+                        cursor: "pointer",
+                        padding: "10px",
+                        border:
+                          selectedEntrenador && selectedEntrenador.id === entrenador.id
+                            ? "1px solid green"
+                            : "none",
+                      }}
+                      onClick={() => handleClientSelection(entrenador)}
+                    >
+                      <span>{`${entrenador.nombre} `}</span>
+                     
+                    </div>
+                  ))}
+              </div>
+            </div>
+
             <div className="campo-obligatorio">
               <span className="required">*</span>
               <span className="message">Campo obligatorio</span>
@@ -409,10 +547,9 @@ const MainServicios = () => {
         <div className="align-self-center">
           <Pagination
             id="ModalRegitro&edit"
-            count={totalPages}
-            shape="rounded"
-            color="secondary"
-            onChange={(event, page) => setCurrentPage(page)}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </CartaPrincipal>

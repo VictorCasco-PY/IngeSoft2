@@ -9,6 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../../../assets/nav-logo.png";
 import { NavBtn } from "./NavBtn";
 import { ProveedoresDropdown } from "./DropDown/ProveedoresDropdown";
+import { ReporteDropdown } from "./DropDown/ReporteDropdown"
 import { UserDropDown } from "./DropDown/UserDropDown";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
@@ -85,12 +86,8 @@ export const NewNavbar = () => {
               >
                 Caja
               </NavBtn>
-              <NavBtn
-                id="nav-reportes"
-                href="/reportes"
-                roles={[RolEnum.ADMIN]}
-              >
-                Reportes
+              <NavBtn id="botonextra" roles={[RolEnum.ADMIN]}>
+                <ReporteDropdown />
               </NavBtn>
               <NavBtn
                 id="nav-planes"
@@ -102,7 +99,7 @@ export const NewNavbar = () => {
               <NavBtn
                 id="nav-dashboard-entrenador"
                 href="/entrenador/dashbo"
-                roles={[ RolEnum.ENTRENADOR]}
+                roles={[RolEnum.ENTRENADOR]}
               >
                 Dashboard Entrenador
               </NavBtn>
@@ -114,7 +111,7 @@ export const NewNavbar = () => {
               >
                 Dashboard cliente
               </NavBtn>
-              
+
               <NavBtn
                 id="nav-actividades-cliente"
                 href="/clientes/actividades"

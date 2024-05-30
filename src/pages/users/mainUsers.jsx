@@ -47,7 +47,7 @@ const MainUsers = () => {
   const nameRegex = /^[a-zA-ZÁáÉéÍíÓóÚúÑñ ]{2,}$/;
   const cedulaRegex = /^[0-9A-Za-z]+$/;
   const telefonoRegex = /^\d+$/;
-  const direccionRegex = /^[a-zA-Z0-9\s]+$/;
+  const direccionRegex = /^[\w\sáéíóúÁÉÍÓÚñÑ.,#'\-\+&ª]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [error, setError] = useState(false);
 
@@ -243,8 +243,8 @@ const MainUsers = () => {
           toast.error("El teléfono solo puede contener números.");
           return;
         }
-        if (userData.telefono.length < 7 || userData.telefono.length > 15) {
-          toast.error("El teléfono debe tener entre 7 y 15 caracteres.");
+        if (userData.telefono.length < 7 || userData.telefono.length > 12) {
+          toast.error("El teléfono debe tener entre 7 y 12 caracteres.");
           return;
         }
         const direccionExists = users.some(
@@ -286,19 +286,27 @@ const MainUsers = () => {
         setFilteredUsers([...filteredUsers, response.data]);
       } else if (modalMode === "edit") {
         // Verificar si se realizaron cambios
-        const editedUsuarios = users.find((user) => user.id === userData.id);
+        const originalUser = users.find((user) => user.id === userData.id);
         if (
-          editedUsuarios.nombre === userData.nombre &&
-          editedUsuarios.cedula === userData.cedula
+          originalUser.nombre === userData.nombre &&
+          originalUser.cedula === userData.cedula &&
+          originalUser.telefono === userData.telefono &&
+          originalUser.direccion === userData.direccion &&
+          originalUser.email === userData.email &&
+          originalUser.rol === userData.rol
         ) {
           toast.promise(new Promise((resolve) => resolve()), {
             loading: "Guardando...",
-            success: "No se realizo ningun cambio en el user.",
+            success: "No se realizó ningún cambio en el usuario.",
             error: "Hubo un error al guardar los cambios.",
           });
+          setUserData(emptyUser);
+          setShowModal(false);
+          setShowEditModal(false);
           return;
         }
-        response = await api.put(`/empleados/${userData.id}`, userData);
+  
+        const response = await api.put(`/empleados/${userData.id}`, userData);
         console.log("Usuario editado:", response.data);
         toast.success("Usuario actualizado satisfactoriamente");
       }
@@ -311,7 +319,6 @@ const MainUsers = () => {
       toast.error("Error al procesar la solicitud");
     }
   };
-
   const handleInputChan = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
@@ -425,7 +432,7 @@ const MainUsers = () => {
                 value={searchTerm}
                 onChange={handleInputChan}
               />
-              <ButtonBasic text="Buscar" onClick={handleSearchClick} />
+              <ButtonBasic text="Buscar" onClick={handleSearchClick} id="btn-search-employee"/>
             </form>
             <div className="dropdown contenedorFiltro">
               <div>

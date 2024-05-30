@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import UserStorage from "../utils/UserStorage";
 import { useNavigate } from "react-router-dom";
 import CajaStorage from "../utils/CajaStorage";
@@ -66,7 +66,7 @@ export const CurrentUserProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
+    useMemo(() => {
         setLocalStorage()
     }, [isAuthenticated]);
 

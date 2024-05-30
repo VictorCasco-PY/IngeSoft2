@@ -6,20 +6,19 @@ import { FiEdit2 } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { TbArrowDown } from "react-icons/tb";
 import { GoQuestion } from "react-icons/go";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "../../components/pagination/PaginationContainer";
 import ButtonBasic from "../../components/bottons/ButtonBasic";
 import ModalBase from "../../components/modals/ModalBase";
 import LabelBase from "../../components/labels/LabelBase";
 import CustomAlert from "../../components/alert/CustomAlert";
-import Indicator from "../../components/ManejoStock/IndicadorClientes";
-import { IoCheckmark } from "react-icons/io5";
 import api from "../../utils/api";
 import toast, { Toaster } from "react-hot-toast";
-import IndicadorClientes from "../../components/ManejoStock/IndicadorClientes";
 import ButtonCrear from "../../components/bottons/ButtonCrear";
 import { IoArrowBackSharp } from "react-icons/io5";
 import EstadoPago from "../../components/estado_pago/EstadoPago";
 import CartaPrincipal from "../../components/cartaPrincipal/CartaPrincipal";
+import { Btn } from "../../components/bottons/Button";
+import { formatFecha } from "../../utils/Formatting";
 
 const InfoServicios = () => {
   const { id } = useParams();
@@ -32,25 +31,19 @@ const InfoServicios = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenEdit, setModalOpenEdit] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState(null);
-  const [clientes, setClientes] = useState([]);
   const [selectedCliente, setSelectedCliente] = useState("");
   const [modalidad, setModalidad] = useState("MENSUAL");
   const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [servicioToDelete, setServicioToDelete] = useState(null);
   const [searchCedulaTerm, setSearchCedulaTerm] = useState("");
   const [searchCedulaResults, setSearchCedulaResults] = useState([]);
+  const [listaSuscripciones, setListaSuscripciones] = useState([]);
 
   useEffect(() => {
     fetchSuscripciones(id, currentPage);
   }, [id, currentPage]);
-
-  useEffect(() => {
-    if (modalOpen) {
-    }
-  }, [modalOpen]);
 
   useEffect(() => {
     const fetchActividadNombre = async () => {
@@ -77,9 +70,10 @@ const InfoServicios = () => {
     }
   };
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = (event, pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const handleFiltrar = (filtro) => {
     setFiltro(filtro);
   };
@@ -111,34 +105,38 @@ const InfoServicios = () => {
     setSuscripciones(filtered);
   };
 
-  const handleSubmitSuscripcion = async (event) => {
+  const handleAddSuscripcion = () => {
+    if (!fechaInicio || !selectedCliente) {
+      toast.error(
+        "Falta llenar campos. Ingresa una fecha de inicio y un cliente."
+      );
+      return;
+    }
+
+    const nuevaSuscripcion = {
+      clienteId: selectedCliente.id,
+      clienteNombre: selectedCliente.nombre,
+      actividadId: id,
+      modalidad: modalidad,
+      estado: "PENDIENTE",
+      fechaInicio: fechaInicio,
+    };
+
+    setListaSuscripciones([...listaSuscripciones, nuevaSuscripcion]);
+    setSelectedCliente("");
+    setSearchCedulaTerm("");
+    setModalidad("MENSUAL");
+    setFechaInicio("");
+  };
+
+  const handleSubmitSuscripciones = async (event) => {
     event.preventDefault();
-
-    if (!fechaInicio) {
-      toast.error("Falta llenar campos. Ingresa una fecha de inicio.");
-      return;
-    }
-
-    if (!selectedCliente) {
-      toast.error("Falta llenar campos. Ingresa un cliente.");
-      return;
-    }
-
     try {
-      const suscripcionData = {
-        clienteId: selectedCliente.id,
-        actividadId: id,
-        modalidad: modalidad,
-        estado: "PENDIENTE",
-        fechaInicio: fechaInicio,
-      };
-      const response = await api.post("/suscripciones", [suscripcionData]);
+      const response = await api.post("/suscripciones", listaSuscripciones);
       console.log("Suscripciones agregadas:", response.data);
-      toast.success("Suscripción agregada exitosamente");
+      toast.success("Suscripciones agregadas exitosamente");
       setModalOpen(false);
-      setSelectedCliente("");
-      setModalidad("MENSUAL");
-      setFechaInicio("");
+      setListaSuscripciones([]);
 
       fetchSuscripciones(id, currentPage);
     } catch (error) {
@@ -180,7 +178,7 @@ const InfoServicios = () => {
     event.preventDefault();
     try {
       console.log(editingSubscription.suscripcionDto.id);
-      setLoading(true); // Establecer el estado de carga a true
+      setLoading(true);
       console.log(editingSubscription);
       await api.put(
         `/suscripciones/${editingSubscription.suscripcionDto.id}`,
@@ -194,24 +192,19 @@ const InfoServicios = () => {
       console.error("Error al actualizar la suscripción:", error);
       toast.error("Error al actualizar la suscripción");
     } finally {
-      setLoading(false); // Establecer el estado de carga a false después de que se complete la solicitud
+      setLoading(false);
     }
   };
 
-  // eliminar una suscripcion
   const handleEliminarSuscripcion = async (suscripcionId) => {
     try {
       await api.delete(`/suscripciones/${suscripcionId}`);
       toast.success("Suscripción eliminada exitosamente");
-      fetchSuscripciones(id, currentPage); // Actualiza la lista de suscripciones después de eliminar
+      fetchSuscripciones(id, currentPage);
     } catch (error) {
       console.error("Error al eliminar la suscripción:", error);
       toast.error("Error al eliminar la suscripción");
     }
-  };
-  const handleShowAlert = (servicio) => {
-    setServicioToDelete(servicio);
-    setShowAlert(true);
   };
 
   const handleCancelDelete = () => {
@@ -230,7 +223,6 @@ const InfoServicios = () => {
     }
   };
 
-  // manejar la cedula del cliente
   const searchByCedula = async () => {
     try {
       const response = await api.get(
@@ -250,45 +242,10 @@ const InfoServicios = () => {
     }
   };
 
-  const handleSearchCedulaChange = (event) => {
-    const term = event.target.value;
-    setSearchCedulaTerm(term);
-
-    // buscar si mayor o igual a 3 caracteres
-    if (term.length >= 3) {
-      if (event.key === "Enter") {
-        searchByCedula();
-      } else {
-        setSearchCedulaResults([]);
-      }
-    }
-  };
-
   const handleSelectCliente = (cliente) => {
     setSelectedCliente(cliente);
     setSearchCedulaTerm(""); // Limpiar el término de búsqueda
     setSearchCedulaResults([]);
-  };
-
-  //buscador mejorado
-  const handleInputChange = (event) => {
-    const term = event.target.value;
-    setSearchTerm(term);
-
-    if (term === "") {
-      // Si el input de búsqueda está vacío, vuelve a la primera página
-      setCurrentPage(1);
-      fetchSuscripciones(id, 1);
-    }
-  };
-
-  const handleSearchChange = () => {
-    console.log(searchTerm);
-    if (searchTerm.length >= 4) {
-      searchServicios(searchTerm);
-    } else {
-      fetchSuscripciones(id, currentPage);
-    }
   };
 
   return (
@@ -327,13 +284,13 @@ const InfoServicios = () => {
                 type="text"
                 placeholder="Search"
                 value={searchTerm}
-                onChange={handleInputChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <ButtonBasic
                 id="btn-buscar"
                 text="Buscar"
-                onClick={handleSearchChange}
-              />{" "}
+                onClick={() => searchServicios(searchTerm)}
+              />
             </form>
             <div className="dropdown">
               <button
@@ -404,12 +361,17 @@ const InfoServicios = () => {
               {suscripcionesFiltradas.map((suscripcion) => (
                 <tr key={suscripcion.id}>
                   <td>
-                    <Link id={`infoActividad${suscripcion.clienteDto.id}`} to={`/clientesinfo/${suscripcion.clienteDto.id}`}>
+                    <Link
+                      id={`infoActividad${suscripcion.clienteDto.id}`}
+                      to={`/clientesinfo/${suscripcion.clienteDto.id}`}
+                    >
                       {suscripcion.clienteDto.nombre}
                     </Link>
                   </td>
                   <td>
-                    <EstadoPago estado={suscripcion.suscripcionDto.estado.toLowerCase()} />
+                    <EstadoPago
+                      estado={suscripcion.suscripcionDto.estado.toLowerCase()}
+                    />
                   </td>
                   <td>{suscripcion.suscripcionDto.modalidad}</td>
                   <td>{suscripcion.clienteDto.email}</td>
@@ -420,9 +382,7 @@ const InfoServicios = () => {
                       style={{ marginRight: "15%" }}
                       id={`eliminar-${suscripcion.suscripcionDto.id}`}
                       onClick={() =>
-                        handleEliminarSuscripcion(
-                          suscripcion.suscripcionDto.id
-                        )
+                        handleEliminarSuscripcion(suscripcion.suscripcionDto.id)
                       }
                     >
                       <RiDeleteBinLine />
@@ -432,8 +392,6 @@ const InfoServicios = () => {
                       id={`editar-${suscripcion.suscripcionDto.id}`}
                       onClick={() => handleEditSubscription(suscripcion)}
                     >
-                      {" "}
-                      {/* Agregar onClick para editar */}
                       <FiEdit2 />
                     </a>
                   </td>
@@ -442,10 +400,10 @@ const InfoServicios = () => {
             </tbody>
           </table>
         </div>
-        <div className="pagination-container">
+        <div className="align-self-center">
           <Pagination
             id="paginacion"
-            count={totalPages}
+            totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
@@ -453,94 +411,140 @@ const InfoServicios = () => {
       </CartaPrincipal>
       <ModalBase
         id="ModalAgregar"
-        title="Agrgar Cliente"
+        title="Registrar Clientes"
         open={modalOpen}
         closeModal={() => {
           setModalOpen(false);
-          // Limpiar los campos
           setSelectedCliente("");
           setModalidad("MENSUAL");
           setFechaInicio("");
         }}
       >
-        <form onSubmit={handleSubmitSuscripcion}>
+        <form onSubmit={handleSubmitSuscripciones}>
           <div>
-            <div className="label-container">
-              <LabelBase label="Modalidad de membresia:" htmlFor="modalidad" />
-              <span className="required">*</span>
+            <h5>Datos de suscripcion</h5>
+            <div className="row">
+              <div className="col">
+                <div className="label-container">
+                  <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  id="cedula"
+                  type="text"
+                  className="form-control"
+                  placeholder="Ingrese el Nº CI"
+                  value={searchCedulaTerm}
+                  onChange={(e) => setSearchCedulaTerm(e.target.value)}
+                />
+              </div>
+              <div className="col" style={{ marginTop: "32px" }}>
+                <Btn
+                  id="btn-buscarCI"
+                  type="secondary"
+                  outline
+                  onClick={searchByCedula}
+                >
+                  Buscar cliente
+                </Btn>
+              </div>
             </div>
-            <select
-              id="modalidad"
-              className="select"
-              value={modalidad}
-              onChange={(e) => setModalidad(e.target.value)}
-            >
-              <option id="mensual" value="MENSUAL">Mensual</option>
-              <option id="semanal" value="SEMANAL">Semanal</option>
-            </select>
-          </div>
-          <div>
-            <div className="label-container">
-              <LabelBase label="Fecha de inicio:" htmlFor="modalidad" />
-              <span className="required">*</span>
+            {selectedCliente && (
+              <div className="mt-3">
+                <span>Cliente seleccionado: {selectedCliente.nombre}</span>
+              </div>
+            )}
+            <div className="row justify-content-between mt-3">
+              <div className="col-4 my-2">
+                <div className="label-container">
+                  <LabelBase label="Modalidad" htmlFor="modalidad" />
+                  <span className="required">*</span>
+                </div>
+                <select
+                  id="modalidad"
+                  className="form-select"
+                  value={modalidad}
+                  onChange={(e) => setModalidad(e.target.value)}
+                >
+                  <option id="mensual" value="MENSUAL">
+                    Mensual
+                  </option>
+                  <option id="semanal" value="SEMANAL">
+                    Semanal
+                  </option>
+                </select>
+              </div>
+              <div className="col-4 my-2">
+                <div className="label-container">
+                  <LabelBase label="Fecha de inicio:" htmlFor="fechaInicio" />
+                  <span className="required">*</span>
+                </div>
+                <input
+                  id="fechaInicio"
+                  className="form-control"
+                  type="date"
+                  value={fechaInicio}
+                  onChange={(e) => setFechaInicio(e.target.value)}
+                />
+              </div>
+              <div className="col-4" style={{ marginTop: "42px" }}>
+                <Btn
+                  id="btn-agregar"
+                  type="secondary"
+                  onClick={handleAddSuscripcion}
+                >
+                  Agregar Suscripción
+                </Btn>
+              </div>
             </div>
-            <input
-              id="fecha"
-              className="select-activity"
-              type="date"
-              value={fechaInicio}
-              onChange={(e) => setFechaInicio(e.target.value)}
-            />
           </div>
 
-          <div>
-            <div className="label-container">
-              <LabelBase label="Cédula del cliente:" htmlFor="cedula" />
-              <span className="required">*</span>
-            </div>
-            <div className="input-container">
-              <input
-                id="cedula"
-                type="text"
-                className="select"
-                placeholder="Ingrese el Nº CI completo del cliente"
-                value={searchCedulaTerm}
-                onChange={handleSearchCedulaChange}
-              />
-              {/* Botón para buscar clientes por cédula */}
-              <ButtonBasic id="btn-buscarCI" text="Agregar" onClick={searchByCedula} style={{ width: '2cm', height: '0.87cm' }} />
-            </div>
-            <ul>
-              {searchCedulaResults.map((cliente) => (
-                <li key={cliente.id}>
-                  <button id={`btn-cliente-${cliente.id}`} onClick={() => handleSelectCliente(cliente)}>
-                    {cliente.nombre} - CI: {cliente.cedula}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Mostrar el cliente seleccionado */}
-          {selectedCliente && (
-            <p>
-              <strong>Seleccionado:</strong> {selectedCliente.nombre} CI:{" "}
-              {selectedCliente.cedula}
-            </p>
-          )}
-          <div className="campo-obligatorio">
+          <div className="campo-obligatorio mt-3">
             <span className="required">*</span>
             <span className="message">Campo obligatorio</span>
           </div>
-          <div className="d-flex justify-content-center align-items-center float-end">
-            <ButtonBasic
+          <div>
+            <table className="table mt-4">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Modalidad</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listaSuscripciones.map((suscripcion, index) => (
+                  <tr key={index}>
+                    <td>{suscripcion.clienteNombre}</td>
+                    <td>{suscripcion.modalidad}</td>
+                    <td>{formatFecha(suscripcion.fechaInicio)}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() =>
+                          setListaSuscripciones(
+                            listaSuscripciones.filter((_, i) => i !== index)
+                          )
+                        }
+                      >
+                        <RiDeleteBinLine />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="d-flex justify-content-center align-items-center float-end mt-3">
+            <Btn
               id="btn-guardar"
-              text="Guardar"
-              type="submit"
-              onClick={handleSubmitSuscripcion}
+              type="primary"
+              onClick={handleSubmitSuscripciones}
             >
-              {loading ? "Cargando..." : "Guardar Cambios"}
-            </ButtonBasic>
+              Guardar
+            </Btn>
           </div>
         </form>
       </ModalBase>
@@ -576,8 +580,12 @@ const InfoServicios = () => {
                   })
                 }
               >
-                <option id="mensual" value="MENSUAL">Mensual</option>
-                <option id="semanal" value="SEMANAL">Semanal</option>
+                <option id="mensual" value="MENSUAL">
+                  Mensual
+                </option>
+                <option id="semanal" value="SEMANAL">
+                  Semanal
+                </option>
               </select>
             </div>
             <div>
@@ -607,7 +615,7 @@ const InfoServicios = () => {
                 <span className="required">*</span>
               </div>
               <input
-                id="fecha-InicioEdit"
+                id="fecha-FinEdit"
                 className="select-activity"
                 type="date"
                 value={editingSubscription.suscripcionDto.fechaFin}
@@ -628,7 +636,7 @@ const InfoServicios = () => {
                 <span className="required">*</span>
               </div>
               <input
-                id="id-actividad"
+                id="nombre-cliente"
                 className="select-activity"
                 type="text"
                 value={editingSubscription.clienteDto.nombre}
