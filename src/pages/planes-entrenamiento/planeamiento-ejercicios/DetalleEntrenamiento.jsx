@@ -9,6 +9,7 @@ import { Btn } from "../../../components/bottons/Button";
 import TablaEjercicios from "../../../components/tablas/TablaEjercicios";
 import FormularioEjercicios from "../../../components/Formularios/FormularioEjercicios";
 import { useNavigate } from "react-router-dom";
+import { ListaVacía } from "../../../components/errores/ListaVacía";
 
 const DetalleEntrenamiento = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const DetalleEntrenamiento = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     fetchPrograma();
@@ -28,6 +30,12 @@ const DetalleEntrenamiento = () => {
     try {
       const res = await getProgramasById(id);
       setPrograma(res);
+      if(res.items.length === 0){
+        setNotFound(true);
+      }
+      else{
+        setNotFound(false);
+      }
     } catch (error) {
       console.error("Error al obtener los detalles del entrenamiento:", error);
     }
@@ -54,6 +62,11 @@ const DetalleEntrenamiento = () => {
   const handleAgregarPlanACliente = () => {
     navigate(`/planes-entrenamiento/${"principiante"}/${id}/cliente/asignar`);
   };
+
+  const isVacio = () => {
+    if (notFound)
+      return <ListaVacía mensaje="No hay entrenamientos disponibles." />;
+  }
 
   return (
     <CartaPrincipal>
@@ -130,6 +143,7 @@ const DetalleEntrenamiento = () => {
           </div>
         </div>
       )}
+    
     </CartaPrincipal>
   );
 };
