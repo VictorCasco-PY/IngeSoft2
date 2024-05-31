@@ -3,7 +3,6 @@ import Pagination from "../pagination/PaginationContainer";
 import { usePlanes } from "../../hooks/usePlanes";
 import ErrorPagina from "../errores/ErrorPagina";
 import { ListaVacía } from "../errores/ListaVacía";
-import { Table } from "../table/Table";
 import CircularProgress from "@mui/material/CircularProgress";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
@@ -19,7 +18,7 @@ const TablaEjercicios = ({ programaId }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [ejercicioToDelete, setEjercicioToDelete] = useState(null);
-
+  const [notFound, setNotFound] = useState(false);
   useEffect(() => {
     fetchEjercicios(programaId, currentPage);
   }, [programaId, currentPage]);
@@ -31,12 +30,24 @@ const TablaEjercicios = ({ programaId }) => {
       setTotalPages(ejerciciosResponse.totalPages);
       setErrorMessage(null);
       setLoadTable(false);
+      if(ejerciciosResponse.items.length === 0){
+        setNotFound(true);
+      }
+      else{
+        setNotFound(false);
+      }
     } catch (error) {
       console.error("Error al obtener ejercicios del programa:", error);
-      setErrorMessage("Ha ocurrido un error al obtener los ejercicios.");
+      //setErrorMessage("Ha ocurrido un error al obtener los ejercicios.");
       setLoadTable(false);
+      console.log(notFound);
     }
   };
+
+  const isVacio = () => {
+    if (notFound)
+      return <ListaVacía mensaje="No hay entrenamientos disponibles." />;
+  }
 
   const handleDelete = async (ejercicioId) => {
     try {
@@ -79,8 +90,8 @@ const TablaEjercicios = ({ programaId }) => {
     <>
       {loadTable ? (
         <CircularProgress />
-      ) : errorMessage ? (
-        <ErrorPagina mensaje={errorMessage} />
+      ) : notFound ? (
+        <ListaVacía mensaje="No hay ejercicios disponibles." />
       ) : (
     
             <>
@@ -134,6 +145,7 @@ const TablaEjercicios = ({ programaId }) => {
               cancelAction={handleCancelDelete}
             />
           )}
+          
 
           <div className="d-flex justify-content-center mt-4">
             <Pagination
