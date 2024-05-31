@@ -64,7 +64,7 @@ const ReporteCompras = () => {
     setDateFin("");
     setDateIni("");
     setEstado("");
-    setNroFactura(null);
+    setNroFactura("");
     setNombreProveedor("");
     setFacturas(prueba);
   };
